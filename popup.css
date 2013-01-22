@@ -1,0 +1,278 @@
+body {
+  font-family:'helvetica neue';
+  width:500px;
+  margin:0;
+  color:#444;
+}
+
+p.error {
+  background-color: #CE6C36;
+  padding:8px 15px;
+  margin:0;
+  color:#fff;
+  display:none;
+}
+
+p.log {
+  background-color: #6A9B00;
+  padding:8px 15px;
+  margin:0;
+  color:#fff;
+  display:none;
+}
+
+p button.close { 
+    float: right;
+    height: 18px;
+    width: 18px;
+    background-color: #fff;
+    padding: 0 0 3px;
+    margin: 0;
+    min-width: 0;
+    color: #444;
+    border-radius: 9px;
+    border: 1px solid #ccc;
+}
+
+p button.close:hover { 
+    background-color: #f4f4f4;
+}
+
+nav {
+  background-color:#285da7;
+  height:40px;
+  padding:0 15px;
+  width:100%;
+  z-index:1;
+  border-top:10px solid #fff;
+  border-bottom: 3px solid #fff;
+}
+
+nav ul {
+  margin:0;
+  padding:0;
+}
+
+nav ul li {
+  list-style-type: none;
+  display:inline;
+}
+
+nav ul li input.search {
+    position: absolute;
+    right: 46px;
+    top: 8px;
+    width: 150px;
+    display:none;
+}
+
+button{
+  list-style-type: none;
+  background-color:#285da7;
+  color:#fff;
+  height:40px;
+  margin:0;
+  border:none;
+  cursor: pointer;
+  min-width:78px;
+  position: relative;
+  padding: 0 15px;
+}
+
+button.selected {
+  background-color:#235292;
+}
+button.selected > .nub {
+  height:0;
+  width:0;
+  border:8px solid;
+  border-color: transparent transparent #fff transparent;
+  position: absolute;
+  bottom: 0;
+  margin-left:50%;
+  left: -8px; /*thickness of border*/
+}
+
+button:hover{
+  background-color:#235292;
+}
+
+section#login, section#addToDelicious, section#viewMyLinks {
+  padding:15px 15px 0;
+  max-height:500px;
+  overflow-y:scroll;
+}
+
+section#login {
+  display:none;
+}
+
+section header {
+  position: relative;
+}
+section header h1 {
+  margin:0 0 10px;
+  display: inline-table;
+}
+section header > span {
+  position: absolute;
+  right:0;
+  top: 5px;
+}
+section header > span > input {
+  vertical-align: top;
+}
+section > input {
+  width:100%;
+  font-size:16px;
+  margin:0 0 5px;
+  border:0;
+  padding:5px 0;
+  background-color:#f1f1f1;
+  text-indent:8px;
+  text-overflow: ellipsis;
+}
+section > span {
+  display:block;
+  text-align:right;
+  margin:4px 0 15px;
+}
+section > span.tags {
+  text-align: left;
+  margin: 3px 0 0;
+  font-size: 14px;
+  color: #a4a4a4;
+  float: left;
+}
+
+section > span.tags a {
+  color:#285da7;
+  text-decoration: none;
+}
+
+section > span.tags a:hover {
+  text-decoration: underline;
+}
+
+section span img.loading {
+  margin-top:8px;
+  vertical-align: top;
+  padding:4px 3px 0 0;
+  display:none;
+}
+
+section button[disabled=disabled] {
+  background-color:#ccc;
+  cursor:default;
+}
+
+section#viewMyLinks {
+  display:none;
+  padding-bottom:10px;
+}
+
+section#viewMyLinks ul {
+  margin:0;
+  padding:0;
+}
+
+section#viewMyLinks ul li {
+  list-style-type: none;
+  border-top:1px solid #ccc;
+  padding:5px;
+  position: relative;
+}
+
+section#viewMyLinks ul li:nth-child(2n) {
+  background-color: #f4f4f4;
+}
+
+section#viewMyLinks ul li p {
+  margin:0;
+  font-size:13px;
+  color:#a4a4a4;
+  margin-top:3px;
+  background: url(icon-tag.png) no-repeat left;
+  padding-left:15px;
+}
+
+section#viewMyLinks ul li a {
+  color: #285DA7;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+section#viewMyLinks ul li a:first-child {
+  margin-right:25px;
+  display:block;
+}
+
+section#viewMyLinks ul li a:hover {
+  text-decoration: underline;
+}
+
+section#viewMyLinks ul li div {
+  text-align: center;
+  margin:10px 0;
+}
+
+section#viewMyLinks ul li a.delete {
+    display: block;
+    height: 20px;
+    width: 20px;
+    background-color: #dedede;
+    border-radius: 0 0 3px 3px;
+    position: absolute;
+    right: 5px;
+    top: 0;
+    color:white;
+    text-indent: 6px;
+}
+
+section#viewMyLinks ul li a.delete:hover {
+  background-color: #CE6C36;
+  text-decoration: none;
+}
+
+section#viewMyLinks ul li div.confirm {
+  position:absolute;
+  background-color:rgba(255,255,255,.80);
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  margin:0;
+  display:none;
+}
+
+section#viewMyLinks ul li div.confirm button {
+  height:20px;
+  right: 5px;
+  position: absolute;
+  border-radius: 0 0 3px 3px;
+  background-color: #CE6C36;
+}
+
+/*jquery ui*/
+.ui-helper-hidden-accessible {
+  display:none;
+}
+
+.ui-autocomplete {
+  background-color:#285DA7;
+  list-style: none;
+  box-shadow: 0 0 5px #888;
+  margin: 0 15px;
+  padding:10px;
+  color:#fff;
+  max-height:108px;
+  overflow-y:scroll;
+  border-radius: 0 0 3px 3px;
+}
+.ui-autocomplete li {
+  margin-bottom:5px;
+}
+
+.ui-autocomplete a.ui-state-focus {
+  color:#7CA5DF;
+}

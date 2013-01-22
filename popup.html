@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="popup.css"/>
+    <script src="vendor/jquery-1.9.0.min.js"></script>
+    <script src="vendor/jquery-ui-1.10.0.custom.min.js"></script>
+    <script src="vendor/xmlToJson.js"></script>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <header>
+      <div>
+        <p class="error"></p>
+        <p class="log">
+          <span></span>
+          <button class="close">x</button>
+        </p>
+      </div>   
+    </header>
+
+    <!-- Login -->
+    <section id="login">
+      <header>
+        <h1>Login to your Delicious account</h1>
+      </header>
+      <input type="text" name="username" id="username" placeholder="Username" tabindex="1" />
+      <input type="password" name="password" id="password" placeholder="Password" tabindex="2" />
+      <span>
+        <img class="loading" src="loading.gif" />
+        <button type="button">Login</button>
+      </span>
+    </section>
+
+    <!-- Tabs -->
+    <section id="content">
+      <nav>
+        <ul>
+          <li>
+            <button name="addToDelicious" class="addLink selected" type="button">
+              Add new link
+              <span class="nub"></span>
+            </button>
+          </li>
+          <li>
+            <button name="viewMyLinks" class="viewLinks" type="button">
+              My bookmarks
+              <span class="nub"></span>
+            </button>
+          </li>
+          <li>
+            <input id="search" class="search" type="search" name="linkSearch" placeholder="Search">
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Tab 1 -->
+      <section id="addToDelicious">
+        <header>
+          <h1>Add to Delicious</h1>
+          <span>
+            <input id="private" type="checkbox" name="private" value="private" />
+            <label for="private">Private?</label>
+          </span>
+        </header>
+        <input type="text" name="url" id="url" placeholder="Url" tabindex="1" />
+        <input type="text" name="tag" id="tag" placeholder="Tag, Tag" tabindex="2" />
+        <span class="tags"></span>
+        <span>
+          <img class="loading" src="loading.gif" />
+          <button type="button" tabindex="3">Add</button>
+        </span>
+      </section>
+
+      <!-- Tab 2 -->
+      <section id="viewMyLinks">
+        <header>
+          <h1>My Links <span></span></h1>
+        </header>
+        <ul class="links">
+          <li>
+            <div>
+              <img class="loading" src="loading.gif" />
+            </div>
+          </li>
+        </ul>
+      </section>
+
+    </section>
+
+
+
+  </body>
+</html>
