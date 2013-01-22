@@ -145,12 +145,13 @@ section > span.tags {
   float: left;
 }
 
-section > span.tags a {
+section a {
   color:#285da7;
+  font-size: 14px;
   text-decoration: none;
 }
 
-section > span.tags a:hover {
+section a:hover {
   text-decoration: underline;
 }
 
@@ -251,6 +252,15 @@ section#viewMyLinks ul li div.confirm button {
   position: absolute;
   border-radius: 0 0 3px 3px;
   background-color: #CE6C36;
+}
+
+section#login > span.join {
+  margin:0;
+}
+
+section#login > span > a {
+  margin-top:3px;
+  float:left;
 }
 
 /*jquery ui*/

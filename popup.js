@@ -240,8 +240,10 @@ DELICIOUS.getSuggestedTags = function() {
 
 DELICIOUS.init = function() {
   DELICIOUS.processLocalStorage();
-  DELICIOUS.getCurrentTabUrlAndUpdateValue();
-  DELICIOUS.getAllMyTags();
+  if (localStorage.getItem('chrome-ext-delicious') !== null) {
+    DELICIOUS.getCurrentTabUrlAndUpdateValue();
+    DELICIOUS.getAllMyTags();
+  }
 };
 
 DELICIOUS.processLocalStorage = function() {
