@@ -5,6 +5,10 @@ body {
   color:#444;
 }
 
+header > div {
+  display:none;
+}
+
 p.error {
   background-color: #CE6C36;
   padding:8px 15px;
@@ -163,8 +167,9 @@ section span img.loading {
 }
 
 section button[disabled=disabled] {
-  background-color:#ccc;
+  background-color:#285DA7;
   cursor:default;
+  color:#ccc;
 }
 
 section#viewMyLinks {
