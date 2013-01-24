@@ -26,6 +26,11 @@
 DELICIOUS = {};
 DELICIOUS.runtime = {};
 
+// custom css expression for a case-insensitive contains()
+jQuery.expr[':'].Contains = function(a,i,m){
+    return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+};
+
 //Functions
 DELICIOUS.addLink = function() {
 
@@ -171,7 +176,7 @@ DELICIOUS.getListOfLinks = function() {
     var html = '';
 
     $.each(json, function(index, obj) {
-      $('section#viewMyLinks > header > h1 span').html('(' + obj['@total'] + ')');
+      $('section#viewMyLinks > header > h1').html(obj['@user'] + ' (' + obj['@total'] + ')');
 
       $.each(obj.post, function(index, obj) {
 
@@ -189,6 +194,8 @@ DELICIOUS.getListOfLinks = function() {
     });
 
     $('section#viewMyLinks ul.links').html(html);
+
+    DELICIOUS.listFilter($("#search"), $("ul.links"));
 
   });
 };
@@ -244,32 +251,36 @@ DELICIOUS.getAllMyTags = function() {
 
 DELICIOUS.getSuggestedTags = function() {
   
-  var options = {
-    type: 'GET',
-    url: 'https://api.del.icio.us/v1/posts/suggest?url=' + $('section#addToDelicious #url').val(),
-    hash: localStorage.getItem('chrome-ext-delicious')
-  };
+  chrome.tabs.getSelected(null, function(tab) {
 
-  DELICIOUS.api(options, function(data) {
+    var options = {
+      type: 'GET',
+      url: 'https://api.del.icio.us/v1/posts/suggest?url=' + tab.url,
+      hash: localStorage.getItem('chrome-ext-delicious')
+    };
 
-    var json = xml.xmlToJSON(data);
-    
-    if (json.suggest !== undefined) {
-      var popularTags = [];
+    DELICIOUS.api(options, function(data) {
 
-      $.each(json.suggest.popular, function(index, obj) {
-        popularTags.push(obj['@tag']);
-      });
+      var json = xml.xmlToJSON(data);
+      
+      if (json.suggest !== undefined) {
+        var popularTags = [];
 
-      if (popularTags.length > 0) {
-        $('section#addToDelicious > span.tags').html('Popular: <a class="tag" href="#">' + popularTags.join('</a> <a class="tag" href="#">') + '</a>');
+        $.each(json.suggest.popular, function(index, obj) {
+          popularTags.push(obj['@tag']);
+        });
+
+        if (popularTags.length > 0) {
+          $('section#addToDelicious > span.tags').html('Popular: <a class="tag" href="#">' + popularTags.join('</a> <a class="tag" href="#">') + '</a>');
+        }
+
+      } else {
+
+        $('section#addToDelicious > span.tags').html('');
+
       }
 
-    } else {
-
-      $('section#addToDelicious > span.tags').html('');
-
-    }
+    });
 
   });
 };
@@ -282,6 +293,31 @@ DELICIOUS.init = function() {
     DELICIOUS.doesTagExist();
 
   }
+};
+
+DELICIOUS.listFilter = function(header, list) {
+
+  var input = $("<input>").attr({"class":"filterinput","type":"search","placeholder":"search","results":""});
+  $(header).append(input);
+
+  $(input)
+    .change( function () {
+      var filter = $(this).val();
+      if(filter) {
+        $(list).find("a:not(:Contains(" + filter + "))").parent().hide();
+        $(list).find("a:Contains(" + filter + ")").parent().show();
+        $(list).find("p.tag:Contains(" + filter + ")").parent().show();
+      } else {
+        $(list).find("li").slideDown();
+      }
+      return false;
+    })
+  .keyup( function () {
+      $(this).change();
+  });
+
+  $('nav ul li#search input').show().focus();
+
 };
 
 DELICIOUS.processLocalStorage = function() {
@@ -346,10 +382,22 @@ $(function() {
   });
 
   $('section#content > nav button.viewLinks').on('click', function() {
+
+    $('#addToDelicious > span > button').attr('disabled', 'disabled');
+
     if (DELICIOUS.runtime.getListOfLinks === undefined) {
       DELICIOUS.getListOfLinks();
       DELICIOUS.runtime.getListOfLinks = true;
     }
+
+    $('nav ul li#search input').show().focus();
+
+
+  });
+
+  $('section#content > nav button.addLink').on('click', function() {
+    $('#addToDelicious > span > button').removeAttr('disabled');
+    $('nav ul li#search input').hide();
   });
 
   $('section#viewMyLinks').on('click', 'a.delete', function(e) {
@@ -386,7 +434,7 @@ $(function() {
     $('#tag').focus();
   });
 
-  $("section").keypress(function (e) {
+  $("section#login, section#addToDelicious").keypress(function (e) {
     if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
       $('section > span > button').trigger('click');
       return false;

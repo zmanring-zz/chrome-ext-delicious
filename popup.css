@@ -50,6 +50,7 @@ nav {
   z-index:1;
   border-top:10px solid #fff;
   border-bottom: 3px solid #fff;
+  position:relative;
 }
 
 nav ul {
@@ -62,7 +63,7 @@ nav ul li {
   display:inline;
 }
 
-nav ul li input.search {
+nav ul li#search input {
     position: absolute;
     right: 46px;
     top: 8px;
