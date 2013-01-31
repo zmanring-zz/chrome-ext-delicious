@@ -1,6 +1,6 @@
 {
   "name": "Delicious",
-  "version": "0.2",
+  "version": "0.3",
   "manifest_version": 2,
   "description": "Chrome extension that adds links and manages bookmarks from your Delicious account.",
   "browser_action": {
