@@ -260,6 +260,13 @@ section#viewMyLinks ul li div.confirm button {
   background-color: #CE6C36;
 }
 
+section#viewMyLinks li p a.link_tag {
+  color:#a4a4a4;
+  display:inline;
+  margin:0 0 0 5px;
+  font-size:13px;
+}
+
 section#login > span.join {
   margin:0;
 }

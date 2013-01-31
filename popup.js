@@ -129,9 +129,9 @@ DELICIOUS.getCurrentTabUrlAndUpdateValue = function() {
 };
 
 DELICIOUS.doesTagExist = function() {
- 
+
   chrome.tabs.getSelected(null, function(tab) {
-   
+
     var options = {
       url: 'https://api.del.icio.us/v1/posts/get',
       data: {
@@ -176,13 +176,23 @@ DELICIOUS.getListOfLinks = function() {
     var html = '';
 
     $.each(json, function(index, obj) {
-      $('section#viewMyLinks > header > h1').html(obj['@user'] + ' (' + obj['@total'] + ')');
+      $('section#viewMyLinks > header > h1').html(obj['@user'] + ' <span>(' + obj['@total'] + ')</span>');
 
       $.each(obj.post, function(index, obj) {
 
+        var tags = obj['@tag'].split(' ');
+
         html += '<li>';
-        html += '<a href="' + obj['@href'] + '" target="_blank">' + obj['@description'] + '</a>';
-        html += '<p class="tag">' + obj['@tag'] + '</p>';
+        html += '<a class="link" href="' + obj['@href'] + '" target="_blank">' + obj['@description'] + '</a>';
+        html += '<p class="tag">';
+
+        for (var i = 0; i < tags.length; i++) {
+          if (tags[i] !== '') {
+            html += '<a class="link_tag" href="javascript:void(0)">' + tags[i] + '</a>';
+          }
+        }
+
+        html += '</p>';
         html += '<a title="Delete this bookmark" class="delete" href="https://api.del.icio.us/v1/posts/delete?md5=' + obj['@hash'] + '">x</a>';
         html += '<div class="confirm">';
         html += '<button>Delete?</buton>';
@@ -250,7 +260,7 @@ DELICIOUS.getAllMyTags = function() {
 };
 
 DELICIOUS.getSuggestedTags = function() {
-  
+
   chrome.tabs.getSelected(null, function(tab) {
 
     var options = {
@@ -262,7 +272,7 @@ DELICIOUS.getSuggestedTags = function() {
     DELICIOUS.api(options, function(data) {
 
       var json = xml.xmlToJSON(data);
-      
+
       if (json.suggest !== undefined) {
         var popularTags = [];
 
@@ -300,20 +310,24 @@ DELICIOUS.listFilter = function(header, list) {
   var input = $("<input>").attr({"class":"filterinput","type":"search","placeholder":"search","results":""});
   $(header).append(input);
 
-  $(input)
-    .change( function () {
-      var filter = $(this).val();
-      if(filter) {
-        $(list).find("a:not(:Contains(" + filter + "))").parent().hide();
-        $(list).find("a:Contains(" + filter + ")").parent().show();
-        $(list).find("p.tag:Contains(" + filter + ")").parent().show();
-      } else {
-        $(list).find("li").slideDown();
-      }
-      return false;
-    })
-  .keyup( function () {
-      $(this).change();
+  $(input).on('change',  function () {
+    var filter = $(this).val();
+    if(filter) {
+      $(list).find("a.link:not(:Contains(" + filter + "))").parent().hide();
+      $(list).find("a.link:Contains(" + filter + ")").parent().show();
+      $(list).find("p.tag:Contains(" + filter + ")").parent().show();
+    } else {
+      $(list).find("li").slideDown();
+    }
+
+    //count
+    $('section#viewMyLinks > header > h1 span').html('(' + $('ul.links li:not(:hidden)').length + ')');
+
+    return false;
+  });
+
+  $(input).on('keyup',  function () {
+    $(input).trigger('change');
   });
 
   $('nav ul li#search input').show().focus();
@@ -329,7 +343,7 @@ DELICIOUS.processLocalStorage = function() {
 
   // isHashAvailable?
   if(localStorage.getItem('chrome-ext-delicious')) {
-    
+
     $('section#addToDelicious button').on('click', function() {
       $(this).attr("disabled", "disabled");
       $('section#addToDelicious img.loading').show();
@@ -337,7 +351,7 @@ DELICIOUS.processLocalStorage = function() {
       DELICIOUS.addLink();
 
     });
-      
+
   } else {
 
     $('section#content').hide();
@@ -439,6 +453,10 @@ $(function() {
       $('section > span > button').trigger('click');
       return false;
     }
+  });
+
+  $('section#viewMyLinks').on('click', '.link_tag', function() {
+    $('input.filterinput').val($(this).html()).trigger('change');
   });
 
 });
