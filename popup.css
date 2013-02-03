@@ -3,7 +3,9 @@ body {
   width:500px;
   margin:0;
   color:#444;
+  overflow-x:hidden;
 }
+
 
 header > div {
   display:none;
@@ -46,7 +48,6 @@ nav {
   background-color:#285da7;
   height:40px;
   padding:0 15px;
-  width:100%;
   z-index:1;
   border-top:10px solid #fff;
   border-bottom: 3px solid #fff;
@@ -65,9 +66,9 @@ nav ul li {
 
 nav ul li#search input {
     position: absolute;
-    right: 46px;
+    right: 20px;
     top: 8px;
-    width: 150px;
+    width: 170px;
     display:none;
 }
 
@@ -211,7 +212,7 @@ section#viewMyLinks ul li a {
 
 section#viewMyLinks ul li a:first-child {
   margin-right:25px;
-  display:block;
+  display:inline-block;
 }
 
 section#viewMyLinks ul li a:hover {

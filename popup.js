@@ -183,12 +183,12 @@ DELICIOUS.getListOfLinks = function() {
         var tags = obj['@tag'].split(' ');
 
         html += '<li>';
-        html += '<a class="link" href="' + obj['@href'] + '" target="_blank">' + obj['@description'] + '</a>';
+        html += '<a class="link" href="' + obj['@href'] + '" target="_blank" title="' + obj['@href'] + '">' + obj['@description'] + '</a>';
         html += '<p class="tag">';
 
         for (var i = 0; i < tags.length; i++) {
           if (tags[i] !== '') {
-            html += '<a class="link_tag" href="javascript:void(0)">' + tags[i] + '</a>';
+            html += '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `' + tags[i] + '`">' + tags[i] + '</a>';
           }
         }
 
@@ -236,7 +236,7 @@ DELICIOUS.getAllMyTags = function() {
       list.push(obj['@tag']);
     });
 
-    $("#tag").autocomplete({
+    $('#tag').autocomplete({
       autoFocus: true,
       source: function( request, response ) {
         response( $.ui.autocomplete.filter(
@@ -248,9 +248,9 @@ DELICIOUS.getAllMyTags = function() {
       select: function( event, ui ) {
         var terms = split( this.value );
         terms.pop();
-        terms.push( ui.item.value );
-        terms.push( "" );
-        this.value = terms.join( ", " );
+        terms.push(ui.item.value);
+        terms.push('');
+        this.value = terms.join(', ');
         return false;
       }
 
@@ -307,17 +307,37 @@ DELICIOUS.init = function() {
 
 DELICIOUS.listFilter = function(header, list) {
 
-  var input = $("<input>").attr({"class":"filterinput","type":"search","placeholder":"search","results":""});
+  var input = $('<input>').attr({'class':'filterinput','type':'search','placeholder':'Filter','results':'', 'title':'Try filtering by typing in multiple words. (Space delimited)'});
   $(header).append(input);
 
   $(input).on('change',  function () {
     var filter = $(this).val();
     if(filter) {
-      $(list).find("a.link:not(:Contains(" + filter + "))").parent().hide();
-      $(list).find("a.link:Contains(" + filter + ")").parent().show();
-      $(list).find("p.tag:Contains(" + filter + ")").parent().show();
+      var multiFilter = filter.split(' '),
+          filteredList;
+
+      $(list).find('a.link').parent().hide();
+
+      for (var i = 0; i < multiFilter.length; i++) {
+
+        if (filteredList) {
+
+          filteredList.hide();
+          $(filteredList).find('a.link:Contains(' + multiFilter[i].trim() + ')').parent().show();
+          $(filteredList).find('p.tag:Contains(' + multiFilter[i].trim() + ')').parent().show();
+
+        } else {
+
+          $(list).find('a.link:Contains(' + multiFilter[i].trim() + ')').parent().show();
+          $(list).find('p.tag:Contains(' + multiFilter[i].trim() + ')').parent().show();
+        }
+
+        filteredList = $('ul.links li:visible');
+
+      }
+
     } else {
-      $(list).find("li").slideDown();
+      $(list).find('li').slideDown();
     }
 
     //count
@@ -457,6 +477,10 @@ $(function() {
 
   $('section#viewMyLinks').on('click', '.link_tag', function() {
     $('input.filterinput').val($(this).html()).trigger('change');
+  });
+
+  $('section#content').on('click', 'input.filterinput', function() {
+    $(this).trigger('change');
   });
 
 });
