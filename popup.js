@@ -5,17 +5,17 @@
 
 // POSTS
 // https://api.delicious.com/v1/posts/add? — add a new bookmark
+// https://api.delicious.com/v1/posts/all? — fetch all bookmarks by date or index range
+// https://api.delicious.com/v1/posts/all?hashes — fetch a change detection manifest of all items
+// https://api.delicious.com/v1/posts/dates? — list dates on which bookmarks were posted
 // https://api.delicious.com/v1/posts/delete? — delete an existing bookmark
 // https://api.delicious.com/v1/posts/get? — get bookmark for a single date, or fetch specific items
 // https://api.delicious.com/v1/posts/recent? — fetch recent bookmarks
-// https://api.delicious.com/v1/posts/dates? — list dates on which bookmarks were posted
-// https://api.delicious.com/v1/posts/all? — fetch all bookmarks by date or index range
-// https://api.delicious.com/v1/posts/all?hashes — fetch a change detection manifest of all items
 // https://api.delicious.com/v1/posts/suggest — fetch popular, recommended and network tags for a specific url
 
 // TAGS
-// https://api.delicious.com/v1/tags/get — fetch all tags
 // https://api.delicious.com/v1/tags/delete? — delete a tag from all posts
+// https://api.delicious.com/v1/tags/get — fetch all tags
 // https://api.delicious.com/v1/tags/rename? — rename a tag on all posts
 
 // TAG BUNDLES
@@ -28,7 +28,7 @@ DELICIOUS.runtime = {};
 
 // custom css expression for a case-insensitive contains()
 jQuery.expr[':'].Contains = function(a,i,m){
-    return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+    return (a.textContent || a.innerText || '').toUpperCase().indexOf( m[3].toUpperCase() ) >= 0;
 };
 
 //Functions
@@ -99,25 +99,25 @@ DELICIOUS.authenticate = function(username, password) {
       //TODO: Cleanup
       localStorage.setItem('chrome-ext-delicious', hash);
       $('p.error').html('').hide();
+      $('section#content').show();
       $('section#login img.loading').hide();
       $('section#login').hide();
-      $('section#content').show();
 
       DELICIOUS.doesTagExist();
 
     }, function() {
-      $('p.error').html('Incorrect username or password.').show();
+      $('section#login button').removeAttr('disabled');
       $('header > div').slideDown().delay(7000).slideUp();
+      $('p.error').html('Incorrect username or password.').show();
       $('section#login img.loading').hide();
-      $("section#login button").removeAttr('disabled');
 
     });
 
   } else {
-    $('p.error').html('Please provide a username and password').show();
     $('header > div').slideDown().delay(7000).slideUp();
+    $('p.error').html('Please provide a username and password').show();
+    $('section#login button').removeAttr('disabled');
     $('section#login img.loading').hide();
-    $("section#login button").removeAttr('disabled');
   }
 };
 
