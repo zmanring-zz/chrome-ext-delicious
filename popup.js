@@ -1,26 +1,26 @@
 // Copyright 2013 Zach Manring
 
 // UPDATE
-// https://api.delicious.com/v1/posts/update — Check to see when a user last posted an item
+// https://api.del.icio.us/v1/posts/update — Check to see when a user last posted an item
 
 // POSTS
-// https://api.delicious.com/v1/posts/add? — add a new bookmark
-// https://api.delicious.com/v1/posts/all? — fetch all bookmarks by date or index range
-// https://api.delicious.com/v1/posts/all?hashes — fetch a change detection manifest of all items
-// https://api.delicious.com/v1/posts/dates? — list dates on which bookmarks were posted
-// https://api.delicious.com/v1/posts/delete? — delete an existing bookmark
-// https://api.delicious.com/v1/posts/get? — get bookmark for a single date, or fetch specific items
-// https://api.delicious.com/v1/posts/recent? — fetch recent bookmarks
-// https://api.delicious.com/v1/posts/suggest — fetch popular, recommended and network tags for a specific url
+// https://api.del.icio.us/v1/posts/add? — add a new bookmark
+// https://api.del.icio.us/v1/posts/all? — fetch all bookmarks by date or index range
+// https://api.del.icio.us/v1/posts/all?hashes — fetch a change detection manifest of all items
+// https://api.del.icio.us/v1/posts/dates? — list dates on which bookmarks were posted
+// https://api.del.icio.us/v1/posts/delete? — delete an existing bookmark
+// https://api.del.icio.us/v1/posts/get? — get bookmark for a single date, or fetch specific items
+// https://api.del.icio.us/v1/posts/recent? — fetch recent bookmarks
+// https://api.del.icio.us/v1/posts/suggest — fetch popular, recommended and network tags for a specific url
 
 // TAGS
-// https://api.delicious.com/v1/tags/delete? — delete a tag from all posts
-// https://api.delicious.com/v1/tags/get — fetch all tags
-// https://api.delicious.com/v1/tags/rename? — rename a tag on all posts
+// https://api.del.icio.us/v1/tags/delete? — delete a tag from all posts
+// https://api.del.icio.us/v1/tags/get — fetch all tags
+// https://api.del.icio.us/v1/tags/rename? — rename a tag on all posts
 
 // TAG BUNDLES
-// https://api.delicious.com/v1/tags/bundles/all? — fetch tag bundles
-// https://api.delicious.com/v1/tags/bundles/set? — assign a set of tags to a
+// https://api.del.icio.us/v1/tags/bundles/all? — fetch tag bundles
+// https://api.del.icio.us/v1/tags/bundles/set? — assign a set of tags to a
 
 //Globals
 DELICIOUS = {};
@@ -53,7 +53,7 @@ DELICIOUS.addLink = function() {
 
     $('p.log span').html(result);
     $('p.log').show();
-    $('header > div').slideDown().delay(3000).slideUp();
+    $('header > div').fadeIn().delay(3000).fadeOut();
 
     $('button.addLink').attr('disabled', 'disabled');
     $('button.viewLinks').trigger('click');
@@ -106,14 +106,14 @@ DELICIOUS.authenticate = function(username, password) {
 
     }, function() {
       $('section#login button').removeAttr('disabled');
-      $('header > div').slideDown().delay(7000).slideUp();
+      $('header > div').show();
       $('p.error').html('Incorrect username or password.').show();
       $('section#login img.loading').hide();
 
     });
 
   } else {
-    $('header > div').slideDown().delay(7000).slideUp();
+    $('header > div').show();
     $('p.error').html('Please provide a username and password').show();
     $('section#login button').removeAttr('disabled');
     $('section#login img.loading').hide();
@@ -141,7 +141,7 @@ DELICIOUS.doesTagExist = function() {
     if (typeof json.posts === 'object') {
       $('p.log span').html('Item already exists');
       $('p.log').show();
-      $('header > div').delay(500).slideDown().delay(7000).slideUp();
+      $('header > div').delay(500).fadeIn().delay(7000).fadeOut();
 
       $('button.addLink').attr('disabled', 'disabled');
       $('button.viewLinks').trigger('click');
@@ -189,7 +189,7 @@ DELICIOUS.getListOfLinks = function() {
         html += '</p>';
         html += '<a title="Delete this bookmark" class="delete" href="https://api.del.icio.us/v1/posts/delete?md5=' + obj['@hash'] + '">&times;</a>';
         html += '<div class="confirm">';
-        html += '<button>Delete?</buton>';
+        html += '<button class="delete_confirm">Delete?</buton>';
         html += '</div>';
         html += '</li>';
 
@@ -506,8 +506,10 @@ $(function() {
     });
   });
 
-  $('section#viewMyLinks').on('click', 'div.confirm', function() {
-    $(this).hide();
+  $('section#viewMyLinks').on('click', 'div.confirm', function(e) {
+    if (!$(e.target).hasClass('delete_confirm')) {
+      $(this).hide();
+    }
   });
 
   $('section#addToDelicious').on('click', 'a.tag', function() {

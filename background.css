@@ -3,9 +3,10 @@
 
   -webkit-animation:pop-in 0.5s;
   -webkit-box-shadow: 0 0 100px #222;
+  background-color:#fff;
   border-radius: 7px;
   border: 3px solid #fff;
-  height: 578px;
+  height: 596px;
   left: 50%;
   margin-left: -250px;
   margin-top: -289px;
@@ -13,24 +14,26 @@
   top: 50%;
   width: 506px;
   z-index:2147483647;
-  background-color:#fff;
+
 }
 
 #chrome-ext-delicious-frame > #chrome-ext-delicious-iframe {
-  width:500px;
-  height:100%;
+
   border:0;
+  height:578px;
   margin:0;
   overflow:hidden;
+  width:500px;
+
 }
 
 #chrome-ext-delicious-frame button.close_frame {
 
-  box-sizing: border-box;
   -webkit-box-shadow: 0 0 10px #222;
   background: -webkit-gradient(linear,left top,left bottom,from(#555),to(#222)) repeat scroll 0 0 transparent;
   border-radius: 13px;
   border: 2px solid #fff;
+  box-sizing: border-box;
   color: #fff;
   cursor: pointer;
   display:block;
@@ -47,12 +50,16 @@
 }
 
 #chrome-ext-delicious-frame button.close_frame:hover {
+
   top: -12px;
   -webkit-box-shadow: 0 0 8px #222;
+
 }
 
 @-webkit-keyframes pop-in {
+
   0% {opacity:0; -webkit-transform: scale(0.75); }
   50% {opacity:1; -webkit-transform: scale(1.05); }
   100% {-webkit-transform: scale(1); }
+
 }

@@ -7,6 +7,7 @@ body {
   padding:0;
   background-color:#fff;
   box-sizing: border-box;
+  position: relative;
 }
 
 header > div {
@@ -14,19 +15,42 @@ header > div {
 }
 
 p.error {
+
   background-color: #CE6C36;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  border-top:1px solid #fff;
   color: #fff;
   display: none;
-  margin: 0;
+  height:20px;
+  overflow:hidden;
   padding: 8px 15px;
+  position: absolute;
+  left:15px;
+  top:10px;
+  width:440px;
+  z-index: 2;
+  margin:0;
+
 }
 
 p.log {
+
   background-color: #6A9B00;
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  border-top:1px solid #fff;
   color: #fff;
   display: none;
-  margin: 0;
+  height:20px;
+  overflow:hidden;
   padding: 8px 15px;
+  position: absolute;
+  right:20px;
+  top:34px;
+  white-space:nowrap;
+  z-index: 2;
+
 }
 
 p button.close {
