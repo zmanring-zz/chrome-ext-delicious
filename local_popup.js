@@ -3,7 +3,7 @@ $('#chrome-ext-delicious-frame').remove();
 var html = '';
 
 html += '<div id="chrome-ext-delicious-frame">';
-html += '<iframe id="chrome-ext-delicious-iframe" src="chrome-extension://pppfobacghabbdebfkkabiecefefopmi/popup.html?url=' + location.href + '&title=' + document.title + '" />';
+html += '<iframe id="chrome-ext-delicious-iframe" src="chrome-extension://pplcoloalmjgljnbpkhcojpjnjbggppe/popup.html?url=' + location.href + '&title=' + document.title + '" />';
 html += '<button class="close_frame" title="close">&times;</button>';
 html += '</div>';
 
