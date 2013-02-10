@@ -25,6 +25,8 @@
 //Globals
 DELICIOUS = {};
 DELICIOUS.runtime = {};
+DELICIOUS.runtime.url = '';
+DELICIOUS.runtime.title = '';
 
 // custom css expression for a case-insensitive contains()
 jQuery.expr[':'].Contains = function(a,i,m){
@@ -119,7 +121,7 @@ DELICIOUS.authenticate = function(username, password) {
 };
 
 DELICIOUS.getCurrentTabUrlAndUpdateValue = function() {
-  $('section#addToDelicious #description').val(DELICIOUS.getQueryStringByName('title'));
+  $('section#addToDelicious #description').val(DELICIOUS.getTitle());
   DELICIOUS.getSuggestedTags();
 };
 
@@ -260,25 +262,48 @@ DELICIOUS.getQueryStringByName = function(name) {
   var regexS = "[\\?&]" + name + "=([^&#]*)";
   var regex = new RegExp(regexS);
   var results = regex.exec(window.location.search);
-  if(results == null)
+
+  if(results == null) {
     return "";
-  else
+  } else {
     return decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
 };
 
 DELICIOUS.getURL = function() {
 
-  var url = '';
+  if (DELICIOUS.runtime.url === '') {
 
-  if (chrome.tabs) {
-    chrome.tabs.getSelected(null, function(tab) {
-      url = tab.url;
-    });
-  } else {
-    url = DELICIOUS.getQueryStringByName('url');
+    if (chrome.tabs) {
+      chrome.tabs.getSelected(null, function(tab) {
+        DELICIOUS.runtime.url = tab.url;
+      });
+    } else {
+      DELICIOUS.runtime.url = DELICIOUS.getQueryStringByName('url');
+    }
+
   }
 
-  return url;
+  return DELICIOUS.runtime.url;
+
+};
+
+DELICIOUS.getTitle = function() {
+
+  if (DELICIOUS.runtime.title === '') {
+
+    if (chrome.tabs) {
+      chrome.tabs.getSelected(null, function(tab) {
+        DELICIOUS.runtime.title = tab.title;
+      });
+    } else {
+      DELICIOUS.runtime.title = DELICIOUS.getQueryStringByName('title');
+    }
+
+  }
+
+  return DELICIOUS.runtime.title;
 
 };
 
@@ -316,6 +341,8 @@ DELICIOUS.getSuggestedTags = function() {
 };
 
 DELICIOUS.init = function() {
+
+  DELICIOUS.getTitle();
 
   DELICIOUS.processLocalStorage();
   if (localStorage.getItem('chrome-ext-delicious') !== null) {
