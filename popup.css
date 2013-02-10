@@ -4,7 +4,9 @@ body {
   margin: 0;
   overflow-x: hidden;
   width: 500px;
+  padding:0;
   background-color:#fff;
+  box-sizing: border-box;
 }
 
 header > div {
@@ -126,6 +128,15 @@ section header {
 section header h1 {
   display: inline-table;
   margin: 0 0 10px;
+  font-size:18px;
+}
+
+section header h1 a {
+  font-size:18px;
+}
+
+section header h1 span {
+  margin-left:5px;
 }
 
 section header > span {

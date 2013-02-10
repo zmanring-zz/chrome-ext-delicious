@@ -168,11 +168,11 @@ DELICIOUS.getListOfLinks = function() {
     var html = '';
 
     $.each(json, function(index, obj) {
-      $('section#viewMyLinks > header > h1').html(obj['@user'] + ' <span>(' + obj['@total'] + ')</span>');
+      $('section#viewMyLinks > header > h1').html('<a target="_blank" href="https://delicious.com/' + obj['@user'] + '">@' + obj['@user'] + '</a><span>(' + obj['@total'] + ')</span>');
 
       $.each(obj.post, function(index, obj) {
 
-        var tags = obj['@tag'].split(' ');
+        var tags = obj['@tag'].split('  ');
 
         html += '<li>';
         html += '<a class="link" href="' + obj['@href'] + '" target="_blank" title="' + obj['@href'] + '">' + obj['@description'] + '</a>';
@@ -185,7 +185,7 @@ DELICIOUS.getListOfLinks = function() {
         }
 
         html += '</p>';
-        html += '<a title="Delete this bookmark" class="delete" href="https://api.del.icio.us/v1/posts/delete?md5=' + obj['@hash'] + '">x</a>';
+        html += '<a title="Delete this bookmark" class="delete" href="https://api.del.icio.us/v1/posts/delete?md5=' + obj['@hash'] + '">&times;</a>';
         html += '<div class="confirm">';
         html += '<button>Delete?</buton>';
         html += '</div>';
@@ -225,7 +225,9 @@ DELICIOUS.getAllMyTags = function() {
     var list = [];
 
     $(json.tags.tag).each(function(index, obj) {
-      list.push(obj['@tag']);
+      if (obj['@tag'] !== '') {
+        list.push(obj['@tag'] + ' (' + obj['@count'] + ')');
+      }
     });
 
     $('#tag').autocomplete({
@@ -238,9 +240,10 @@ DELICIOUS.getAllMyTags = function() {
         return false;
       },
       select: function( event, ui ) {
-        var terms = split( this.value );
+        var terms = split( this.value ),
+            splitCount = ui.item.value.split('(');
         terms.pop();
-        terms.push(ui.item.value);
+        terms.push(splitCount.slice(0, -1).join('(').toString().trim());
         terms.push('');
         this.value = terms.join(', ');
         return false;

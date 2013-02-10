@@ -12,7 +12,7 @@
     "http://*/*",
     "https://*/*",
     "https://api.del.icio.us/",
-    "contextMenus",
+    "contextMenus"
   ],
   "background": {
     "scripts": ["background.js"]
