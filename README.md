@@ -1,8 +1,6 @@
-chrome-ext-delicious
+![icon](icon.png) @Delicious
 ====================
-https://chrome.google.com/webstore/detail/delicious/pplcoloalmjgljnbpkhcojpjnjbggppe?hl=en-US
-
-Chrome extension that adds links and manages bookmarks from your Delicious account.
+Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.
 
 Installing the unpacked extension
 ====================
