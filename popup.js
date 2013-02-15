@@ -25,7 +25,6 @@
 //Globals
 DELICIOUS = {};
 DELICIOUS.runtime = {};
-DELICIOUS.runtime.url = '';
 DELICIOUS.runtime.title = '';
 
 // custom css expression for a case-insensitive contains()
@@ -36,27 +35,31 @@ jQuery.expr[':'].Contains = function(a,i,m){
 //Functions
 DELICIOUS.addLink = function() {
 
-  var options = {
-    url: 'https://api.del.icio.us/v1/posts/add',
-    data: {
-      url: DELICIOUS.getURL(),
-      description: $('#description').val(),
-      shared: (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? 'no' : 'yes',
-      tags: $('section#addToDelicious #tag').val()
-    },
-    hash: localStorage.getItem('chrome-ext-delicious')
-  };
+  DELICIOUS.getURL().then(function(myUrl) {
 
-  DELICIOUS.api(options, function(data) {
+    var options = {
+      url: 'https://api.del.icio.us/v1/posts/add',
+      data: {
+        url: myUrl,
+        description: $('#description').val(),
+        shared: (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? 'no' : 'yes',
+        tags: $('section#addToDelicious #tag').val()
+      },
+      hash: localStorage.getItem('chrome-ext-delicious')
+    };
 
-    var result = $(data).find('result').attr('code');
+    DELICIOUS.api(options, function(data) {
 
-    $('p.log span').html(result);
-    $('p.log').show();
-    $('header > div').fadeIn().delay(3000).fadeOut();
+      var result = $(data).find('result').attr('code');
 
-    $('button.addLink').attr('disabled', 'disabled');
-    $('button.viewLinks').trigger('click');
+      $('p.log span').html(result);
+      $('p.log').show();
+      $('header > div').fadeIn().delay(3000).fadeOut();
+
+      $('button.addLink').attr('disabled', 'disabled');
+      $('button.viewLinks').trigger('click');
+
+    });
 
   });
 
@@ -121,37 +124,48 @@ DELICIOUS.authenticate = function(username, password) {
 };
 
 DELICIOUS.getCurrentTabUrlAndUpdateValue = function() {
-  $('section#addToDelicious #description').val(DELICIOUS.getTitle());
-  DELICIOUS.getSuggestedTags();
+
+  DELICIOUS.getTitle().done(function(title) {
+
+    $('section#addToDelicious #description').val(title);
+    DELICIOUS.getSuggestedTags();
+
+  });
+
 };
 
 DELICIOUS.doesTagExist = function() {
 
-  var options = {
-    url: 'https://api.del.icio.us/v1/posts/get',
-    data: {
-      url: DELICIOUS.getURL()
-    },
-    hash: localStorage.getItem('chrome-ext-delicious')
-  };
+  DELICIOUS.getURL().done(function(myUrl) {
 
-  DELICIOUS.api(options, function(data) {
-    var json = xml.xmlToJSON(data);
+    var options = {
+      type: 'GET',
+      url: 'https://api.del.icio.us/v1/posts/get',
+      data: {
+        url: myUrl
+      },
+      hash: localStorage.getItem('chrome-ext-delicious')
+    };
 
-    if (typeof json.posts === 'object') {
-      $('p.log span').html('Item already exists');
-      $('p.log').show();
-      $('header > div').delay(500).fadeIn().delay(7000).fadeOut();
+    DELICIOUS.api(options, function(data) {
+      var json = xml.xmlToJSON(data);
 
-      $('button.addLink').attr('disabled', 'disabled');
-      $('button.viewLinks').trigger('click');
+      if (typeof json.posts === 'object') {
+        $('p.log span').html('Item already exists');
+        $('p.log').show();
+        $('header > div').delay(500).fadeIn().delay(7000).fadeOut();
 
-    } else {
+        $('button.addLink').attr('disabled', 'disabled');
+        $('button.viewLinks').trigger('click');
 
-      DELICIOUS.getCurrentTabUrlAndUpdateValue();
-      DELICIOUS.getAllMyTags();
+      } else {
 
-    }
+        DELICIOUS.getCurrentTabUrlAndUpdateValue();
+        DELICIOUS.getAllMyTags();
+
+      }
+
+    });
 
   });
 
@@ -263,7 +277,7 @@ DELICIOUS.getQueryStringByName = function(name) {
   var regex = new RegExp(regexS);
   var results = regex.exec(window.location.search);
 
-  if(results == null) {
+  if(results === null) {
     return "";
   } else {
     return decodeURIComponent(results[1].replace(/\+/g, " "));
@@ -273,45 +287,43 @@ DELICIOUS.getQueryStringByName = function(name) {
 
 DELICIOUS.getURL = function() {
 
-  if (DELICIOUS.runtime.url === '') {
+  var deferred = $.Deferred();
 
-    if (chrome.tabs) {
-      chrome.tabs.getSelected(null, function(tab) {
-        DELICIOUS.runtime.url = tab.url;
-      });
-    } else {
-      DELICIOUS.runtime.url = DELICIOUS.getQueryStringByName('url');
-    }
-
+  if (chrome.tabs) {
+    chrome.tabs.getSelected(null, function(tab) {
+      deferred.resolve(tab.url);
+    });
+  } else {
+    deferred.resolve(DELICIOUS.getQueryStringByName('url'));
   }
 
-  return DELICIOUS.runtime.url;
+  return deferred.promise();
 
 };
 
 DELICIOUS.getTitle = function() {
 
-  if (DELICIOUS.runtime.title === '') {
+  var deferred = $.Deferred();
 
-    if (chrome.tabs) {
-      chrome.tabs.getSelected(null, function(tab) {
-        DELICIOUS.runtime.title = tab.title;
-      });
-    } else {
-      DELICIOUS.runtime.title = DELICIOUS.getQueryStringByName('title');
-    }
-
+  if (chrome.tabs) {
+    chrome.tabs.getSelected(null, function(tab) {
+      deferred.resolve(tab.title);
+    });
+  } else {
+    deferred.resolve(DELICIOUS.getQueryStringByName('title'));
   }
 
-  return DELICIOUS.runtime.title;
+  return deferred.promise();
 
 };
 
 DELICIOUS.getSuggestedTags = function() {
 
+  DELICIOUS.getURL().then(function(myUrl) {
+
     var options = {
       type: 'GET',
-      url: 'https://api.del.icio.us/v1/posts/suggest?url=' + DELICIOUS.getURL(),
+      url: 'https://api.del.icio.us/v1/posts/suggest?url=' + myUrl,
       hash: localStorage.getItem('chrome-ext-delicious')
     };
 
@@ -338,18 +350,24 @@ DELICIOUS.getSuggestedTags = function() {
 
     });
 
+ });
+
 };
 
 DELICIOUS.init = function() {
 
-  DELICIOUS.getTitle();
+  DELICIOUS.getTitle().done(function(title) {
 
-  DELICIOUS.processLocalStorage();
-  if (localStorage.getItem('chrome-ext-delicious') !== null) {
+    DELICIOUS.runtime.title = title;
 
-    DELICIOUS.doesTagExist();
+    DELICIOUS.processLocalStorage();
+    if (localStorage.getItem('chrome-ext-delicious') !== null) {
 
-  }
+      DELICIOUS.doesTagExist();
+
+    }
+
+  });
 
 };
 

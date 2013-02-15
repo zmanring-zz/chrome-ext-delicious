@@ -1,6 +1,6 @@
 {
   "name": "@Delicious",
-  "version": "0.9",
+  "version": "1.0",
   "manifest_version": 2,
   "description": "Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.",
   "browser_action": {
@@ -21,4 +21,5 @@
     "128":"icon-128.png"
   },
   "web_accessible_resources": [ "popup.html" ]
+
 }
