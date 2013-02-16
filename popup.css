@@ -234,12 +234,17 @@ section#viewMyLinks ul {
 section#viewMyLinks ul li {
   border-top: 1px solid #ccc;
   list-style-type: none;
-  padding: 5px;
+  padding: 6px  5px;
   position: relative;
 }
 
 section#viewMyLinks ul li:nth-child(2n) {
   background-color: #f4f4f4;
+}
+
+section#viewMyLinks ul li.private {
+  border-top: 1px solid #EFCFBD;
+  background: #FBF3EF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQIW2P8/vzef05JJUYGJADmoEvAVSBLoGiDSaAIwowCABbcE8GJ8NQzAAAAAElFTkSuQmCC) repeat ;
 }
 
 section#viewMyLinks ul li p {
