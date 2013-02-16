@@ -11,4 +11,3 @@ Installing the unpacked extension
 5. Enjoy
 
 [The MIT License](http://opensource.org/licenses/MIT)
-
