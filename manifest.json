@@ -1,24 +1,28 @@
 {
-  "name": "@Delicious",
-  "version": "1.1",
-  "manifest_version": 2,
-  "description": "Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.",
+
+ "background": {
+    "scripts": ["background.js"]
+  },
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "images/icon.png",
     "default_popup": "popup.html"
   },
+  "description": "Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.",
+  "icons": {
+    "16": "images/icon-16.png",
+    "128":"images/icon-128.png"
+  },
+  "manifest_version": 2,
+  "name": "@Delicious",
+  "omnibox": { "keyword" : "@delicious" },
   "permissions": [
-    "tabs",
+    "contextMenus",
     "http://*/*",
     "https://*/*",
     "https://api.del.icio.us/",
-    "contextMenus"
+    "tabs"
   ],
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "icons": {
-    "128":"icon-128.png"
-  },
+  "version": "1.2",
   "web_accessible_resources": [ "popup.html" ]
+
 }

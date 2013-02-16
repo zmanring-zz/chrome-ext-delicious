@@ -1,5 +1,3 @@
-// Copyright 2013 Zach Manring
-
 // UPDATE
 // https://api.del.icio.us/v1/posts/update — Check to see when a user last posted an item
 
@@ -463,7 +461,6 @@ $(function() {
     }
 
     $('nav ul li#search input').show().focus();
-
   });
 
   $('section#content > nav button.addLink').on('click', function() {
@@ -476,7 +473,6 @@ $(function() {
 
     DELICIOUS.runtime.deleteUrl = $(this).attr('href');
     $(this).siblings('div.confirm').show();
-
   });
 
   $('section#viewMyLinks').on('click', 'div.confirm button', function() {
@@ -561,7 +557,6 @@ $(function() {
 
     //count
     $('section#viewMyLinks > header > h1 span').html('(' + $('ul.links li:not(:hidden)').length + ')');
-
   });
 
   $('input.filterinput').on('keyup',  function () {

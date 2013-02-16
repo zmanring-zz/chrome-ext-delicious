@@ -1,6 +1,4 @@
-
 #chrome-ext-delicious-frame {
-
   -webkit-animation:pop-in 0.5s;
   -webkit-box-shadow: 0 0 100px #222;
   background-color:#fff;
@@ -14,21 +12,17 @@
   top: 50%;
   width: 506px;
   z-index:2147483647;
-
 }
 
 #chrome-ext-delicious-frame > #chrome-ext-delicious-iframe {
-
   border:0;
   height:578px;
   margin:0;
   overflow:hidden;
   width:500px;
-
 }
 
 #chrome-ext-delicious-frame button.close_frame {
-
   -webkit-box-shadow: 0 0 10px #222;
   background: -webkit-gradient(linear,left top,left bottom,from(#555),to(#222)) repeat scroll 0 0 transparent;
   border-radius: 13px;
@@ -46,20 +40,15 @@
   position: absolute;
   top: -13px;
   width: 26px;
-
 }
 
 #chrome-ext-delicious-frame button.close_frame:hover {
-
-  top: -12px;
   -webkit-box-shadow: 0 0 8px #222;
-
+  top: -12px;
 }
 
 @-webkit-keyframes pop-in {
-
   0% {opacity:0; -webkit-transform: scale(0.75); }
   50% {opacity:1; -webkit-transform: scale(1.05); }
   100% {-webkit-transform: scale(1); }
-
 }

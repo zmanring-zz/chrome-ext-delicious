@@ -1,4 +1,4 @@
-![icon](icon.png) @Delicious
+![icon](images/icon.png) @Delicious
 ====================
 Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.
 
@@ -10,5 +10,5 @@ Installing the unpacked extension
 4. Select the unpacked folder chrome-ext-delicious
 5. Enjoy
 
-
+[The MIT License](http://opensource.org/licenses/MIT)
 
