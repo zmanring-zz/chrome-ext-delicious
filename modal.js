@@ -10,6 +10,6 @@ html += '</div>';
 $('body').append(html);
 
 //Events
-$('#chrome-ext-delicious-frame button.close_frame').on('click', function() {
+$('#chrome-ext-delicious-frame button.close_frame').on('click', function () {
   $('#chrome-ext-delicious-frame').remove();
 });

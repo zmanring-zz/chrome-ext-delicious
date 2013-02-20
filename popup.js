@@ -27,14 +27,14 @@ DELICIOUS.runtime.title = '';
 DELICIOUS.runtime.bookmarkCount = 0;
 
 // custom css expression for a case-insensitive contains()
-jQuery.expr[':'].Contains = function(a,i,m){
-    return (a.textContent || a.innerText || '').toUpperCase().indexOf( m[3].toUpperCase() ) >= 0;
+$.expr[':'].Contains = function (a, i, m) {
+    return (a.textContent || a.innerText || '').toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 
 //Functions
-DELICIOUS.addLink = function() {
+DELICIOUS.addLink = function () {
 
-  DELICIOUS.getURL().then(function(myUrl) {
+  DELICIOUS.getURL().then(function (myUrl) {
 
     var options = {
       url: 'https://api.del.icio.us/v1/posts/add',
@@ -47,7 +47,7 @@ DELICIOUS.addLink = function() {
       hash: localStorage.getItem('chrome-ext-delicious')
     };
 
-    DELICIOUS.api(options, function(data) {
+    DELICIOUS.api(options, function (data) {
 
       var result = $(data).find('result').attr('code');
       DELICIOUS.runtime.getListOfLinks = false;
@@ -64,19 +64,19 @@ DELICIOUS.addLink = function() {
   });
 };
 
-DELICIOUS.api = function(options, callbackSuccess, callbackFailure) {
+DELICIOUS.api = function (options, callbackSuccess, callbackFailure) {
 
   $.ajax({
     type: options.type || 'POST',
     url: options.url,
     data: options.data || {},
     headers: { 'Authorization' : 'Basic ' + options.hash},
-    success: function(data) {
+    success: function (data) {
       if (typeof callbackSuccess === 'function') {
         callbackSuccess(data);
       }
     },
-    error: function(xhr, type){
+    error: function (xhr, type){
       if (typeof callbackFailure === 'function') {
         callbackFailure(xhr, type);
       }
@@ -85,7 +85,7 @@ DELICIOUS.api = function(options, callbackSuccess, callbackFailure) {
   });
 };
 
-DELICIOUS.authenticate = function(username, password) {
+DELICIOUS.authenticate = function (username, password) {
 
   if(username !== '' && password !== '') {
     var hash = btoa(username + ":" + password);
@@ -96,7 +96,7 @@ DELICIOUS.authenticate = function(username, password) {
       hash: hash
     };
 
-    DELICIOUS.api(options, function(data) {
+    DELICIOUS.api(options, function (data) {
       //TODO: Cleanup
       localStorage.setItem('chrome-ext-delicious', hash);
       $('p.error').html('').hide();
@@ -106,7 +106,7 @@ DELICIOUS.authenticate = function(username, password) {
 
       DELICIOUS.doesTagExist();
 
-    }, function() {
+    }, function () {
       $('section#login button').removeAttr('disabled');
       $('header > div').show();
       $('p.error').html('Incorrect username or password.').show();
@@ -122,9 +122,9 @@ DELICIOUS.authenticate = function(username, password) {
   }
 };
 
-DELICIOUS.getCurrentTabUrlAndUpdateValue = function() {
+DELICIOUS.getCurrentTabUrlAndUpdateValue = function () {
 
-  DELICIOUS.getTitle().done(function(title) {
+  DELICIOUS.getTitle().done(function (title) {
 
     $('section#addToDelicious #description').val(title);
     DELICIOUS.getSuggestedTags();
@@ -132,9 +132,9 @@ DELICIOUS.getCurrentTabUrlAndUpdateValue = function() {
   });
 };
 
-DELICIOUS.doesTagExist = function() {
+DELICIOUS.doesTagExist = function () {
 
-  DELICIOUS.getURL().done(function(myUrl) {
+  DELICIOUS.getURL().done(function (myUrl) {
 
     var options = {
       type: 'GET',
@@ -145,7 +145,7 @@ DELICIOUS.doesTagExist = function() {
       hash: localStorage.getItem('chrome-ext-delicious')
     };
 
-    DELICIOUS.api(options, function(data) {
+    DELICIOUS.api(options, function (data) {
       var json = xml.xmlToJSON(data);
 
       if (typeof json.posts === 'object') {
@@ -171,7 +171,7 @@ DELICIOUS.doesTagExist = function() {
   });
 };
 
-DELICIOUS.getListOfLinks = function() {
+DELICIOUS.getListOfLinks = function () {
 
   var options = {
     type: 'GET',
@@ -179,13 +179,13 @@ DELICIOUS.getListOfLinks = function() {
     hash: localStorage.getItem('chrome-ext-delicious')
   };
 
-  DELICIOUS.api(options, function(data) {
+  DELICIOUS.api(options, function (data) {
     var json = xml.xmlToJSON(data),
         html = '';
 
     if (json.posts) {
 
-      $.each(json, function(index, obj) {
+      $.each(json, function (index, obj) {
 
         $('section#viewMyLinks > header > h1').html('<a target="_blank" href="https://delicious.com/' + obj['@user'] + '">@' + obj['@user'] + '</a><span>(' + obj['@total'] + ')</span>');
         DELICIOUS.runtime.bookmarkCount = obj['@total'];
@@ -196,7 +196,7 @@ DELICIOUS.getListOfLinks = function() {
           obj.post = temp;
         }
 
-        $.each(obj.post, function(index, obj) {
+        $.each(obj.post, function (index, obj) {
 
           var tags = obj['@tag'].split('  ');
 
@@ -234,7 +234,7 @@ DELICIOUS.getListOfLinks = function() {
   });
 };
 
-DELICIOUS.getAllMyTags = function() {
+DELICIOUS.getAllMyTags = function () {
 
   var options = {
     type: 'GET',
@@ -242,7 +242,7 @@ DELICIOUS.getAllMyTags = function() {
     hash: localStorage.getItem('chrome-ext-delicious')
   };
 
-  DELICIOUS.api(options, function(data) {
+  DELICIOUS.api(options, function (data) {
 
     function split( val ) {
       return val.split( /,\s*/ );
@@ -257,7 +257,7 @@ DELICIOUS.getAllMyTags = function() {
 
     if (json.tags) {
 
-      $(json.tags.tag).each(function(index, obj) {
+      $(json.tags.tag).each(function (index, obj) {
         if (obj['@tag'] !== '') {
           list.push(obj['@tag'] + ' (' + obj['@count'] + ')');
         }
@@ -265,14 +265,14 @@ DELICIOUS.getAllMyTags = function() {
 
       $('#tag').autocomplete({
         autoFocus: true,
-        source: function( request, response ) {
+        source: function (request, response) {
           response( $.ui.autocomplete.filter(
             list, extractLast( request.term ) ) );
         },
         focus: function() {
           return false;
         },
-        select: function( event, ui ) {
+        select: function(event, ui) {
           var terms = split( this.value ),
               splitCount = ui.item.value.split('(');
           terms.pop();
@@ -289,7 +289,7 @@ DELICIOUS.getAllMyTags = function() {
   });
 };
 
-DELICIOUS.getQueryStringByName = function(name) {
+DELICIOUS.getQueryStringByName = function (name) {
 
   name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
   var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -303,12 +303,12 @@ DELICIOUS.getQueryStringByName = function(name) {
   }
 };
 
-DELICIOUS.getURL = function() {
+DELICIOUS.getURL = function () {
 
   var deferred = $.Deferred();
 
   if (chrome.tabs) {
-    chrome.tabs.getSelected(null, function(tab) {
+    chrome.tabs.getSelected(null, function (tab) {
       deferred.resolve(tab.url);
     });
   } else {
@@ -318,12 +318,12 @@ DELICIOUS.getURL = function() {
   return deferred.promise();
 };
 
-DELICIOUS.getTitle = function() {
+DELICIOUS.getTitle = function () {
 
   var deferred = $.Deferred();
 
   if (chrome.tabs) {
-    chrome.tabs.getSelected(null, function(tab) {
+    chrome.tabs.getSelected(null, function (tab) {
       deferred.resolve(tab.title);
     });
   } else {
@@ -333,9 +333,9 @@ DELICIOUS.getTitle = function() {
   return deferred.promise();
 };
 
-DELICIOUS.getSuggestedTags = function() {
+DELICIOUS.getSuggestedTags = function () {
 
-  DELICIOUS.getURL().then(function(myUrl) {
+  DELICIOUS.getURL().then(function (myUrl) {
 
     var options = {
       type: 'GET',
@@ -343,14 +343,14 @@ DELICIOUS.getSuggestedTags = function() {
       hash: localStorage.getItem('chrome-ext-delicious')
     };
 
-    DELICIOUS.api(options, function(data) {
+    DELICIOUS.api(options, function (data) {
 
       var json = xml.xmlToJSON(data);
 
       if (json.suggest !== undefined) {
         var popularTags = [];
 
-        $.each(json.suggest.popular, function(index, obj) {
+        $.each(json.suggest.popular, function (index, obj) {
           popularTags.push(obj['@tag']);
         });
 
@@ -369,9 +369,9 @@ DELICIOUS.getSuggestedTags = function() {
  });
 };
 
-DELICIOUS.init = function() {
+DELICIOUS.init = function () {
 
-  DELICIOUS.getTitle().done(function(title) {
+  DELICIOUS.getTitle().done(function (title) {
 
     DELICIOUS.runtime.title = title;
 
@@ -385,12 +385,12 @@ DELICIOUS.init = function() {
   });
 };
 
-DELICIOUS.listFilter = function() {
+DELICIOUS.listFilter = function () {
 
   $('#search input').css('display', 'inline-block').focus();
 };
 
-DELICIOUS.processLocalStorage = function() {
+DELICIOUS.processLocalStorage = function () {
 
   // isPrivate?
   if (localStorage.getItem('chrome-ext-delicious-private') === 'true') {
@@ -400,7 +400,7 @@ DELICIOUS.processLocalStorage = function() {
   // isHashAvailable?
   if(localStorage.getItem('chrome-ext-delicious')) {
 
-    $('section#addToDelicious button').on('click', function() {
+    $('section#addToDelicious button').on('click', function () {
       $(this).attr("disabled", "disabled");
       $('section#addToDelicious img.loading').show();
 
@@ -413,7 +413,7 @@ DELICIOUS.processLocalStorage = function() {
     $('section#content').hide();
     $('section#login').show();
 
-    $("section#login button").on('click', function() {
+    $("section#login button").on('click', function () {
       $(this).attr("disabled", "disabled");
       $('section#login img.loading').show();
 
@@ -425,12 +425,12 @@ DELICIOUS.processLocalStorage = function() {
 };
 
 
-$(function() {
+$(function () {
 
   DELICIOUS.init();
 
   //Events
-  $('input#private').on('change', function() {
+  $('input#private').on('change', function () {
     if ($(this).is(':checked')) {
       localStorage.setItem('chrome-ext-delicious-private', 'true');
     } else {
@@ -438,12 +438,12 @@ $(function() {
     }
   });
 
-  $('button.close').on('click', function() {
+  $('button.close').on('click', function () {
     $(this).parent().hide();
   });
 
-  $('section#content > nav button').on('click', function() {
-    $('section#content > nav button').each(function() {
+  $('section#content > nav button').on('click', function () {
+    $('section#content > nav button').each(function () {
       $(this).removeClass('selected');
       $('#' + $(this).attr('name')).hide();
     });
@@ -451,7 +451,7 @@ $(function() {
     $('#' + $(this).attr('name')).show();
   });
 
-  $('section#content > nav button.viewLinks').on('click', function() {
+  $('section#content > nav button.viewLinks').on('click', function () {
 
     $('#addToDelicious > span > button').attr('disabled', 'disabled');
 
@@ -463,19 +463,19 @@ $(function() {
     $('nav ul li#search input').show().focus();
   });
 
-  $('section#content > nav button.addLink').on('click', function() {
+  $('section#content > nav button.addLink').on('click', function () {
     $('#addToDelicious > span > button').removeAttr('disabled');
     $('nav ul li#search input').hide();
   });
 
-  $('section#viewMyLinks').on('click', 'a.delete', function(e) {
+  $('section#viewMyLinks').on('click', 'a.delete', function (e) {
     e.preventDefault();
 
     DELICIOUS.runtime.deleteUrl = $(this).attr('href');
     $(this).siblings('div.confirm').show();
   });
 
-  $('section#viewMyLinks').on('click', 'div.confirm button', function() {
+  $('section#viewMyLinks').on('click', 'div.confirm button', function () {
 
     var me = $(this);
     var options = {
@@ -484,8 +484,8 @@ $(function() {
       hash: localStorage.getItem('chrome-ext-delicious')
     };
 
-    DELICIOUS.api(options, function() {
-      me.parents('li').fadeOut('slow', function() {
+    DELICIOUS.api(options, function () {
+      me.parents('li').fadeOut('slow', function () {
         $(this).remove();
         DELICIOUS.runtime.bookmarkCount -= 1;
         $('section#viewMyLinks > header > h1 > span').html('(' + DELICIOUS.runtime.bookmarkCount + ')');
@@ -494,13 +494,13 @@ $(function() {
     });
   });
 
-  $('section#viewMyLinks').on('click', 'div.confirm', function(e) {
+  $('section#viewMyLinks').on('click', 'div.confirm', function (e) {
     if (!$(e.target).hasClass('delete_confirm')) {
       $(this).hide();
     }
   });
 
-  $('section#addToDelicious').on('click', 'a.tag', function() {
+  $('section#addToDelicious').on('click', 'a.tag', function () {
     $('#tag').val($('#tag').val() + $(this).html() + ', ');
     $(this).remove();
     $('#tag').focus();
@@ -516,11 +516,11 @@ $(function() {
     }
   });
 
-  $('section#viewMyLinks').on('click', '.link_tag', function() {
+  $('section#viewMyLinks').on('click', '.link_tag', function () {
     $('input.filterinput').val($(this).html()).trigger('change');
   });
 
-  $('section#content').on('click', 'input.filterinput', function() {
+  $('section#content').on('click', 'input.filterinput', function () {
     $(this).trigger('change');
   });
 
@@ -556,7 +556,9 @@ $(function() {
     }
 
     //count
-    $('section#viewMyLinks > header > h1 span').html('(' + $('ul.links li:not(:hidden)').length + ')');
+    var count = $('ul.links li:not(:hidden)').length;
+    $('section#viewMyLinks > header > h1 span').html('(' + count + ')');
+    DELICIOUS.runtime.bookmarkCount = count;
   });
 
   $('input.filterinput').on('keyup',  function () {
