@@ -21,9 +21,8 @@ $(function () {
    };
 
    //Events
-   $(document).keypress(function (e) {
-
-      if (e.altKey && e.shiftKey && e.keyCode === 206) {
+   $(document).keydown(function (e) {
+      if (e.altKey && e.shiftKey && e.keyCode === 68) {
          loadModal();
       }
 
