@@ -46,7 +46,7 @@ DELICIOUS.addLink = function (obj) {
     var options = {
       url: 'https://api.del.icio.us/v1/posts/add',
       data: {
-        url: myUrl, //Required
+        url: obj.url || myUrl, //Required
         description: obj.description, //Required
         // extended: '', //Additional notes
         shared: obj.isShared,
@@ -234,7 +234,7 @@ DELICIOUS.getListOfLinks = function () {
           html += '<span><input id="private" type="checkbox" name="private" value="private" ' + ((obj['@private'] === 'yes') ? 'checked' : '') + ' /><label for="private">Private?</label></span>';
           html += '<a href="javascript:void(0)" class="delete">Remove link</a>';
           html += '<button class="cancel">Cancel</button>';
-          html += '<button class="submit">Submit</button>';
+          html += '<button class="submit">Change</button>';
           html += '</fieldset>';
           html += '</section>';
 
@@ -550,6 +550,7 @@ $(function () {
       obj = {},
       parent = $(this).parents('li');
 
+      obj.url = linkObj['@href'];
       obj.description = $(parent).find('section.editor input#description').val();
       obj.tags = $(parent).find('section.editor input#tag').val();
       obj.isShared = ($(parent).find('section.editor input#private:checked').val() !== undefined) ? 'no' : 'yes';
