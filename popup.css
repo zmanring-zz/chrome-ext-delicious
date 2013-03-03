@@ -277,7 +277,8 @@ section#viewMyLinks ul li div {
 }
 
 section#viewMyLinks ul li a.edit {
-  background-color: #dedede;
+  background: #dedede url(images/icon-edit.png) no-repeat center;
+  background-size: 14px;
   border-radius: 0 0 3px 3px;
   color: white;
   display: block;
@@ -307,10 +308,13 @@ section#viewMyLinks ul li div.confirm {
 
 section#viewMyLinks ul li div.confirm button {
   background-color: #CE6C36;
-  border-radius: 0 0 3px 3px;
-  height: 20px;
   position: absolute;
-  right: 5px;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  margin-left: -60px;
+  margin-top: -20px;
+
 }
 
 section#viewMyLinks li p a.link_tag {
@@ -354,8 +358,9 @@ section#login > span > a {
   color: #7CA5DF;
 }
 
-li.editor {
+section#viewMyLinks ul li.editor {
   background-color: #fff;
+  padding: 12px 0;
 }
 
 section.editor fieldset {
@@ -374,15 +379,21 @@ section.editor fieldset.buttons button{
   margin: 5px 0 5px 5px;
 }
 
-section#viewMyLinks ul li section.editor fieldset.buttons a.delete {
-  margin: 0 5px 0 0;
-  color: #A4A4A4;
-  font-size: 13px;
+section.editor fieldset.buttons button.cancel{
+  background-color: #dedede;
 }
 
-section#viewMyLinks ul li section.editor fieldset.buttons a.delete:hover {
+section.editor fieldset.buttons button.delete {
+  background-color: #fff;
+  color: #A4A4A4;
+}
+
+section.editor fieldset.buttons button.delete:hover {
   color: #CE6C36;
 }
 
+section.editor fieldset.buttons button.cancel:hover{
+  background-color: #dadada;
+}
 
 

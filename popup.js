@@ -34,24 +34,25 @@ $.expr[':'].Contains = function (a, i, m) {
 //Functions
 DELICIOUS.addLink = function (obj) {
 
-  if (!obj) {
-    obj = {};
-    obj.description = $('section#addToDelicious #description').val();
-    obj.isShared = (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? 'no' : 'yes';
-    obj.tags = $('section#addToDelicious #tag').val();
-  }
-
   DELICIOUS.getURL().then(function (myUrl) {
+
+    if (!obj) {
+      obj = {};
+      obj.url = myUrl;
+      obj.description = $('section#addToDelicious #description').val();
+      obj.isShared = (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? 'no' : 'yes';
+      obj.tags = $('section#addToDelicious #tag').val();
+    }
 
     var options = {
       url: 'https://api.del.icio.us/v1/posts/add',
       data: {
-        url: obj.url || myUrl, //Required
+        url: obj.url, //Required
         description: obj.description, //Required
         // extended: '', //Additional notes
         shared: obj.isShared,
         replace: 'yes',
-        tags: obj.tags
+        tags: obj.tags.split(',').join(', ')
       },
       hash: localStorage.getItem('chrome-ext-delicious')
     };
@@ -226,19 +227,24 @@ DELICIOUS.getListOfLinks = function () {
           html += ((obj['@private'] === 'yes') ? '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `private`">private</a>' : '');
 
           html += '</p>';
-          html += '<a title="Edit this bookmark" class="edit">!</a>';
+          html += '<a title="Edit this bookmark" class="edit"></a>';
           html += '</section>';
 
           html += '<section class="editor" style="display:none;">';
-          html += '<input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" value="' + obj['@description'] + '"/>';
-          html += '<input type="text" name="tag" id="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="2" value="' + tags.join(', ') + '"/>';
+          // html += '<input type="text" name="url" id="url" placeholder="url" title="Edit url" tabindex="1" value="' + obj['@href'] + '"/>';
+          html += '<input type="text" name="description" class="description" placeholder="Description" title="Edit description" tabindex="2" value="' + obj['@description'] + '"/>';
+          html += '<input type="text" name="tag" class="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="3" value="' + tags.join(', ') + '"/>';
           html += '<fieldset class="buttons">';
-          html += '<span><input id="private" type="checkbox" name="private" value="private" ' + ((obj['@private'] === 'yes') ? 'checked' : '') + ' /><label for="private">Private?</label></span>';
-          html += '<a href="javascript:void(0)" class="delete">Remove link</a>';
-          html += '<button class="cancel">Cancel</button>';
-          html += '<button class="submit">Change</button>';
+          html += '<span><input tabindex="4" id="editor_private" class="private" type="checkbox" name="private" value="private" ' + ((obj['@private'] === 'yes') ? 'checked' : '') + ' /><label for="editor_private">Private?</label></span>';
+          html += '<button tabindex="7" class="delete">Remove</button>';
+          html += '<button tabindex="6" class="cancel">Cancel</button>';
+          html += '<button tabindex="5" class="submit">Change</button>';
           html += '</fieldset>';
           html += '</section>';
+
+          html += '<div class="confirm">';
+          html += '<button data-url="https://api.del.icio.us/v1/posts/delete?md5=' + obj['@hash'] + '" class="delete_confirm">Remove link?</button>';
+          html += '</div>';
 
           html += '</li>';
 
@@ -506,16 +512,20 @@ $(function () {
 
   });
 
-  $('section#viewMyLinks').on('click', 'a.delete', function (e) {
-    e.preventDefault();
+  $('section#viewMyLinks').on('click', 'button.delete', function () {
 
-    var me = $(this),
-      index = me.parents('li').data('index'),
-      linkObj = DELICIOUS.runtime.listOfLinks.posts.post[index];
+    $(this).parents('section.editor').siblings('div.confirm').show();
+
+  });
+
+  $('section#viewMyLinks').on('click', 'button.delete_confirm', function () {
+
+    var me = $(this);
+    me.attr('disabled', 'disabled');
 
     var options = {
       type: 'GET',
-      url: 'https://api.del.icio.us/v1/posts/delete?md5=' + linkObj['@hash'] + '',
+      url: $(this).data('url'),
       hash: localStorage.getItem('chrome-ext-delicious')
     };
 
@@ -527,17 +537,18 @@ $(function () {
 
       });
     });
+
   });
 
   $('section#viewMyLinks').on('click', 'button.cancel', function () {
 
     var index = $(this).parents('li').data('index'),
-      linkObj = DELICIOUS.runtime.listOfLinks.posts.post[index];
-
-      var parent = $(this).parents('section.editor');
+      linkObj = DELICIOUS.runtime.listOfLinks.posts.post[index],
+      parent = $(this).parents('section.editor');
 
       parent.hide();
       parent.siblings('section.display').show();
+      parent.parent('li').removeClass('editor');
 
       if (linkObj['@private'] === 'yes') {
         parent.parent('li').addClass('private');
@@ -547,15 +558,17 @@ $(function () {
 
   $('section#viewMyLinks').on('click', 'button.submit', function () {
 
+    $(this).attr('disabled', 'disabled');
+
     var index = $(this).parents('li').data('index'),
       linkObj = DELICIOUS.runtime.listOfLinks.posts.post[index],
       obj = {},
       parent = $(this).parents('li');
 
       obj.url = linkObj['@href'];
-      obj.description = $(parent).find('section.editor input#description').val();
-      obj.tags = $(parent).find('section.editor input#tag').val();
-      obj.isShared = ($(parent).find('section.editor input#private:checked').val() !== undefined) ? 'no' : 'yes';
+      obj.description = $(parent).find('section.editor input.description').val();
+      obj.tags = $(parent).find('section.editor input.tag').val();
+      obj.isShared = ($(parent).find('section.editor input.private:checked').val() !== undefined) ? 'no' : 'yes';
 
       DELICIOUS.addLink(obj);
   });
