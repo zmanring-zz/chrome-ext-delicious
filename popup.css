@@ -276,7 +276,7 @@ section#viewMyLinks ul li div {
   text-align: center;
 }
 
-section#viewMyLinks ul li a.delete {
+section#viewMyLinks ul li a.edit {
   background-color: #dedede;
   border-radius: 0 0 3px 3px;
   color: white;
@@ -289,7 +289,7 @@ section#viewMyLinks ul li a.delete {
   width: 20px;
 }
 
-section#viewMyLinks ul li a.delete:hover {
+section#viewMyLinks ul li a.edit:hover {
   background-color: #CE6C36;
   text-decoration: none;
 }
@@ -353,3 +353,36 @@ section#login > span > a {
 .ui-autocomplete a.ui-state-focus {
   color: #7CA5DF;
 }
+
+li.editor {
+  background-color: #fff;
+}
+
+section.editor fieldset {
+  border: 0;
+  margin:  0;
+  padding: 0;
+  text-align: right;
+}
+
+section.editor fieldset.buttons span:first-child{
+  float:left;
+  margin-top: 14px;
+}
+
+section.editor fieldset.buttons button{
+  margin: 5px 0 5px 5px;
+}
+
+section#viewMyLinks ul li section.editor fieldset.buttons a.delete {
+  margin: 0 5px 0 0;
+  color: #A4A4A4;
+  font-size: 13px;
+}
+
+section#viewMyLinks ul li section.editor fieldset.buttons a.delete:hover {
+  color: #CE6C36;
+}
+
+
+

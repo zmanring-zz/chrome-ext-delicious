@@ -32,17 +32,26 @@ $.expr[':'].Contains = function (a, i, m) {
 };
 
 //Functions
-DELICIOUS.addLink = function () {
+DELICIOUS.addLink = function (obj) {
+
+  if (!obj) {
+    obj = {};
+    obj.description = $('section#addToDelicious #description').val();
+    obj.isShared = (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? 'no' : 'yes';
+    obj.tags = $('section#addToDelicious #tag').val();
+  }
 
   DELICIOUS.getURL().then(function (myUrl) {
 
     var options = {
       url: 'https://api.del.icio.us/v1/posts/add',
       data: {
-        url: myUrl,
-        description: $('#description').val(),
-        shared: (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? 'no' : 'yes',
-        tags: $('section#addToDelicious #tag').val()
+        url: myUrl, //Required
+        description: obj.description, //Required
+        // extended: '', //Additional notes
+        shared: obj.isShared,
+        replace: 'yes',
+        tags: obj.tags
       },
       hash: localStorage.getItem('chrome-ext-delicious')
     };
@@ -181,7 +190,9 @@ DELICIOUS.getListOfLinks = function () {
 
   DELICIOUS.api(options, function (data) {
     var json = xml.xmlToJSON(data),
-        html = '';
+      html = '';
+
+    DELICIOUS.runtime.listOfLinks = json;
 
     if (json.posts) {
 
@@ -200,7 +211,9 @@ DELICIOUS.getListOfLinks = function () {
 
           var tags = obj['@tag'].split('  ');
 
-          html += '<li title="' + ((obj['@private'] === 'yes') ? 'private' : '') + '" class="' + ((obj['@private'] === 'yes') ? 'private' : '')  + '">';
+          html += '<li data-index="' + index + '" ' + ((obj['@private'] === 'yes') ? 'title="private" class="private"' : '') + '>';
+
+          html += '<section class="display">';
           html += '<a class="link" href="' + obj['@href'] + '" target="_blank" title="' + obj['@href'] + '">' + obj['@description'] + '</a>';
           html += '<p class="tag">';
 
@@ -211,10 +224,20 @@ DELICIOUS.getListOfLinks = function () {
           }
 
           html += '</p>';
-          html += '<a title="Delete this bookmark" class="delete" href="https://api.del.icio.us/v1/posts/delete?md5=' + obj['@hash'] + '">&times;</a>';
-          html += '<div class="confirm">';
-          html += '<button class="delete_confirm">Delete?</buton>';
-          html += '</div>';
+          html += '<a title="Edit this bookmark" class="edit">!</a>';
+          html += '</section>';
+
+          html += '<section class="editor" style="display:none;">';
+          html += '<input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" value="' + obj['@description'] + '"/>';
+          html += '<input type="text" name="tag" id="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="2" value="' + tags.join(', ') + '"/>';
+          html += '<fieldset class="buttons">';
+          html += '<span><input id="private" type="checkbox" name="private" value="private" ' + ((obj['@private'] === 'yes') ? 'checked' : '') + ' /><label for="private">Private?</label></span>';
+          html += '<a href="javascript:void(0)" class="delete">Remove link</a>';
+          html += '<button class="cancel">Cancel</button>';
+          html += '<button class="submit">Submit</button>';
+          html += '</fieldset>';
+          html += '</section>';
+
           html += '</li>';
 
         });
@@ -468,19 +491,29 @@ $(function () {
     $('nav ul li#search input').hide();
   });
 
+  $('section#viewMyLinks').on('click', 'a.edit', function (e) {
+    e.preventDefault();
+
+    var parent = $(this).parent('section');
+
+    parent.parent('li').removeClass('private');
+    parent.parent('li').addClass('editor');
+
+    parent.hide();
+    parent.siblings('section.editor').show();
+
+  });
+
   $('section#viewMyLinks').on('click', 'a.delete', function (e) {
     e.preventDefault();
 
-    DELICIOUS.runtime.deleteUrl = $(this).attr('href');
-    $(this).siblings('div.confirm').show();
-  });
+    var me = $(this),
+      index = me.parents('li').data('index'),
+      linkObj = DELICIOUS.runtime.listOfLinks.posts.post[index];
 
-  $('section#viewMyLinks').on('click', 'div.confirm button', function () {
-
-    var me = $(this);
     var options = {
       type: 'GET',
-      url: DELICIOUS.runtime.deleteUrl,
+      url: 'https://api.del.icio.us/v1/posts/delete?md5=' + linkObj['@hash'] + '',
       hash: localStorage.getItem('chrome-ext-delicious')
     };
 
@@ -494,10 +527,34 @@ $(function () {
     });
   });
 
-  $('section#viewMyLinks').on('click', 'div.confirm', function (e) {
-    if (!$(e.target).hasClass('delete_confirm')) {
-      $(this).hide();
-    }
+  $('section#viewMyLinks').on('click', 'button.cancel', function () {
+
+    var index = $(this).parents('li').data('index'),
+      linkObj = DELICIOUS.runtime.listOfLinks.posts.post[index];
+
+      var parent = $(this).parents('section.editor');
+
+      parent.hide();
+      parent.siblings('section.display').show();
+
+      if (linkObj['@private'] === 'yes') {
+        parent.parent('li').addClass('private');
+      }
+
+  });
+
+  $('section#viewMyLinks').on('click', 'button.submit', function () {
+
+    var index = $(this).parents('li').data('index'),
+      linkObj = DELICIOUS.runtime.listOfLinks.posts.post[index],
+      obj = {},
+      parent = $(this).parents('li');
+
+      obj.description = $(parent).find('section.editor input#description').val();
+      obj.tags = $(parent).find('section.editor input#tag').val();
+      obj.isShared = ($(parent).find('section.editor input#private:checked').val() !== undefined) ? 'no' : 'yes';
+
+      DELICIOUS.addLink(obj);
   });
 
   $('section#addToDelicious').on('click', 'a.tag', function () {
@@ -531,20 +588,20 @@ $(function () {
       var multiFilter = filter.split(' '),
           filteredList;
 
-      $("ul.links").find('a.link').parent().hide();
+      $("ul.links").find('a.link').parents('li').hide();
 
       for (var i = 0; i < multiFilter.length; i++) {
 
         if (filteredList) {
 
           filteredList.hide();
-          $(filteredList).find('a.link:Contains(' + multiFilter[i].trim() + ')').parent().show();
-          $(filteredList).find('p.tag:Contains(' + multiFilter[i].trim() + ')').parent().show();
+          $(filteredList).find('a.link:Contains(' + multiFilter[i].trim() + ')').parents('li').show();
+          $(filteredList).find('p.tag:Contains(' + multiFilter[i].trim() + ')').parents('li').show();
 
         } else {
 
-          $("ul.links").find('a.link:Contains(' + multiFilter[i].trim() + ')').parent().show();
-          $("ul.links").find('p.tag:Contains(' + multiFilter[i].trim() + ')').parent().show();
+          $("ul.links").find('a.link:Contains(' + multiFilter[i].trim() + ')').parents('li').show();
+          $("ul.links").find('p.tag:Contains(' + multiFilter[i].trim() + ')').parents('li').show();
         }
 
         filteredList = $('ul.links li:visible');
@@ -552,7 +609,7 @@ $(function () {
       }
 
     } else {
-      $("ul.links").find('li').slideDown();
+      $("ul.links").find('li').show();
     }
 
     //count
