@@ -223,6 +223,8 @@ DELICIOUS.getListOfLinks = function () {
             }
           }
 
+          html += ((obj['@private'] === 'yes') ? '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `private`">private</a>' : '');
+
           html += '</p>';
           html += '<a title="Edit this bookmark" class="edit">!</a>';
           html += '</section>';
