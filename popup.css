@@ -276,8 +276,9 @@ section#viewMyLinks ul li div {
   text-align: center;
 }
 
-section#viewMyLinks ul li a.delete {
-  background-color: #dedede;
+section#viewMyLinks ul li a.edit {
+  background: #dedede url(images/icon-edit.png) no-repeat center;
+  background-size: 14px;
   border-radius: 0 0 3px 3px;
   color: white;
   display: block;
@@ -289,13 +290,13 @@ section#viewMyLinks ul li a.delete {
   width: 20px;
 }
 
-section#viewMyLinks ul li a.delete:hover {
+section#viewMyLinks ul li a.edit:hover {
   background-color: #CE6C36;
   text-decoration: none;
 }
 
 section#viewMyLinks ul li div.confirm {
-  background-color: rgba(255,255,255,.80);
+  background-color: rgba(255,255,255,.90);
   bottom: 0;
   display: none;
   left: 0;
@@ -307,10 +308,13 @@ section#viewMyLinks ul li div.confirm {
 
 section#viewMyLinks ul li div.confirm button {
   background-color: #CE6C36;
-  border-radius: 0 0 3px 3px;
-  height: 20px;
   position: absolute;
-  right: 5px;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  margin-left: -60px;
+  margin-top: -20px;
+
 }
 
 section#viewMyLinks li p a.link_tag {
@@ -353,3 +357,48 @@ section#login > span > a {
 .ui-autocomplete a.ui-state-focus {
   color: #7CA5DF;
 }
+
+section#viewMyLinks ul li.editor {
+  background: #fff;
+  padding: 12px 0;
+}
+
+section.editor fieldset {
+  border: 0;
+  margin:  0;
+  padding: 0;
+  text-align: right;
+}
+
+section.editor fieldset.buttons span:first-child{
+  float:left;
+  margin-top: 14px;
+}
+
+section.editor fieldset.buttons span:first-child label{
+  vertical-align: middle;
+}
+
+
+section.editor fieldset.buttons button{
+  margin: 5px 0 5px 5px;
+}
+
+section.editor fieldset.buttons button.cancel{
+  background-color: #dedede;
+}
+
+section.editor fieldset.buttons button.delete {
+  background-color: #fff;
+  color: #A4A4A4;
+}
+
+section.editor fieldset.buttons button.delete:hover {
+  color: #CE6C36;
+}
+
+section.editor fieldset.buttons button.cancel:hover{
+  background-color: #dadada;
+}
+
+
