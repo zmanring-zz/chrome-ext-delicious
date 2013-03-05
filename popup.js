@@ -44,6 +44,18 @@ DELICIOUS.addLink = function (obj) {
       obj.tags = $('section#addToDelicious #tag').val();
     }
 
+    // Takes care of crazy spacing and tags with no words
+    var tagsArray = [];
+    $.each(obj.tags.split(','), function (index, prop) {
+
+      var newProp = prop.trim();
+
+      if (newProp !== '') {
+        tagsArray.push(newProp);
+      }
+
+    });
+
     var options = {
       url: 'https://api.del.icio.us/v1/posts/add',
       data: {
@@ -52,7 +64,7 @@ DELICIOUS.addLink = function (obj) {
         // extended: '', //Additional notes
         shared: obj.isShared,
         replace: 'yes',
-        tags: obj.tags.split(',').join(', ')
+        tags: tagsArray.join(', ')
       },
       hash: localStorage.getItem('chrome-ext-delicious')
     };
@@ -256,6 +268,7 @@ DELICIOUS.getListOfLinks = function () {
       $('input.filterinput').trigger('change');
 
       DELICIOUS.listFilter();
+      // DELICIOUS.getAllMyTags();
 
     } else {
       $('section#viewMyLinks > header > h1').html(json.result["@code"]);
@@ -280,7 +293,7 @@ DELICIOUS.getAllMyTags = function () {
     }
 
     function extractLast( term ) {
-      return split( term ).pop();
+      return split(term).pop();
     }
 
     var json = xml.xmlToJSON(data),
@@ -294,7 +307,9 @@ DELICIOUS.getAllMyTags = function () {
         }
       });
 
-      $('#tag').autocomplete({
+      DELICIOUS.runtime.myTags = list;
+
+      $('#tag, .tag').autocomplete({
         autoFocus: true,
         source: function (request, response) {
           response( $.ui.autocomplete.filter(
@@ -502,14 +517,15 @@ $(function () {
   $('section#viewMyLinks').on('click', 'a.edit', function (e) {
     e.preventDefault();
 
-    var parent = $(this).parent('section');
+    // hide all before showing next
+    $('section.editor').hide();
+    $('section.display').show().parent('li').removeClass('editor');
 
-    parent.parent('li').removeClass('private');
+    var parent = $(this).parent('section');
     parent.parent('li').addClass('editor');
 
     parent.hide();
-    parent.siblings('section.editor').show();
-
+    parent.siblings('section.editor').fadeIn();
   });
 
   $('section#viewMyLinks').on('click', 'button.delete', function () {
@@ -553,7 +569,6 @@ $(function () {
       if (linkObj['@private'] === 'yes') {
         parent.parent('li').addClass('private');
       }
-
   });
 
   $('section#viewMyLinks').on('click', 'button.submit', function () {
@@ -580,6 +595,10 @@ $(function () {
     if ($('span.tags a.tag').length === 0) {
       $('span.tags').remove();
     }
+  });
+
+  $('section#viewMyLinks').on('click', 'div.confirm', function () {
+    $(this).fadeOut();
   });
 
   $("section#login, section#addToDelicious").keypress(function (e) {

@@ -296,7 +296,7 @@ section#viewMyLinks ul li a.edit:hover {
 }
 
 section#viewMyLinks ul li div.confirm {
-  background-color: rgba(255,255,255,.80);
+  background-color: rgba(255,255,255,.90);
   bottom: 0;
   display: none;
   left: 0;
@@ -359,7 +359,7 @@ section#login > span > a {
 }
 
 section#viewMyLinks ul li.editor {
-  background-color: #fff;
+  background: #fff;
   padding: 12px 0;
 }
 
@@ -374,6 +374,11 @@ section.editor fieldset.buttons span:first-child{
   float:left;
   margin-top: 14px;
 }
+
+section.editor fieldset.buttons span:first-child label{
+  vertical-align: middle;
+}
+
 
 section.editor fieldset.buttons button{
   margin: 5px 0 5px 5px;
