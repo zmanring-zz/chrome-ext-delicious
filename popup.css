@@ -238,6 +238,17 @@ section#viewMyLinks ul li {
   position: relative;
 }
 
+section#viewMyLinks ul li:last-child {
+  border-bottom: 1px solid #ccc;
+}
+
+
+section#viewMyLinks ul li section img{
+  padding-right: 5px;
+  vertical-align: bottom;
+  margin-bottom: 1px;
+}
+
 section#viewMyLinks ul li:nth-child(2n) {
   background-color: #f4f4f4;
 }
@@ -247,13 +258,11 @@ section#viewMyLinks ul li.private {
   background: #FBF3EF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQIW2P8/vzef05JJUYGJADmoEvAVSBLoGiDSaAIwowCABbcE8GJ8NQzAAAAAElFTkSuQmCC) repeat ;
 }
 
-section#viewMyLinks ul li p {
-  background: url(images/icon-tag.png) no-repeat left;
+section#viewMyLinks ul li p.tag {
   color: #a4a4a4;
   font-size: 13px;
-  margin-top: 3px;
   margin: 0;
-  padding-left: 15px;
+  padding-top: 2px;
 }
 
 section#viewMyLinks ul li a {
@@ -264,7 +273,7 @@ section#viewMyLinks ul li a {
 
 section#viewMyLinks ul li a:first-child {
   display: inline-block;
-  margin-right: 25px;
+  margin-right: 30px;
 }
 
 section#viewMyLinks ul li a:hover {
@@ -321,6 +330,14 @@ section#viewMyLinks li p a.link_tag {
   color: #a4a4a4;
   display: inline;
   font-size: 13px;
+  margin: 0 0 0 5px;
+}
+
+section#viewMyLinks li p a.link_tag:first-child {
+  margin: 0;
+}
+
+section#viewMyLinks li p span.seperator {
   margin: 0 0 0 5px;
 }
 
