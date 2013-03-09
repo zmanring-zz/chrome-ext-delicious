@@ -201,6 +201,10 @@ DELICIOUS.getListOfLinks = function () {
     hash: localStorage.getItem('chrome-ext-delicious')
   };
 
+  function getRootUrl (url) {
+    return url.toString().replace(/^(.*\/\/[^\/?#]*).*$/,"$1").split('/')[2];
+  }
+
   DELICIOUS.api(options, function (data) {
     var json = xml.xmlToJSON(data),
       html = '';
@@ -222,13 +226,20 @@ DELICIOUS.getListOfLinks = function () {
 
         $.each(obj.post, function (index, obj) {
 
-          var tags = obj['@tag'].split('  ');
+          var tags = obj['@tag'].split('  '),
+            rootUrl = getRootUrl(obj['@href']),
+            linkDate = new Date(obj['@time']),
+            parsedLinkDate = linkDate.getFullYear() + '-' + ('0' + (linkDate.getMonth() + 1)).slice(-2);
 
           html += '<li data-index="' + index + '" ' + ((obj['@private'] === 'yes') ? 'title="private" class="private"' : '') + '>';
 
           html += '<section class="display">';
-          html += '<a class="link" href="' + obj['@href'] + '" target="_blank" title="' + obj['@href'] + '">' + obj['@description'] + '</a>';
+          html += '<a class="link" href="' + obj['@href'] + '" target="_blank" title="' + obj['@href'] + '"><img class="favicon" style="height:16px; width: 16px" src=http://www.google.com/s2/u/0/favicons?domain=' + rootUrl + ' />' + obj['@description'] + '</a>';
           html += '<p class="tag">';
+
+          html += '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `' + parsedLinkDate + '`">' + parsedLinkDate + '</a>';
+          html += ((obj['@private'] === 'yes') ? '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `private`">private</a>' : '');
+          html += '<span class="seperator">|</span>';
 
           for (var i = 0; i < tags.length; i++) {
             if (tags[i] !== '') {
@@ -236,7 +247,7 @@ DELICIOUS.getListOfLinks = function () {
             }
           }
 
-          html += ((obj['@private'] === 'yes') ? '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `private`">private</a>' : '');
+          // html += ((obj['@private'] === 'yes') ? '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `private`">private</a>' : '');
 
           html += '</p>';
           html += '<a title="Edit this bookmark" class="edit"></a>';
