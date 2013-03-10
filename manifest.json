@@ -14,6 +14,7 @@
     "css": ["background.css"]
     }
   ],
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "description": "Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.",
   "icons": {
     "16": "images/icon-16.png",
@@ -28,7 +29,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "1.5",
+  "version": "1.7",
   "web_accessible_resources": [ "popup.html" ]
 
 }
