@@ -448,6 +448,7 @@ DELICIOUS.init = function () {
     if (localStorage.getItem('chrome-ext-delicious') !== null) {
 
       DELICIOUS.doesTagExist();
+      DELICIOUS.setVersionFooter();
 
     }
 
@@ -495,6 +496,11 @@ DELICIOUS.processLocalStorage = function () {
   }
 };
 
+DELICIOUS.setVersionFooter = function () {
+
+  var manifest = chrome.runtime.getManifest();
+  $('#viewMyLinks footer p.version').html(manifest.name + ' ' + manifest.version);
+};
 
 $(function () {
 
@@ -684,7 +690,7 @@ $(function () {
     $('input.filterinput').trigger('change');
   });
 
-  $('section#viewMyLinks header span a').on('click', function (e) {
+  $('section#viewMyLinks footer span a').on('click', function (e) {
     _gaq.push(['_trackEvent', e.currentTarget.id, 'clicked']);
   });
 

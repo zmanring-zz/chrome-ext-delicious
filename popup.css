@@ -262,7 +262,7 @@ section#viewMyLinks ul li p.tag {
   color: #a4a4a4;
   font-size: 13px;
   margin: 0;
-  padding-top: 2px;
+  padding-top: 3px;
 }
 
 section#viewMyLinks ul li a {
@@ -418,12 +418,23 @@ section.editor fieldset.buttons button.cancel:hover{
   background-color: #dadada;
 }
 
-section#viewMyLinks header span {
+section#viewMyLinks footer {
+  text-align: center;
+  font-size: 13px;
+  color: #a4a4a4;
+}
+
+section#viewMyLinks footer p.version {
+  font-size: 12px;
+  color: #cecece;
+}
+
+section#viewMyLinks footer span {
   padding-right: 6px;
   top: 3px;
 }
 
-section#viewMyLinks header span a, section#viewMyLinks header span a:hover {
+section#viewMyLinks footer span a, section#viewMyLinks footer span a:hover {
   font-size: 0;
   text-decoration: none;
   margin-left: 4px;
