@@ -418,4 +418,14 @@ section.editor fieldset.buttons button.cancel:hover{
   background-color: #dadada;
 }
 
+section#viewMyLinks header span {
+  padding-right: 6px;
+  top: 3px;
+}
+
+section#viewMyLinks header span a, section#viewMyLinks header span a:hover {
+  font-size: 0;
+  text-decoration: none;
+  margin-left: 4px;
+}
 

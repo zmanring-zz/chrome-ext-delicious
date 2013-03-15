@@ -227,7 +227,7 @@ DELICIOUS.getListOfLinks = function () {
 
       $.each(json, function (index, obj) {
 
-        $('section#viewMyLinks > header > h1').html('<a target="_blank" href="https://delicious.com/' + obj['@user'] + '">@' + obj['@user'] + '</a><span>(' + obj['@total'] + ')</span>');
+        $('section#viewMyLinks > header > h1').html('<a title="Link to your Delicious page" target="_blank" href="https://delicious.com/' + obj['@user'] + '">@' + obj['@user'] + '</a><span>(' + obj['@total'] + ')</span>');
         DELICIOUS.runtime.bookmarkCount = obj['@total'];
 
         if (!obj.post.length) {
@@ -682,6 +682,10 @@ $(function () {
 
   $('input.filterinput').on('keyup',  function () {
     $('input.filterinput').trigger('change');
+  });
+
+  $('section#viewMyLinks header span a').on('click', function (e) {
+    _gaq.push(['_trackEvent', e.currentTarget.id, 'clicked']);
   });
 
 });

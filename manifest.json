@@ -15,7 +15,7 @@
     }
   ],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
-  "description": "Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.",
+  "description": "Feature rich Chrome extension with the ability to add, edit, remove, and filter bookmarks from your Delicious account.",
   "icons": {
     "16": "images/icon-16.png",
     "128":"images/icon-128.png"
@@ -29,7 +29,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "1.7",
+  "version": "1.8",
   "web_accessible_resources": [ "popup.html" ]
 
 }
