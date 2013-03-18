@@ -33,18 +33,18 @@
       </span>
     </section>
 
-    <!-- Tabs -->
+    <!-- Nav -->
     <section id="content">
       <nav>
         <ul>
           <li>
-            <button name="addToDelicious" class="addLink selected" type="button">
+            <button id="tabAddToDelicious" name="addToDelicious" class="addLink selected" type="button">
               Add new link
               <span class="nub"></span>
             </button>
           </li>
           <li>
-            <button name="viewMyLinks" class="viewLinks" type="button">
+            <button id="tabMyBookmarks" name="viewMyLinks" class="viewLinks" type="button">
               My bookmarks
               <span class="nub"></span>
             </button>
@@ -69,7 +69,7 @@
         <span class="tags"></span>
         <span>
           <img class="loading" src="images/loading.gif" />
-          <button type="button" tabindex="3">Add</button>
+          <button id="addToDeliciousButton" type="button" tabindex="3">Add</button>
         </span>
       </section>
 
@@ -85,6 +85,18 @@
             </div>
           </li>
         </ul>
+        <footer>
+          <p>Awesome people share awesome things to their friends.</p>
+          <span class="share">
+            <a id="shareFacebook" title="Share @Delicous on Facebook" href="http://api.addthis.com/oexchange/0.8/forward/facebook/offer?pco=tbxnj-1.0&amp;url=https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fdelicious%2Fpplcoloalmjgljnbpkhcojpjnjbggppe%3Futm_source%3Dchrome-ntp-icon&amp;pubid=ra-514291f003728d39" target="_blank" >
+              <img src="/images/icon-facebook.png" border="0" alt="Facebook" />
+            </a>
+            <a id="shareTwitter" title="Share @Delicous on Twitter" href="http://api.addthis.com/oexchange/0.8/forward/twitter/offer?pco=tbxnj-1.0&amp;url=https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fdelicious%2Fpplcoloalmjgljnbpkhcojpjnjbggppe%3Futm_source%3Dchrome-ntp-icon&amp;pubid=ra-514291f003728d39" target="_blank" >
+              <img src="/images/icon-twitter.png" border="0" alt="Twitter" />
+            </a>
+          </span>
+          <p class="version"></p>
+        </footer>
       </section>
 
     </section>

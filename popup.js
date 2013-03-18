@@ -20,6 +20,18 @@
 // https://api.del.icio.us/v1/tags/bundles/all? — fetch tag bundles
 // https://api.del.icio.us/v1/tags/bundles/set? — assign a set of tags to a
 
+//Google analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-38039307-2']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+
 //Globals
 DELICIOUS = {};
 DELICIOUS.runtime = {};
@@ -215,7 +227,7 @@ DELICIOUS.getListOfLinks = function () {
 
       $.each(json, function (index, obj) {
 
-        $('section#viewMyLinks > header > h1').html('<a target="_blank" href="https://delicious.com/' + obj['@user'] + '">@' + obj['@user'] + '</a><span>(' + obj['@total'] + ')</span>');
+        $('section#viewMyLinks > header > h1').html('<a title="Link to your Delicious page" target="_blank" href="https://delicious.com/' + obj['@user'] + '">@' + obj['@user'] + '</a><span>(' + obj['@total'] + ')</span>');
         DELICIOUS.runtime.bookmarkCount = obj['@total'];
 
         if (!obj.post.length) {
@@ -250,7 +262,7 @@ DELICIOUS.getListOfLinks = function () {
           // html += ((obj['@private'] === 'yes') ? '<a class="link_tag" href="javascript:void(0)" title="Select to filter by `private`">private</a>' : '');
 
           html += '</p>';
-          html += '<a title="Edit this bookmark" class="edit"></a>';
+          html += '<a title="Edit this bookmark" class="edit" id="editBookmark"></a>';
           html += '</section>';
 
           html += '<section class="editor" style="display:none;">';
@@ -436,6 +448,7 @@ DELICIOUS.init = function () {
     if (localStorage.getItem('chrome-ext-delicious') !== null) {
 
       DELICIOUS.doesTagExist();
+      DELICIOUS.setVersionFooter();
 
     }
 
@@ -457,11 +470,13 @@ DELICIOUS.processLocalStorage = function () {
   // isHashAvailable?
   if(localStorage.getItem('chrome-ext-delicious')) {
 
-    $('section#addToDelicious button').on('click', function () {
+    $('section#addToDelicious button').on('click', function (e) {
       $(this).attr("disabled", "disabled");
       $('section#addToDelicious img.loading').show();
 
       DELICIOUS.addLink();
+
+      _gaq.push(['_trackEvent', e.target.id, 'clicked']);
 
     });
 
@@ -481,6 +496,11 @@ DELICIOUS.processLocalStorage = function () {
   }
 };
 
+DELICIOUS.setVersionFooter = function () {
+
+  var manifest = chrome.runtime.getManifest();
+  $('#viewMyLinks footer p.version').html(manifest.name + ' ' + manifest.version);
+};
 
 $(function () {
 
@@ -499,16 +519,18 @@ $(function () {
     $(this).parent().hide();
   });
 
-  $('section#content > nav button').on('click', function () {
+  $('section#content > nav button').on('click', function (e) {
     $('section#content > nav button').each(function () {
       $(this).removeClass('selected');
       $('#' + $(this).attr('name')).hide();
     });
     $(this).addClass('selected');
     $('#' + $(this).attr('name')).show();
+
+    _gaq.push(['_trackEvent', e.target.id, 'clicked']);
   });
 
-  $('section#content > nav button.viewLinks').on('click', function () {
+  $('section#content > nav button.viewLinks').on('click', function (e) {
 
     $('#addToDelicious > span > button').attr('disabled', 'disabled');
 
@@ -537,12 +559,13 @@ $(function () {
 
     parent.hide();
     parent.siblings('section.editor').fadeIn();
+
+    _gaq.push(['_trackEvent', e.target.id, 'clicked']);
   });
 
   $('section#viewMyLinks').on('click', 'button.delete', function () {
 
     $(this).parents('section.editor').siblings('div.confirm').show();
-
   });
 
   $('section#viewMyLinks').on('click', 'button.delete_confirm', function () {
@@ -564,7 +587,6 @@ $(function () {
 
       });
     });
-
   });
 
   $('section#viewMyLinks').on('click', 'button.cancel', function () {
@@ -666,6 +688,10 @@ $(function () {
 
   $('input.filterinput').on('keyup',  function () {
     $('input.filterinput').trigger('change');
+  });
+
+  $('section#viewMyLinks footer span a').on('click', function (e) {
+    _gaq.push(['_trackEvent', e.currentTarget.id, 'clicked']);
   });
 
 });

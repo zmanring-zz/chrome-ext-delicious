@@ -238,18 +238,13 @@ section#viewMyLinks ul li {
   position: relative;
 }
 
-section#viewMyLinks ul li:last-child {
-  border-bottom: 1px solid #ccc;
-}
-
-
 section#viewMyLinks ul li section img{
   padding-right: 5px;
   vertical-align: bottom;
   margin-bottom: 1px;
 }
 
-section#viewMyLinks ul li:nth-child(2n) {
+section#viewMyLinks ul li:nth-child(even) {
   background-color: #f4f4f4;
 }
 
@@ -262,7 +257,7 @@ section#viewMyLinks ul li p.tag {
   color: #a4a4a4;
   font-size: 13px;
   margin: 0;
-  padding-top: 2px;
+  padding-top: 3px;
 }
 
 section#viewMyLinks ul li a {
@@ -418,4 +413,26 @@ section.editor fieldset.buttons button.cancel:hover{
   background-color: #dadada;
 }
 
+section#viewMyLinks footer {
+  border-top: 1px solid #ccc;
+  color: #a4a4a4;
+  font-size: 13px;
+  text-align: center;
+}
+
+section#viewMyLinks footer p.version {
+  color: #cecece;
+  font-size: 12px;
+}
+
+section#viewMyLinks footer span {
+  padding-right: 6px;
+  top: 3px;
+}
+
+section#viewMyLinks footer span a, section#viewMyLinks footer span a:hover {
+  font-size: 0;
+  margin-left: 4px;
+  text-decoration: none;
+}
 
