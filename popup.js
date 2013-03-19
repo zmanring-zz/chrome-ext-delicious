@@ -13,9 +13,7 @@ app.config(['$routeProvider', function($routeProvider) {
     controller: 'NewLinkCtrl',
     resolve: {
       tab: function($q, delicious) {
-        var defer = $q.defer();
-        delicious.getTab().then(defer.resolve, defer.reject);
-        return defer.promise;
+        return delicious.getTab();
       }
     }
   });
