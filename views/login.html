@@ -1,0 +1,17 @@
+<!-- Login -->
+<section id="login">
+  <header>
+    <h1>Login to your Delicious account</h1>
+  </header>
+  <form ng-submit='login()'>
+    <input type="text" ng-model='username' name="username" id="username" placeholder="Username" tabindex="1" />
+    <input type="password" ng-model='password' name="password" id="password" placeholder="Password" tabindex="2" />
+    <span class="join">
+      <a target="_blank" href="https://delicious.com/join">Join Delicious</a>
+    </span>
+    <span>
+      <img class="loading" src="images/loading.gif" />
+      <button class='button' type="submit">Login</button>
+    </span>
+  </form>
+</section>
