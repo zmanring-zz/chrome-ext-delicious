@@ -1,0 +1,35 @@
+<!-- Tab 2 -->
+<section id="viewMyLinks">
+  <header>
+    <h1>Bookmarks ({{linksLength}})</h1>
+    <input class="filterinput" type="search" placeholder="Filter" ng-model='query' />
+  </header>
+  <ul class='links'>
+    <li ng-repeat='link in links | filter:query'>
+      <a class='link' ng-href='{{link.href}}' target='_blank' title='{{link.href}}'>{{link.description}}</a>
+      <p class='tag'>{{link.tags | list}}</p>
+      <div class='link-actions'>
+        <a class='edit' title='Edit this bookmark' ng-hide='link.confirmRemoval' ng-click='confirmUpdate(link)'>☃</a>
+        <a class='delete' title='Delete this bookmark' ng-hide='link.confirmRemoval' ng-click='confirmRemove(link)'>×</a>
+        <div class='confirm' ng-show='link.confirmRemoval'>
+          Are you sure?
+          <button class="cancel_confirm" ng-click='remove(link)'>Yes</button>
+          /
+          <button class="delete_confirm" ng-click='cancelRemove(link)'>No</button>
+        </div>
+      </div>
+      <form ng-submit='update(link)' ng-show='link.confirmUpdate' class='edit-link'>
+        <input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" ng-model='link.description' />
+        <input type="text" name="tag" id="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="2" ng-model='link.tags' ng-list />
+        <label for="private">
+          <input id="private" type="checkbox" name="private" value="private" ng-model='link.share' />
+          Private?
+        </label>
+        <div>
+          <button type="submit" tabindex="3">Done</button>
+          <a href='' ng-click='cancelUpdate(link)'>Cancel</a>
+        </div>
+      </form>
+    </li>
+  </ul>
+</section>
