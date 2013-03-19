@@ -90,26 +90,32 @@ nav ul li {
   list-style-type: none;
 }
 
-.button, nav ul li a {
+nav ul li#search input {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 8px;
+    width: 170px;
+}
+
+button{
   background-color: #285da7;
   border: none;
   color: #fff;
   cursor: pointer;
   height: 40px;
-  line-height: 40px;
   list-style-type: none;
   margin: 0;
   min-width: 78px;
   padding: 0 15px;
   position: relative;
-  display: inline-block;
 }
 
-nav ul li a.selected {
+button.selected {
   background-color: #235292;
 }
 
-nav ul li a.selected > .nub {
+button.selected > .nub {
   height:0;
   width:0;
   border:8px solid;
@@ -120,16 +126,8 @@ nav ul li a.selected > .nub {
   left: -8px; /*thickness of border*/
 }
 
-nav ul li a:hover{
+button:hover{
   background-color:#235292;
-}
-
-nav ul li#search input {
-    display: none;
-    position: absolute;
-    right: 20px;
-    top: 8px;
-    width: 170px;
 }
 
 section#login,
@@ -144,8 +142,8 @@ section#viewMyLinks {
 }
 
 section#login {
-/*  display:none;
-*/}
+  display:none;
+}
 
 section header {
   position: relative;
@@ -224,6 +222,7 @@ section button[disabled=disabled] {
 }
 
 section#viewMyLinks {
+  display: none;
   padding-bottom: 10px;
 }
 
@@ -239,7 +238,13 @@ section#viewMyLinks ul li {
   position: relative;
 }
 
-section#viewMyLinks ul li:nth-child(2n) {
+section#viewMyLinks ul li section img{
+  padding-right: 5px;
+  vertical-align: bottom;
+  margin-bottom: 1px;
+}
+
+section#viewMyLinks ul li:nth-child(even) {
   background-color: #f4f4f4;
 }
 
@@ -248,76 +253,86 @@ section#viewMyLinks ul li.private {
   background: #FBF3EF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQIW2P8/vzef05JJUYGJADmoEvAVSBLoGiDSaAIwowCABbcE8GJ8NQzAAAAAElFTkSuQmCC) repeat ;
 }
 
-section#viewMyLinks ul li p {
-  background: url(images/icon-tag.png) no-repeat left;
+section#viewMyLinks ul li p.tag {
   color: #a4a4a4;
   font-size: 13px;
-  margin-top: 3px;
   margin: 0;
-  padding-left: 15px;
+  padding-top: 3px;
 }
 
-section#viewMyLinks ul li > a {
+section#viewMyLinks ul li a {
   color: #285DA7;
   font-size: 15px;
   text-decoration: none;
 }
 
-section#viewMyLinks ul li > a:first-child {
+section#viewMyLinks ul li a:first-child {
   display: inline-block;
-  margin-right: 25px;
+  margin-right: 30px;
 }
 
-section#viewMyLinks ul li > a:hover {
+section#viewMyLinks ul li a:hover {
   text-decoration: underline;
 }
 
-section#viewMyLinks ul li .link-actions {
-  background-color: #dedede;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-section#viewMyLinks ul li .link-actions a {
-  color: white;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  line-height: 20px;
-  cursor: pointer;
+section#viewMyLinks ul li div {
+  margin:10px 0;
   text-align: center;
 }
 
-section#viewMyLinks ul li .link-actions a:hover {
+section#viewMyLinks ul li a.edit {
+  background: #dedede url(images/icon-edit.png) no-repeat center;
+  background-size: 14px;
+  border-radius: 0 0 3px 3px;
+  color: white;
+  display: block;
+  height: 20px;
+  position: absolute;
+  right: 5px;
+  text-indent: 6px;
+  top: 0;
+  width: 20px;
+}
+
+section#viewMyLinks ul li a.edit:hover {
   background-color: #CE6C36;
   text-decoration: none;
 }
 
 section#viewMyLinks ul li div.confirm {
-  background-color: #CE6C36;
-  border-radius: 0 0 3px 3px;
-  height: 20px;
-  line-height: 20px;
-  color: #fff;
-  padding: 0 6px;
-  font-size: 11px;
+  background-color: rgba(255,255,255,.90);
+  bottom: 0;
+  display: none;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 section#viewMyLinks ul li div.confirm button {
-  background: none;
-  color: #fff;
-  font-size: 11px;
-  border: none;
-  padding: 0;
-  text-decoration: underline;
-  cursor: pointer;
+  background-color: #CE6C36;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  margin-left: -60px;
+  margin-top: -20px;
+
 }
 
 section#viewMyLinks li p a.link_tag {
   color: #a4a4a4;
   display: inline;
   font-size: 13px;
+  margin: 0 0 0 5px;
+}
+
+section#viewMyLinks li p a.link_tag:first-child {
+  margin: 0;
+}
+
+section#viewMyLinks li p span.seperator {
   margin: 0 0 0 5px;
 }
 
@@ -354,3 +369,70 @@ section#login > span > a {
 .ui-autocomplete a.ui-state-focus {
   color: #7CA5DF;
 }
+
+section#viewMyLinks ul li.editor {
+  background: #fff;
+  padding: 12px 0;
+}
+
+section.editor fieldset {
+  border: 0;
+  margin:  0;
+  padding: 0;
+  text-align: right;
+}
+
+section.editor fieldset.buttons span:first-child{
+  float:left;
+  margin-top: 14px;
+}
+
+section.editor fieldset.buttons span:first-child label{
+  vertical-align: middle;
+}
+
+
+section.editor fieldset.buttons button{
+  margin: 5px 0 5px 5px;
+}
+
+section.editor fieldset.buttons button.cancel{
+  background-color: #dedede;
+}
+
+section.editor fieldset.buttons button.delete {
+  background-color: #fff;
+  color: #A4A4A4;
+}
+
+section.editor fieldset.buttons button.delete:hover {
+  color: #CE6C36;
+}
+
+section.editor fieldset.buttons button.cancel:hover{
+  background-color: #dadada;
+}
+
+section#viewMyLinks footer {
+  border-top: 1px solid #ccc;
+  color: #a4a4a4;
+  font-size: 13px;
+  text-align: center;
+}
+
+section#viewMyLinks footer p.version {
+  color: #cecece;
+  font-size: 12px;
+}
+
+section#viewMyLinks footer span {
+  padding-right: 6px;
+  top: 3px;
+}
+
+section#viewMyLinks footer span a, section#viewMyLinks footer span a:hover {
+  font-size: 0;
+  margin-left: 4px;
+  text-decoration: none;
+}
+

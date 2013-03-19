@@ -1,9 +1,8 @@
 <!doctype html>
-<html>
+<html ng-csp='' ng-app='yum'> <!-- Because "yum" is easier to type than "delicious"; yeah I'm that lazy. -->
   <head>
     <link rel="stylesheet" type="text/css" href="popup.css"/>
-    <script src="vendor/jquery-1.9.0.min.js"></script>
-    <script src="vendor/jquery-ui-1.10.0.custom.min.js"></script>
+    <script src="vendor/angular-1.0.5.js"></script>
     <script src="vendor/xmlToJson.js"></script>
     <script src="popup.js"></script>
   </head>
@@ -17,91 +16,19 @@
       </div>
     </header>
 
-    <!-- Login -->
-    <section id="login">
-      <header>
-        <h1>Login to your Delicious account</h1>
-      </header>
-      <input type="text" name="username" id="username" placeholder="Username" tabindex="1" />
-      <input type="password" name="password" id="password" placeholder="Password" tabindex="2" />
-      <span class="join">
-        <a target="_blank" href="https://delicious.com/join">Join Delicious</a>
-      </span>
-      <span>
-        <img class="loading" src="images/loading.gif" />
-        <button type="button">Login</button>
-      </span>
-    </section>
-
-    <!-- Nav -->
-    <section id="content">
-      <nav>
+    <!-- Tabs -->
+    <section id="content" ng-controller='AppCtrl'>
+      <nav ng-show='loggedIn'>
         <ul>
-          <li>
-            <button id="tabAddToDelicious" name="addToDelicious" class="addLink selected" type="button">
-              Add new link
+          <li ng-repeat='item in menu'>
+            <a href='' ng-click='navigateTo(item.path)' ng-class='{selected: isSelected(item)}'>
+              {{item.text}}
               <span class="nub"></span>
-            </button>
-          </li>
-          <li>
-            <button id="tabMyBookmarks" name="viewMyLinks" class="viewLinks" type="button">
-              My bookmarks
-              <span class="nub"></span>
-            </button>
-          </li>
-          <li id="search">
-            <input class="filterinput" type="search" placeholder="Filter" results="" title="Try filtering by typing in multiple words. (Space delimited)" style="display: none;">
+            </a>
           </li>
         </ul>
       </nav>
-
-      <!-- Tab 1 -->
-      <section id="addToDelicious">
-        <header>
-          <h1>Add to Delicious</h1>
-          <span>
-            <input id="private" type="checkbox" name="private" value="private" />
-            <label for="private">Private?</label>
-          </span>
-        </header>
-        <input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" />
-        <input type="text" name="tag" id="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="2" />
-        <span class="tags"></span>
-        <span>
-          <img class="loading" src="images/loading.gif" />
-          <button id="addToDeliciousButton" type="button" tabindex="3">Add</button>
-        </span>
-      </section>
-
-      <!-- Tab 2 -->
-      <section id="viewMyLinks">
-        <header>
-          <h1>&nbsp;</h1>
-        </header>
-        <ul class="links">
-          <li>
-            <div>
-              <img class="loading" src="images/loading.gif" />
-            </div>
-          </li>
-        </ul>
-        <footer>
-          <p>Awesome people share awesome things to their friends.</p>
-          <span class="share">
-            <a id="shareFacebook" title="Share @Delicous on Facebook" href="http://api.addthis.com/oexchange/0.8/forward/facebook/offer?pco=tbxnj-1.0&amp;url=https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fdelicious%2Fpplcoloalmjgljnbpkhcojpjnjbggppe%3Futm_source%3Dchrome-ntp-icon&amp;pubid=ra-514291f003728d39" target="_blank" >
-              <img src="/images/icon-facebook.png" border="0" alt="Facebook" />
-            </a>
-            <a id="shareTwitter" title="Share @Delicous on Twitter" href="http://api.addthis.com/oexchange/0.8/forward/twitter/offer?pco=tbxnj-1.0&amp;url=https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fdelicious%2Fpplcoloalmjgljnbpkhcojpjnjbggppe%3Futm_source%3Dchrome-ntp-icon&amp;pubid=ra-514291f003728d39" target="_blank" >
-              <img src="/images/icon-twitter.png" border="0" alt="Twitter" />
-            </a>
-          </span>
-          <p class="version"></p>
-        </footer>
-      </section>
-
+      <div class='view-container' ng-view></div>
     </section>
-
-
-
   </body>
 </html>
