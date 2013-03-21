@@ -1,6 +1,8 @@
-![icon](images/icon.png) @Delicious
+![icon](assets/images/icon.png) @Delicious
 ====================
 Chrome extension with context menu that adds links and manages bookmarks from your Delicious account.
+
+[The MIT License](http://opensource.org/licenses/MIT)
 
 Installing the unpacked extension
 ====================
@@ -10,4 +12,8 @@ Installing the unpacked extension
 4. Select the unpacked folder chrome-ext-delicious
 5. Enjoy
 
-[The MIT License](http://opensource.org/licenses/MIT)
+Running tests
+====================
+To run the Jasmine tests, simply navigate to:
+    
+    chrome-extension://<extension_id>/spec-runner.html
