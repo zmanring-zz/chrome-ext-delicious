@@ -1,115 +1,64 @@
 body {
+  -webkit-box-sizing: border-box;
+  background-color:#fff;
   color: #444;
   font-family: 'helvetica neue', 'helvetica', 'arial', 'sans-serif';
+  font-weight: normal;
   margin: 0;
   overflow-x: hidden;
-  width: 500px;
   padding:0;
-  background-color:#fff;
-  box-sizing: border-box;
   position: relative;
+  width: 500px;
 }
 
-header > div {
-  display: none;
-}
-
-p.error {
-
-  background-color: #CE6C36;
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
-  border-top:1px solid #fff;
-  color: #fff;
-  display: none;
-  height:20px;
-  overflow:hidden;
-  padding: 8px 15px;
-  position: absolute;
-  left:15px;
-  top:10px;
-  width:440px;
-  z-index: 2;
-  margin:0;
-
-}
-
-p.log {
-
-  background-color: #6A9B00;
-  border-bottom-left-radius: 7px;
-  border-bottom-right-radius: 7px;
-  border-top:1px solid #fff;
-  color: #fff;
-  display: none;
-  height:20px;
-  overflow:hidden;
-  padding: 8px 15px;
-  position: absolute;
-  right:20px;
-  top:34px;
-  white-space:nowrap;
-  z-index: 2;
-
-}
-
-p button.close {
-    background-color: #fff;
-    border-radius: 9px;
-    border: 1px solid #ccc;
-    color: #444;
-    float: right;
-    height: 18px;
-    margin: 0;
-    min-width: 0;
-    padding: 0 0 3px;
-    width: 18px;
-}
-
-p button.close:hover {
-    background-color: #f4f4f4;
-}
-
-nav {
+header {
   background-color: #285da7;
-  border-bottom: 3px solid #fff;
-  border-top: 10px solid #fff;
-  height: 40px;
-  padding: 0 15px;
-  position: relative;
-  z-index: 1;
 }
 
-nav ul {
+hgroup {
+  padding: 10px 20px;
+  margin-bottom: 15px;
+}
+
+hgroup h1 {
+  color: #fff;
+  font-size: 20px;
+  font-weight: normal;
   margin: 0;
-  padding: 0;
 }
 
-nav ul li {
-  display: inline;
-  list-style-type: none;
+hgroup h2 {
+  color: #fff;
+  font-size: 14px;
+  font-weight: normal;
+  margin: 0;
 }
 
-.button, nav ul li a {
-  background-color: #285da7;
+div.view-container {
+  padding: 20px 0;
+}
+
+button{
   border: none;
   color: #fff;
   cursor: pointer;
   height: 40px;
-  line-height: 40px;
   list-style-type: none;
   margin: 0;
   min-width: 78px;
   padding: 0 15px;
   position: relative;
-  display: inline-block;
 }
 
-nav ul li a.selected {
+button.primary {
+  background-color: #285da7;
+}
+
+button.selected {
   background-color: #235292;
 }
 
-nav ul li a.selected > .nub {
+button.selected > .nub {
   height:0;
   width:0;
   border:8px solid;
@@ -120,75 +69,47 @@ nav ul li a.selected > .nub {
   left: -8px; /*thickness of border*/
 }
 
-nav ul li a:hover{
+button:hover{
   background-color:#235292;
 }
 
-nav ul li#search input {
-    display: none;
-    position: absolute;
-    right: 20px;
-    top: 8px;
-    width: 170px;
+a {
+  color:#285da7;
+  font-size: 14px;
+  text-decoration: none;
 }
 
-section#login,
-section#addToDelicious,
-section#viewMyLinks {
-  padding: 15px 15px 0;
+a:hover {
+  text-decoration: underline;
 }
 
-section#viewMyLinks {
-  max-height: 500px;
-  overflow-y: scroll;
+/* Login */
+section#login header {
+  background: #285da7 url(/images/icon-32.png) no-repeat 20px center;
+  padding-left: 40px;
 }
 
-section#login {
-/*  display:none;
-*/}
-
-section header {
-  position: relative;
+section#login form {
+  margin: 0 20px;
 }
 
-section header h1 {
-  display: inline-table;
-  margin: 0 0 10px;
-  font-size:18px;
-}
-
-section header h1 a {
-  font-size:18px;
-}
-
-section header h1 span {
-  margin-left:5px;
-}
-
-section header > span {
-  position: absolute;
-  right: 0;
-  top: 5px;
-}
-
-section header > span > input {
-  vertical-align: top;
-}
-
-section > input {
-  background-color: #f1f1f1;
-  border: 0;
+section#login form input {
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-box-sizing: border-box;
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  background-color: #fafafa;
+  border: 1px solid #cccccc;
   font-size: 16px;
   margin: 0 0 5px;
-  padding: 5px 0;
-  text-indent: 8px;
+  padding: 5px;
   text-overflow: ellipsis;
   width: 100%;
 }
 
-section > span {
+section#login form span {
   display: block;
-  margin: 4px 0 15px;
+  margin-top: 10px;
   text-align: right;
 }
 
