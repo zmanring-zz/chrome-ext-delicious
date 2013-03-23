@@ -116,6 +116,7 @@ form span {
   display: block;
   margin-top: 10px;
   text-align: right;
+  position: relative;
 }
 
 form span img {
@@ -264,6 +265,33 @@ section#login header {
 form input:focus:invalid {
   border: 1px solid #CE6C36;
   -webkit-box-shadow: 0px 0px 5px 0px #CE6C36;
+}
+
+
+/* Add link */
+
+header span.private {
+  margin: 0;
+}
+
+span.tags {
+  display: inline-block;
+  font-size: 13px;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  text-align: left;
+  top: 0;
+}
+
+span.tags p {
+  font-size: 13px;
+}
+
+span.tags button {
+  font-size: 13px;
+  min-width: auto;
+  padding: 0 0 0 4px;
 }
 
 
