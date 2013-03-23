@@ -28,7 +28,13 @@
       </nav>
       <div class="view-container" ng-view></div>
       <footer>
-        <button class="link" ng-show="loggedIn" ng-click="logout()">Logout</button>
+        <p>
+          <span>{{extVersion()}}</span>
+          | <a target="_blank" title="Share @Delicious on Facebook" href="http://api.addthis.com/oexchange/0.8/forward/facebook/offer?pco=tbxnj-1.0&url=https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fdelicious%2Fpplcoloalmjgljnbpkhcojpjnjbggppe%3Futm_source%3Dchrome-ntp-icon&pubid=ra-514291f003728d39">Facebook</a>
+          | <a target="_blank" title="Share @Delicious on Twitter" href="http://api.addthis.com/oexchange/0.8/forward/twitter/offer?pco=tbxnj-1.0&url=https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fdelicious%2Fpplcoloalmjgljnbpkhcojpjnjbggppe%3Futm_source%3Dchrome-ntp-icon&pubid=ra-514291f003728d39">Twitter</a>
+
+          <span ng-show="loggedIn">| <a href="" ng-click="logout()">Logout</a></span>
+        </p>
       </footer>
     </section>
   </body>

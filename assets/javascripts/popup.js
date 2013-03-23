@@ -1,5 +1,6 @@
 'use strict';
 
+
 // App
 var app = angular.module('yum', ['yum.filters', 'yum.services', 'yum.controllers', 'yum.directives']);
 
@@ -35,6 +36,7 @@ app.run(function($rootScope, $location) {
   });
 });
 
+
 // Filters
 var filters = angular.module('yum.filters', []);
 
@@ -43,6 +45,7 @@ filters.filter('list', [function() {
     return arr.join(', ');
   };
 }]);
+
 
 // Services
 var services = angular.module('yum.services', []);
@@ -162,11 +165,51 @@ services.factory('delicious', function($http, $q, $rootScope) {
 
         return link;
       });
+    }
+  })();
+
+  DELICIOUS.getPopularSuggestedTags = (function () {
+
+    function _parseSuggestionsResponse(data) {
+      var json = xml.xmlToJSON(data);
+
+      return json.suggest.popular.map(function(rawSuggestionTag) {
+
+        var suggestedTag = {},
+          key;
+
+        // Remove '@' symbols from keys
+        for (key in rawSuggestionTag) {
+          var k = key.split('@')[1];
+          suggestedTag[k] = rawSuggestionTag[key];
+        }
+        return suggestedTag.tag;
+      });
+    }
+
+    return function (url) {
+      var defer = $q.defer();
+
+      var hash = localStorage.getItem('chrome-ext-delicious');
+      var options = {
+        method: 'GET',
+        url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url,
+        headers: {'Authorization' : 'Basic ' + hash},
+        transformResponse: _parseSuggestionsResponse
+      };
+
+      $http(options).then(function(resp) {
+        defer.resolve(resp.data);
+      });
+
+      return defer.promise;
+
     };
   })();
 
   return DELICIOUS;
 });
+
 
 // Controllers
 var controllers = angular.module('yum.controllers', []);
@@ -191,22 +234,23 @@ controllers.controller('AppCtrl', function($scope, $location) {
     location.reload();
   };
 
+  $scope.extVersion = function() {
+    var manifest = chrome.runtime.getManifest();
+    return manifest.name + ' ' + manifest.version;
+  };
 });
 
 controllers.controller('LoginCtrl', function($scope, $rootScope, $location, delicious) {
   $scope.login = function() {
     $scope.loading = true;
-    // $rootScope.loginFailed = false;
+
     delicious.authenticate($scope.username, $scope.password)
       .success(function(data) {
         $rootScope.loggedIn = true;
         $location.path('/new');
       })
       .error(function(data) {
-        // loginForm.reset();
-        // $scope.loginForm.$setPristine(); // new in angular 1.1.x
         $rootScope.loginFailed = true;
-        // $scope.loading = false;
         $location.path('/new');
       });
   };
@@ -216,8 +260,11 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
   $scope.url = tab.url;
   $scope.description = tab.title;
   $scope.tags = [];
+  $scope.suggestedTags = [];
 
   $scope.add = function() {
+    $scope.loading = true;
+
     delicious.addLink({
       url: $scope.url,
       description: $scope.description,
@@ -228,6 +275,20 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
       $location.path('/bookmarks');
     });
   };
+
+  $scope.addSuggestedTag = function(tag) {
+    var tags = angular.copy($scope.tags);
+    tags.push(tag);
+    $scope.tags = tags;
+
+    // remove from suggestedTags arary
+    var index = $scope.suggestedTags.indexOf(tag);
+    $scope.suggestedTags.splice(index, 1);
+  };
+
+  delicious.getPopularSuggestedTags($scope.url).then(function(tags) {
+    $scope.suggestedTags = tags;
+  });
 });
 
 controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious) {
