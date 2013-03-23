@@ -5,11 +5,11 @@ var app = angular.module('yum', ['yum.filters', 'yum.services', 'yum.controllers
 
 app.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/login', {
-    templateUrl: 'views/login.html', 
+    templateUrl: 'views/login.html',
     controller: 'LoginCtrl'
   });
   $routeProvider.when('/new', {
-    templateUrl: 'views/new.html', 
+    templateUrl: 'views/new.html',
     controller: 'NewLinkCtrl',
     resolve: {
       tab: function($q, delicious) {
@@ -41,7 +41,7 @@ var filters = angular.module('yum.filters', []);
 filters.filter('list', [function() {
   return function(arr) {
     return arr.join(', ');
-  }
+  };
 }]);
 
 // Services
@@ -58,7 +58,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
       headers: {'Authorization' : 'Basic ' + hash}
     };
 
-    return $http(options).then(function() {
+    return $http(options).success(function() {
       localStorage.setItem('chrome-ext-delicious', hash);
     });
   };
@@ -125,7 +125,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
     return defer.promise;
   };
 
-  DELICIOUS.getLinks = (function() { 
+  DELICIOUS.getLinks = (function() {
     return function getLinks() {
       var defer = $q.defer();
 
@@ -151,16 +151,16 @@ services.factory('delicious', function($http, $q, $rootScope) {
         var link = {};
 
         // Remove '@' symbols from keys
-        for (key in rawLink) { 
-          var k = key.split('@')[1]; 
-          link[k] = rawLink[key]; 
+        for (key in rawLink) {
+          var k = key.split('@')[1];
+          link[k] = rawLink[key];
         }
 
         // Convert tag string to array of tags
         link.tags = link.tag.split(' ');
         delete link.tag;
 
-        return link; 
+        return link;
       });
     };
   })();
@@ -173,8 +173,8 @@ var controllers = angular.module('yum.controllers', []);
 
 controllers.controller('AppCtrl', function($scope, $location) {
   $scope.menu = [
-    {path: '/new', text: 'Add Link'},
-    {path: '/bookmarks', text: 'My Bookmarks'}
+    {path: '/new', text: 'Add link'},
+    {path: '/bookmarks', text: 'My links'}
   ];
 
   $scope.isSelected = function(item) {
@@ -185,13 +185,28 @@ controllers.controller('AppCtrl', function($scope, $location) {
   $scope.navigateTo = function(path) {
     $location.path(path);
   };
+
+  $scope.logout = function(link) {
+    localStorage.removeItem('chrome-ext-delicious');
+    location.reload();
+  };
+
 });
 
 controllers.controller('LoginCtrl', function($scope, $rootScope, $location, delicious) {
   $scope.login = function() {
+    $scope.loading = true;
+    // $rootScope.loginFailed = false;
     delicious.authenticate($scope.username, $scope.password)
-      .then(function(msg) {
+      .success(function(data) {
         $rootScope.loggedIn = true;
+        $location.path('/new');
+      })
+      .error(function(data) {
+        // loginForm.reset();
+        // $scope.loginForm.$setPristine(); // new in angular 1.1.x
+        $rootScope.loginFailed = true;
+        // $scope.loading = false;
         $location.path('/new');
       });
   };

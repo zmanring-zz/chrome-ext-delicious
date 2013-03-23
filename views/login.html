@@ -3,18 +3,19 @@
   <header>
     <hgroup>
       <h1>Welcome to @Delicious</h1>
-      <h2>Please login using your Delicious credentials</h2>
+      <h2>Please login using your Delicious account credentials</h2>
     </hgroup>
   </header>
-  <form ng-submit='login()'>
-    <input ng-required type="text" ng-model='username' name="username" id="username" placeholder="username" tabindex="1" />
-    <input ng-required type="password" ng-model='password' name="password" id="password" placeholder="password" tabindex="2" />
-<!--     <span class="join">
-      <a target="_blank" href="https://delicious.com/join">Join Delicious</a>
-    </span> -->
+  <form name="loginForm" ng-submit="login()">
+    <input required type="text" ng-model="username" name="username" id="username" placeholder="username" tabindex="1" autofocus/>
+    <input required type="password" ng-model="password" name="password" id="password" placeholder="password" tabindex="2" />
     <span>
-      <img class="loading" src="images/loading.gif" />
-      <button class='primary' type="submit">Login</button>
+      <p ng-show="loginFailed" class="error">Invalid credentials</p>
+      <img ng-show="loading" class="loading" src="/assets/images/loading.gif" />
+      <a tabindex="4" class="button secondary" target="_blank" href="https://delicious.com/join">Join</a>
+      <button tabindex="3" class="primary" type="submit">Login</button>
     </span>
   </form>
+  <footer>
+  </footer>
 </section>
