@@ -9,7 +9,7 @@
       </span>
     </header>
     <input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" ng-model='description' />
-    <input type="text" name="tag" id="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="2" ng-model='tags' ng-list />
+    <input type="text" name="tag" id="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="2" ng-model='tags' ng-list select-two='myTags' />
     <span>
 
       <span ng-show="suggestedTags.length > 0" class="tags">
