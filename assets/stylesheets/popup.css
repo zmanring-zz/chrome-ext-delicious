@@ -1,3 +1,23 @@
+/* select2 overrides */
+.select2-container.select2-container-multi {
+  display: block;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-size: 16px;
+}
+
+.select2-container-multi .select2-choices {
+  -webkit-border-radius: 3px;
+  font-size: 16px;
+  background-color: #fafafa;
+  padding: 2px 0 0 0;
+}
+
+.select2-results {
+  max-height: 100px;
+}
+
 /* validations */
 ::-webkit-validation-bubble-icon {
   display: none;
@@ -257,7 +277,6 @@ nav ul li#search input {
 
 /* Login */
 section#login header {
-  /*background-color: #285da7;*/
   background: #285da7 url(/assets/images/icon-32.png) no-repeat 20px center;
   padding-left: 42px;
 }
@@ -282,6 +301,7 @@ span.tags {
   position: absolute;
   text-align: left;
   top: 0;
+  width: 335px;
 }
 
 span.tags p {
@@ -299,81 +319,7 @@ span.tags button {
 section#viewMyLinks {
   max-height: 460px;
   overflow-y: scroll;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*section#login form span a {
-  float: left;
-  margin-top: 10px;
-}*/
-/*
-section > span.tags {
-  color: #a4a4a4;
-  float: left;
-  font-size: 14px;
-  margin: 3px 0 0;
-  text-align: left;
-}
-
-section a {
-  color:#285da7;
-  font-size: 14px;
-  text-decoration: none;
-}
-
-section a:hover {
-  text-decoration: underline;
-}
-
-section span img.loading {
-  display: none;
-  margin-top: 8px;
-  padding: 4px 3px 0 0;
-  vertical-align: top;
-}
-
-section button[disabled=disabled] {
-  background-color: #285DA7;
-  color: #ccc;
-  cursor: default;
-}
-
-section#viewMyLinks {
-  padding-bottom: 10px;
+  padding: 0 20px;
 }
 
 section#viewMyLinks ul {
@@ -388,118 +334,3 @@ section#viewMyLinks ul li {
   position: relative;
 }
 
-section#viewMyLinks ul li:nth-child(2n) {
-  background-color: #f4f4f4;
-}
-
-section#viewMyLinks ul li.private {
-  border-top: 1px solid #EFCFBD;
-  background: #FBF3EF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQIW2P8/vzef05JJUYGJADmoEvAVSBLoGiDSaAIwowCABbcE8GJ8NQzAAAAAElFTkSuQmCC) repeat ;
-}
-
-section#viewMyLinks ul li p {
-  background: url(../images/icon-tag.png) no-repeat left;
-  color: #a4a4a4;
-  font-size: 13px;
-  margin-top: 3px;
-  margin: 0;
-  padding-left: 15px;
-}
-
-section#viewMyLinks ul li > a {
-  color: #285DA7;
-  font-size: 15px;
-  text-decoration: none;
-}
-
-section#viewMyLinks ul li > a:first-child {
-  display: inline-block;
-  margin-right: 25px;
-}
-
-section#viewMyLinks ul li > a:hover {
-  text-decoration: underline;
-}
-
-section#viewMyLinks ul li .link-actions {
-  background-color: #dedede;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-section#viewMyLinks ul li .link-actions a {
-  color: white;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  line-height: 20px;
-  cursor: pointer;
-  text-align: center;
-}
-
-section#viewMyLinks ul li .link-actions a:hover {
-  background-color: #CE6C36;
-  text-decoration: none;
-}
-
-section#viewMyLinks ul li div.confirm {
-  background-color: #CE6C36;
-  border-radius: 0 0 3px 3px;
-  height: 20px;
-  line-height: 20px;
-  color: #fff;
-  padding: 0 6px;
-  font-size: 11px;
-}
-
-section#viewMyLinks ul li div.confirm button {
-  background: none;
-  color: #fff;
-  font-size: 11px;
-  border: none;
-  padding: 0;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-section#viewMyLinks li p a.link_tag {
-  color: #a4a4a4;
-  display: inline;
-  font-size: 13px;
-  margin: 0 0 0 5px;
-}
-
-section#login > span.join {
-  margin: 0;
-}
-
-section#login > span > a {
-  float: left;
-  margin-top: 3px;
-}*/
-
-/*jquery ui*/
-/*.ui-helper-hidden-accessible {
-  display:none;
-}
-
-.ui-autocomplete {
-  background-color: #285DA7;
-  border-radius: 0 0 3px 3px;
-  box-shadow: 0 0 5px #888;
-  color: #fff;
-  list-style: none;
-  margin: 0 15px;
-  max-height: 108px;
-  overflow-y: scroll;
-  padding: 10px;
-}
-
-.ui-autocomplete li {
-  margin-bottom: 5px;
-}
-
-.ui-autocomplete a.ui-state-focus {
-  color: #7CA5DF;
-}*/

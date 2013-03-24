@@ -23,6 +23,7 @@ $(function () {
 
    //Events
    $(document).keydown(function (e) {
+      // shift-alt-d
       if (e.altKey && e.shiftKey && e.keyCode === 68) {
          loadModal();
       }

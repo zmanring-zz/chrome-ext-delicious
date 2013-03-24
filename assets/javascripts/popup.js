@@ -173,18 +173,20 @@ services.factory('delicious', function($http, $q, $rootScope) {
     function _parseSuggestionsResponse(data) {
       var json = xml.xmlToJSON(data);
 
-      return json.suggest.popular.map(function(rawSuggestionTag) {
+      if (json.suggest) {
+        return json.suggest.popular.map(function(rawSuggestionTag) {
 
-        var suggestedTag = {},
-          key;
+          var suggestedTag = {},
+            key;
 
-        // Remove '@' symbols from keys
-        for (key in rawSuggestionTag) {
-          var k = key.split('@')[1];
-          suggestedTag[k] = rawSuggestionTag[key];
-        }
-        return suggestedTag.tag;
-      });
+          // Remove '@' symbols from keys
+          for (key in rawSuggestionTag) {
+            var k = key.split('@')[1];
+            suggestedTag[k] = rawSuggestionTag[key];
+          }
+          return suggestedTag.tag;
+        });
+      }
     }
 
     return function (url) {
@@ -205,6 +207,47 @@ services.factory('delicious', function($http, $q, $rootScope) {
       return defer.promise;
 
     };
+  })();
+
+  DELICIOUS.getAllMyTags = (function () {
+
+    function _parseTags(data) {
+      var json = xml.xmlToJSON(data);
+
+      return json.tags.tag.map(function(myTag) {
+
+        var tag = {},
+          key;
+
+        // Remove '@' symbols from keys
+        for (key in myTag) {
+          var k = key.split('@')[1];
+          tag[k] = myTag[key];
+        }
+        return tag.tag;
+      });
+
+    }
+
+    return function () {
+      var defer = $q.defer();
+
+      var hash = localStorage.getItem('chrome-ext-delicious');
+      var options = {
+        method: 'GET',
+        url: 'https://api.del.icio.us/v1/tags/get',
+        headers: {'Authorization' : 'Basic ' + hash},
+        transformResponse: _parseTags
+      };
+
+      $http(options).then(function(resp) {
+        // console.log(resp.data)
+        defer.resolve(resp.data);
+      });
+
+      return defer.promise;
+    };
+
   })();
 
   return DELICIOUS;
@@ -257,6 +300,7 @@ controllers.controller('LoginCtrl', function($scope, $rootScope, $location, deli
 });
 
 controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious) {
+  var $tagInput = $('#tag');
   $scope.url = tab.url;
   $scope.description = tab.title;
   $scope.tags = [];
@@ -280,11 +324,20 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
     var tags = angular.copy($scope.tags);
     tags.push(tag);
     $scope.tags = tags;
+    $tagInput.val($scope.tags).trigger('change');
 
     // remove from suggestedTags arary
     var index = $scope.suggestedTags.indexOf(tag);
     $scope.suggestedTags.splice(index, 1);
   };
+
+  delicious.getAllMyTags().then(function(myTags) {
+    $tagInput.select2({ tags:myTags });
+    $tagInput.on('change', function() {
+      $scope.tags = $(this).val().split(',');
+      // console.log($(this).val().split(','));
+    });
+  });
 
   delicious.getPopularSuggestedTags($scope.url).then(function(tags) {
     $scope.suggestedTags = tags;
