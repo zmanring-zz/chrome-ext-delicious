@@ -621,7 +621,7 @@ the specific language governing permissions and limitations under the Apache Lic
                 .data("select2", this)
                 .addClass("select2-offscreen")
                 .bind("focus.select2", function() { $(this).select2("focus"); })
-                .attr("tabIndex", "-1")
+                .attr("tabIndex", this.elementTabIndex)
                 .before(this.container);
             this.container.data("select2", this);
 

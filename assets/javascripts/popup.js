@@ -385,6 +385,7 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   });
 });
 
+
 // Directives
 var directives = angular.module('yum.directives', []);
 
@@ -396,13 +397,13 @@ directives.directive('appVersion', ['version', function(version) {
 
 directives.directive('selectTwo', [function() {
   function link(scope, element, attrs) {
-    var model = attrs['ngModel']
-      , select = angular.element(element);
+    var model = attrs['ngModel'],
+      select = angular.element(element);
 
     scope.$watch('myTags', function(newTags, oldTags) {
       if (!newTags) return;
       select.select2({
-        tags: newTags, 
+        tags: newTags,
         tokenSeparators: [',']
       });
     });
@@ -411,13 +412,13 @@ directives.directive('selectTwo', [function() {
       if (!newTags) return;
       select.select2('val', newTags);
     });
-    
+
     select.bind('change', function(e) {
       scope.$apply(function() {
         scope.tags = e.val;
       });
     });
-  };
+  }
 
   return {
     restrict: 'A',
@@ -427,5 +428,5 @@ directives.directive('selectTwo', [function() {
       myTags: '=selectTwo'
     },
     link: link
-  }
+  };
 }]);
