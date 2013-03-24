@@ -7,8 +7,7 @@
   font-size: 16px;
 }
 
-.select2-container-multi .select2-choices {
-
+.select2-container-multi .select2-choices {=
   -webkit-border-radius: 3px;
   background-image: none;
   font-size: 16px;
@@ -39,11 +38,11 @@
 }
 
 .select2-drop {
-  /*-webkit-box-shadow: 0 0 5px 0 #BDD2EF;*/
   background: #fafafa;
   border-color: #285da7;
   margin-top: -2px;
 }
+
 
 /* validations */
 ::-webkit-validation-bubble-icon {
@@ -69,6 +68,7 @@
   outline: none;
 }
 
+
 /* Global */
 body {
   -webkit-box-sizing: border-box;
@@ -84,11 +84,12 @@ body {
 }
 
 footer {
+  -webkit-box-shadow: 0 0 20px #555;
   background-color: #f1f1f1;
   border-top: 1px solid #dedede;
   color: #a9a9a9;
   font-size: 13px;
-  margin-top: 25px;
+  /*margin-top: 25px;*/
   position: relative;
   text-align: center;
 }
@@ -275,6 +276,7 @@ p.error {
   color: #CE6C36;
 }
 
+
 /* Nav */
 nav {
   background-color: #285da7;
@@ -304,6 +306,10 @@ nav ul li#search input {
 
 
 /* Login */
+section#login {
+  margin-bottom: 25px;
+}
+
 section#login header {
   background: #285da7 url(/assets/images/icon-32.png) no-repeat 20px center;
   padding-left: 42px;
@@ -316,6 +322,9 @@ form input:focus:invalid {
 
 
 /* Add link */
+section#addToDelicious {
+  margin-bottom: 25px;
+}
 
 header span.private {
   margin: 0;
@@ -345,13 +354,20 @@ span.tags button {
 
 /* View my links */
 section#viewMyLinks {
-  max-height: 460px;
-  overflow-y: scroll;
   padding: 0 20px;
 }
 
+section#viewMyLinks header input {
+  position: absolute;
+  right: 0;
+  top: 19px;
+  width: 150px;
+}
+
 section#viewMyLinks ul {
-  margin: 0;
+  margin: 0 0 25px 0;
+  max-height: 400px;
+  overflow-y: scroll;
   padding: 0;
 }
 
@@ -362,3 +378,34 @@ section#viewMyLinks ul li {
   position: relative;
 }
 
+section#viewMyLinks ul li:last-child {
+  border-bottom: 1px solid #ccc;
+}
+
+section#viewMyLinks ul li:nth-child(odd) {
+  background-color: #f4f4f4;
+}
+
+section#viewMyLinks ul li p {
+  color: #a4a4a4;
+  font-size: 13px;
+  margin: 0;
+  padding-top: 3px;
+}
+
+section#viewMyLinks li p a.link_tag {
+  color: #a4a4a4;
+  display: inline;
+  font-size: 13px;
+  margin: 0;
+}
+
+section#viewMyLinks ul li a {
+  color: #285DA7;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+section#viewMyLinks ul li a:hover {
+  text-decoration: underline;
+}
