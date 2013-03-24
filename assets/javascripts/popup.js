@@ -73,7 +73,6 @@ services.factory('delicious', function($http, $q, $rootScope) {
       url: 'https://api.del.icio.us/v1/posts/add',
       headers: {'Authorization' : 'Basic ' + hash, 'Content-Type': 'application/x-www-form-urlencoded'},
       transformRequest: function(obj) {
-        console.log(obj);
         var str = [];
         for(var p in obj) {
           str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
@@ -303,7 +302,7 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
       url: $scope.url,
       description: $scope.description,
       shared: (!$scope.share ? 'yes' : 'no'),
-      tags: $scope.tags.toString(),
+      tags: $scope.tags.join(', '),
       replace: 'yes'
     }).then(function() {
       $location.path('/bookmarks');
@@ -333,7 +332,6 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   $scope.linksLength = 0;
 
   delicious.getLinks().then(function(links) {
-    console.log(links);
     $scope.links = angular.extend(links, {confirmUpdate: false, confirmRemoval: false});
     $scope.linksLength = $scope.links.length;
   });
