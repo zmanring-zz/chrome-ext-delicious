@@ -84,7 +84,7 @@ body {
 }
 
 footer {
-  -webkit-box-shadow: 0 0 20px #555;
+  /*-webkit-box-shadow: 0 0 20px #555;*/
   background-color: #f1f1f1;
   border-top: 1px solid #dedede;
   color: #a9a9a9;
@@ -395,9 +395,9 @@ section#viewMyLinks ul li p {
 
 section#viewMyLinks li p a.link_tag {
   color: #a4a4a4;
-  display: inline;
+  /*display: inline;*/
   font-size: 13px;
-  margin: 0;
+  margin-right: 3px;
 }
 
 section#viewMyLinks ul li a {

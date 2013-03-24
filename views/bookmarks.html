@@ -8,7 +8,7 @@
     <li ng-repeat="link in links | filter:query">
       <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}">{{link.description}}</a>
       <p>
-        <a href="" class="link_tag">{{link.tags | list}}</a>
+        <a ng-repeat="tag in link.tags" href="" class="link_tag">{{tag}}</a>
       </p>
       <!-- <div class="link-actions">
         <a class="edit" title="Edit this bookmark" ng-hide="link.confirmRemoval" ng-click="confirmUpdate(link)">☃</a>
