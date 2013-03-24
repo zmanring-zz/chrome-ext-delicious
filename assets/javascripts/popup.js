@@ -169,27 +169,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
   })();
 
   DELICIOUS.getPopularSuggestedTags = (function () {
-
-    function _parseSuggestionsResponse(data) {
-      var json = xml.xmlToJSON(data);
-
-      if (json.suggest) {
-        return json.suggest.popular.map(function(rawSuggestionTag) {
-
-          var suggestedTag = {},
-            key;
-
-          // Remove '@' symbols from keys
-          for (key in rawSuggestionTag) {
-            var k = key.split('@')[1];
-            suggestedTag[k] = rawSuggestionTag[key];
-          }
-          return suggestedTag.tag;
-        });
-      }
-    }
-
-    return function (url) {
+    return function getPopularSuggestedTags(url) {
       var defer = $q.defer();
 
       var hash = localStorage.getItem('chrome-ext-delicious');
@@ -205,31 +185,28 @@ services.factory('delicious', function($http, $q, $rootScope) {
       });
 
       return defer.promise;
+    };
 
+    function _parseSuggestionsResponse(data) {
+      var json = xml.xmlToJSON(data);
+
+      if (json.suggest) {
+        return json.suggest.popular.map(function(rawSuggestionTag) {
+          var suggestedTag = {}
+
+          // Remove '@' symbols from keys
+          for (key in rawSuggestionTag) {
+            var k = key.split('@')[1];
+            suggestedTag[k] = rawSuggestionTag[key];
+          }
+          return suggestedTag.tag;
+        });
+      }
     };
   })();
 
   DELICIOUS.getAllMyTags = (function () {
-
-    function _parseTags(data) {
-      var json = xml.xmlToJSON(data);
-
-      return json.tags.tag.map(function(myTag) {
-
-        var tag = {},
-          key;
-
-        // Remove '@' symbols from keys
-        for (key in myTag) {
-          var k = key.split('@')[1];
-          tag[k] = myTag[key];
-        }
-        return tag.tag;
-      });
-
-    }
-
-    return function () {
+    return function getAllMyTags() {
       var defer = $q.defer();
 
       var hash = localStorage.getItem('chrome-ext-delicious');
@@ -241,13 +218,26 @@ services.factory('delicious', function($http, $q, $rootScope) {
       };
 
       $http(options).then(function(resp) {
-        // console.log(resp.data)
         defer.resolve(resp.data);
       });
 
       return defer.promise;
     };
 
+    function _parseTags(data) {
+      var json = xml.xmlToJSON(data);
+
+      return json.tags.tag.map(function(myTag) {
+        var tag = {};
+
+        // Remove '@' symbols from keys
+        for (key in myTag) {
+          var k = key.split('@')[1];
+          tag[k] = myTag[key];
+        }
+        return tag.tag;
+      });
+    };
   })();
 
   return DELICIOUS;
@@ -300,10 +290,10 @@ controllers.controller('LoginCtrl', function($scope, $rootScope, $location, deli
 });
 
 controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious) {
-  var $tagInput = $('#tag');
   $scope.url = tab.url;
   $scope.description = tab.title;
   $scope.tags = [];
+  $scope.myTags = [];
   $scope.suggestedTags = [];
 
   $scope.add = function() {
@@ -324,7 +314,6 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
     var tags = angular.copy($scope.tags);
     tags.push(tag);
     $scope.tags = tags;
-    $tagInput.val($scope.tags).trigger('change');
 
     // remove from suggestedTags arary
     var index = $scope.suggestedTags.indexOf(tag);
@@ -332,11 +321,7 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
   };
 
   delicious.getAllMyTags().then(function(myTags) {
-    $tagInput.select2({ tags:myTags });
-    $tagInput.on('change', function() {
-      $scope.tags = $(this).val().split(',');
-      // console.log($(this).val().split(','));
-    });
+    $scope.myTags = myTags;
   });
 
   delicious.getPopularSuggestedTags($scope.url).then(function(tags) {
@@ -407,4 +392,40 @@ directives.directive('appVersion', ['version', function(version) {
   return function(scope, elm, attrs) {
     elm.text(version);
   };
+}]);
+
+directives.directive('selectTwo', [function() {
+  function link(scope, element, attrs) {
+    var model = attrs['ngModel']
+      , select = angular.element(element);
+
+    scope.$watch('myTags', function(newTags, oldTags) {
+      if (!newTags) return;
+      select.select2({
+        tags: newTags, 
+        tokenSeparators: [',']
+      });
+    });
+
+    scope.$watch('tags', function(newTags, oldTags) {
+      if (!newTags) return;
+      select.select2('val', newTags);
+    });
+    
+    select.bind('change', function(e) {
+      scope.$apply(function() {
+        scope.tags = e.val;
+      });
+    });
+  };
+
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    scope: {
+      tags: '=ngModel',
+      myTags: '=selectTwo'
+    },
+    link: link
+  }
 }]);
