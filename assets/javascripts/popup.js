@@ -128,21 +128,54 @@ services.factory('delicious', function($http, $q, $rootScope) {
     return defer.promise;
   };
 
-  DELICIOUS.getLinks = (function() {
-    return function getLinks() {
+  DELICIOUS.setLastUpdated = (function () {
+    return function setLastUpdated() {
       var defer = $q.defer();
 
       var hash = localStorage.getItem('chrome-ext-delicious');
       var options = {
         method: 'GET',
-        url: 'https://api.del.icio.us/v1/posts/all?',
+        url: 'https://api.del.icio.us/v1/posts/update',
         headers: {'Authorization' : 'Basic ' + hash},
-        transformResponse: _parseLinksResponse
+        transformResponse: _parseResponse
       };
 
       $http(options).then(function(resp) {
         defer.resolve(resp.data);
       });
+
+      return defer.promise;
+    };
+
+    function _parseResponse(data) {
+      var json = xml.xmlToJSON(data);
+      return json.update['@time'];
+    }
+  })();
+
+  DELICIOUS.getLinks = (function() {
+    return function getLinks(getLinkData) {
+      var defer = $q.defer();
+
+      var localLinkData = localStorage.getItem('chrome-ext-delicious-links');
+
+      if (localLinkData && !getLinkData) {
+        defer.resolve(JSON.parse(localLinkData));
+      } else {
+        var hash = localStorage.getItem('chrome-ext-delicious');
+        var options = {
+          method: 'GET',
+          url: 'https://api.del.icio.us/v1/posts/all?',
+          headers: {'Authorization' : 'Basic ' + hash},
+          transformResponse: _parseLinksResponse
+        };
+
+        $http(options).then(function(resp) {
+          localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
+          defer.resolve(resp.data);
+
+        });
+      }
 
       return defer.promise;
     };
@@ -226,16 +259,18 @@ services.factory('delicious', function($http, $q, $rootScope) {
     function _parseTags(data) {
       var json = xml.xmlToJSON(data);
 
-      return json.tags.tag.map(function(myTag) {
-        var tag = {};
+      if (json.tags) {
+        return json.tags.tag.map(function(myTag) {
+          var tag = {};
 
-        // Remove '@' symbols from keys
-        for (key in myTag) {
-          var k = key.split('@')[1];
-          tag[k] = myTag[key];
-        }
-        return tag.tag;
-      });
+          // Remove '@' symbols from keys
+          for (key in myTag) {
+            var k = key.split('@')[1];
+            tag[k] = myTag[key];
+          }
+          return tag.tag;
+        });
+      }
     }
   })();
 
@@ -246,11 +281,27 @@ services.factory('delicious', function($http, $q, $rootScope) {
 // Controllers
 var controllers = angular.module('yum.controllers', []);
 
-controllers.controller('AppCtrl', function($scope, $location) {
+controllers.controller('AppCtrl', function($scope, $location, delicious) {
   $scope.menu = [
     {path: '/new', text: 'Add link'},
     {path: '/bookmarks', text: 'My links'}
   ];
+
+  // setLastUpdated
+  delicious.setLastUpdated().then(function (data) {
+    var lastUpdated = localStorage.getItem('chrome-ext-delicious-last-updated');
+
+    $scope.getLinkData = true;
+
+    if (lastUpdated) {
+      if (lastUpdated === data) {
+        $scope.getLinkData = false;
+      }
+    }
+
+    // setItem
+    localStorage.setItem('chrome-ext-delicious-last-updated', data);
+  });
 
   $scope.isSelected = function(item) {
     var path = $location.path();
@@ -297,6 +348,7 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
 
   $scope.add = function() {
     $scope.loading = true;
+    // $scope.getLinkData = true;
 
     delicious.addLink({
       url: $scope.url,
@@ -331,9 +383,10 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
 controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious) {
   $scope.linksLength = 0;
 
-  delicious.getLinks().then(function(links) {
+  delicious.getLinks($scope.getLinkData).then(function(links) {
     $scope.links = angular.extend(links, {confirmUpdate: false, confirmRemoval: false});
     $scope.linksLength = $scope.links.length;
+    // $scope.getLinkData = false;
   });
 
   $scope.confirmRemove = function(link) {
