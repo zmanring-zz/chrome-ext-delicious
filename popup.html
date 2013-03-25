@@ -17,7 +17,7 @@
       <nav ng-show="loggedIn">
         <ul>
           <li ng-repeat="item in menu">
-            <a class="button primary" href="" ng-click="navigateTo(item.path)" ng-class="{selected: isSelected(item)}">
+            <a class="button primary" ng-href="#{{item.path}}" ng-class="{selected: isSelected(item)}">
               {{item.text}}
               <span class="nub"></span>
             </a>

@@ -22,6 +22,10 @@ app.config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/login'});
 }]);
 
+app.config(function($compileProvider) {
+  $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|chrome-extension):/);
+});
+
 app.run(function($rootScope, $location) {
   $rootScope.loggedIn = localStorage.getItem('chrome-ext-delicious') ? true : false;
 
@@ -309,10 +313,6 @@ controllers.controller('AppCtrl', function($scope, $location, delicious) {
   $scope.isSelected = function(item) {
     var path = $location.path();
     return (path === item.path);
-  };
-
-  $scope.navigateTo = function(path) {
-    $location.path(path);
   };
 
   $scope.logout = function(link) {
