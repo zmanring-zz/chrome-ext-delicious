@@ -74,7 +74,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
       headers: {'Authorization' : 'Basic ' + hash, 'Content-Type': 'application/x-www-form-urlencoded'},
       transformRequest: function(obj) {
         var str = [];
-        for(var p in obj) {
+        for (var p in obj) {
           str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
         }
         return str.join('&');
@@ -150,32 +150,41 @@ services.factory('delicious', function($http, $q, $rootScope) {
     function _parseResponse(data) {
       var json = xml.xmlToJSON(data);
       return json.update['@time'];
-    }
+    };
   })();
 
   DELICIOUS.getLinks = (function() {
-    return function getLinks(getLinkData) {
-      var defer = $q.defer();
+    var prevUpdateTime;
 
-      var localLinkData = localStorage.getItem('chrome-ext-delicious-links');
+    return function getLinks() {
+      var defer = $q.defer(),
+          links = JSON.parse(localStorage.getItem('chrome-ext-delicious-links'));
 
-      if (localLinkData && !getLinkData) {
-        defer.resolve(JSON.parse(localLinkData));
-      } else {
-        var hash = localStorage.getItem('chrome-ext-delicious');
-        var options = {
-          method: 'GET',
-          url: 'https://api.del.icio.us/v1/posts/all?',
-          headers: {'Authorization' : 'Basic ' + hash},
-          transformResponse: _parseLinksResponse
-        };
+      // Get update info
+      this.getUpdate().then(function(update) {
+        // If links are cached and update time hasn't changed
+        if (links && (update.time === prevUpdateTime)) {
+          // Resolve with cached links
+          defer.resolve(links);
+        } else {
+          // Fetch and resolve with new links
+          var hash = localStorage.getItem('chrome-ext-delicious');
+          var options = {
+            method: 'GET',
+            url: 'https://api.del.icio.us/v1/posts/all?',
+            headers: {'Authorization' : 'Basic ' + hash},
+            transformResponse: _parseLinksResponse
+          };
 
-        $http(options).then(function(resp) {
-          localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
-          defer.resolve(resp.data);
+          $http(options).then(function(resp) {
+            localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
+            defer.resolve(resp.data);
+          });
+        }
 
-        });
-      }
+        // Store update.time
+        prevUpdateTime = update.time;
+      });
 
       return defer.promise;
     };
@@ -195,9 +204,11 @@ services.factory('delicious', function($http, $q, $rootScope) {
         // Convert tag string to array of tags
         link.tags = link.tag.split('  ');
         delete link.tag;
+
         return link;
       });
-    }
+    };
+  })();
 
   DELICIOUS.getUpdate = (function () {
     return function getUpdate() {
@@ -305,7 +316,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
           return tag.tag;
         });
       }
-    }
+    };
   })();
 
   return DELICIOUS;
@@ -320,22 +331,6 @@ controllers.controller('AppCtrl', function($scope, $location, delicious) {
     {path: '/new', text: 'Add link'},
     {path: '/bookmarks', text: 'My links'}
   ];
-
-  // setLastUpdated
-  delicious.setLastUpdated().then(function (data) {
-    var lastUpdated = localStorage.getItem('chrome-ext-delicious-last-updated');
-
-    $scope.getLinkData = true;
-
-    if (lastUpdated) {
-      if (lastUpdated === data) {
-        $scope.getLinkData = false;
-      }
-    }
-
-    // setItem
-    localStorage.setItem('chrome-ext-delicious-last-updated', data);
-  });
 
   $scope.isSelected = function(item) {
     var path = $location.path();
@@ -382,7 +377,6 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
 
   $scope.add = function() {
     $scope.loading = true;
-    // $scope.getLinkData = true;
 
     delicious.addLink({
       url: $scope.url,
@@ -417,10 +411,9 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
 controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious) {
   $scope.linksLength = 0;
 
-  delicious.getLinks($scope.getLinkData).then(function(links) {
+  delicious.getLinks().then(function(links) {
     $scope.links = angular.extend(links, {confirmUpdate: false, confirmRemoval: false});
     $scope.linksLength = $scope.links.length;
-    // $scope.getLinkData = false;
   });
 
   $scope.confirmRemove = function(link) {
@@ -504,7 +497,7 @@ directives.directive('selectTwo', [function() {
         scope.tags = e.val;
       });
     });
-  }
+  };
 
   return {
     restrict: 'A',
