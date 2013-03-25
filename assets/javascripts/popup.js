@@ -86,7 +86,10 @@ services.factory('delicious', function($http, $q, $rootScope) {
       data: linkData
     };
 
-    return $http(options);
+    return $http(options).success(function() {
+      // Clear out links cache
+      localStorage.removeItem('chrome-ext-delicious-links');
+    });
   };
 
   DELICIOUS.removeLink = function(link) {
@@ -132,36 +135,33 @@ services.factory('delicious', function($http, $q, $rootScope) {
     return defer.promise;
   };
 
-  DELICIOUS.getLinks = (function() {
-    return function getLinks() {
-      var defer = $q.defer(),
-        links = JSON.parse(localStorage.getItem('chrome-ext-delicious-links')),
-        lastUpdate = JSON.parse(localStorage.getItem('chrome-ext-delicious-last-update'));
+  DELICIOUS.getLinks = function() {
+    var defer = $q.defer(),
+      links = JSON.parse(localStorage.getItem('chrome-ext-delicious-links'));
 
-      // Get update info
-      this.getUpdate().then(function(update) {
-        // If links are cached and update time hasn't changed
-        if (links && (update.time === lastUpdate)) {
-          // Resolve with cached links
-          defer.resolve(links);
-        } else {
-          // Fetch and resolve with new links
-          var hash = localStorage.getItem('chrome-ext-delicious');
-          var options = {
-            method: 'GET',
-            url: 'https://api.del.icio.us/v1/posts/all?',
-            headers: {'Authorization' : 'Basic ' + hash},
-            transformResponse: _parseLinksResponse
-          };
+    if (links) {
+      defer.resolve(links);
+    } else {
+      this.fetchLinks().then(defer.resolve);
+    }
 
-          $http(options).then(function(resp) {
-            localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
-            defer.resolve(resp.data);
-          });
-        }
+    return defer.promise;
+  };
 
-        // Store lastUpdate
-        localStorage.setItem('chrome-ext-delicious-last-update', update.time);
+  DELICIOUS.fetchLinks = (function() {
+    return function fetchLinks() {
+      var defer = $q.defer();
+      var hash = localStorage.getItem('chrome-ext-delicious');
+      var options = {
+        method: 'GET',
+        url: 'https://api.del.icio.us/v1/posts/all?',
+        headers: {'Authorization' : 'Basic ' + hash},
+        transformResponse: _parseLinksResponse
+      };
+
+      $http(options).then(function(resp) {
+        localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
+        defer.resolve(resp.data);
       });
 
       return defer.promise;
@@ -297,6 +297,21 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
+  DELICIOUS.logout = function() {
+    localStorage.removeItem('chrome-ext-delicious');
+  };
+
+  // Check for updates
+  DELICIOUS.getUpdate().then(function(update) {
+    var lastUpdate = JSON.parse(localStorage.getItem('chrome-ext-delicious-last-update'));
+
+    if (update.time !== lastUpdate) {
+      DELICIOUS.fetchLinks();
+    }
+
+    localStorage.setItem('chrome-ext-delicious-last-update', update.time);        
+  });
+
   return DELICIOUS;
 });
 
@@ -316,8 +331,8 @@ controllers.controller('AppCtrl', function($scope, $location, delicious) {
   };
 
   $scope.logout = function(link) {
-    localStorage.removeItem('chrome-ext-delicious');
-    location.reload();
+    delicious.logout();
+    $location.reload();
   };
 
   $scope.extVersion = function() {
