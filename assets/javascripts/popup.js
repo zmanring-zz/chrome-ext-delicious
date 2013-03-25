@@ -445,9 +445,7 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   };
 
   $scope.$watch('query', function(newValue, oldValue) {
-    if (newValue) {
-      $scope.linksLength = $filter('filter')($scope.links, newValue).length;
-    }
+    $scope.linksLength = $filter('filter')($scope.links, newValue).length;
   });
 });
 
