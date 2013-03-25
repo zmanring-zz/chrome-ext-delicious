@@ -1,13 +1,13 @@
 <!-- Tab 1 -->
 <section id="addToDelicious">
+  <header>
+    <h1>Add new link to Delicious</h1>
+    <span class="private">
+      <input id="private" type="checkbox" name="private" value="private" ng-model='share' />
+      <label for="private">Private?</label>
+    </span>
+  </header>
   <form ng-submit='add()'>
-    <header>
-      <h1>Add new link to Delicious</h1>
-      <span class="private">
-        <input id="private" type="checkbox" name="private" value="private" ng-model='share' />
-        <label for="private">Private?</label>
-      </span>
-    </header>
     <input type="text" name="description" id="description" placeholder="description" tabindex="1" ng-model='description' required />
     <input type="text" name="tag" id="tag" placeholder="tag" tabindex="2" ng-model='tags' ng-list select-two='myTags' />
     <span>

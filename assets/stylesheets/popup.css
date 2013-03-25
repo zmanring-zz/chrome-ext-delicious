@@ -84,12 +84,10 @@ body {
 }
 
 footer {
-  /*-webkit-box-shadow: 0 0 20px #555;*/
   background-color: #f1f1f1;
   border-top: 1px solid #dedede;
   color: #a9a9a9;
   font-size: 13px;
-  /*margin-top: 25px;*/
   position: relative;
   text-align: center;
 }
@@ -116,6 +114,7 @@ section {
 
 section header {
   position: relative;
+  margin: 0 20px;
 }
 
 section header > span {
@@ -354,7 +353,7 @@ span.tags button {
 
 /* View my links */
 section#viewMyLinks {
-  padding: 0 20px;
+  padding: 0;
 }
 
 section#viewMyLinks header input {
@@ -365,7 +364,7 @@ section#viewMyLinks header input {
 }
 
 section#viewMyLinks ul {
-  margin: 0 0 25px 0;
+  margin: 0;
   max-height: 400px;
   overflow-y: scroll;
   padding: 0;
@@ -374,7 +373,7 @@ section#viewMyLinks ul {
 section#viewMyLinks ul li {
   border-top: 1px solid #ccc;
   list-style-type: none;
-  padding: 6px  5px;
+  padding: 10px  20px;
   position: relative;
 }
 
