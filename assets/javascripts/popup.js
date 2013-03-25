@@ -198,6 +198,40 @@ services.factory('delicious', function($http, $q, $rootScope) {
         return link;
       });
     }
+
+  DELICIOUS.getUpdate = (function () {
+    return function getUpdate() {
+      var defer = $q.defer();
+      var hash = localStorage.getItem('chrome-ext-delicious');
+      var options = {
+        method: 'GET',
+        url: 'https://api.del.icio.us/v1/posts/update',
+        headers: {'Authorization' : 'Basic ' + hash},
+        transformResponse: _parseUpdateResponse
+      };
+
+      $http(options).then(function(resp) {
+        defer.resolve(resp.data);
+      });
+
+      return defer.promise;
+    };
+
+    function _parseUpdateResponse(data) {
+      var rawUpdate = xml.xmlToJSON(data).update, 
+          update = {};
+
+      // Remove '@' symbols from keys
+      for (key in rawUpdate) {
+        var k = key.split('@')[1];
+        update[k] = rawUpdate[key];
+      }
+
+      // Convert time string to time integer
+      update.time = new Date(update.time).getTime();
+
+      return update;
+    };
   })();
 
   DELICIOUS.getPopularSuggestedTags = (function () {
