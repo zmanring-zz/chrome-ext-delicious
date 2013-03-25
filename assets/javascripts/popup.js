@@ -55,36 +55,36 @@ filters.filter('list', [function() {
 var services = angular.module('yum.services', []);
 
 services.factory('delicious', function($http, $q, $rootScope) {
-  var DELICIOUS = {};
+  var Delicious = {};
 
-  DELICIOUS.authenticate = function(username, password) {
-    var hash = btoa(username + ":" + password);
-    var options = {
-      method: 'GET',
-      url: 'https://api.del.icio.us/v1/posts/update',
-      headers: {'Authorization' : 'Basic ' + hash}
-    };
+  Delicious.authenticate = function(username, password) {
+    var hash = btoa(username + ":" + password),
+      options = {
+        method: 'GET',
+        url: 'https://api.del.icio.us/v1/posts/update',
+        headers: {'Authorization' : 'Basic ' + hash}
+      };
 
     return $http(options).success(function() {
       localStorage.setItem('chrome-ext-delicious', hash);
     });
   };
 
-  DELICIOUS.addLink = function(linkData) {
-    var hash = localStorage.getItem('chrome-ext-delicious');
-    var options = {
-      method: 'POST',
-      url: 'https://api.del.icio.us/v1/posts/add',
-      headers: {'Authorization' : 'Basic ' + hash, 'Content-Type': 'application/x-www-form-urlencoded'},
-      transformRequest: function(obj) {
-        var str = [];
-        for (var p in obj) {
-          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-        }
-        return str.join('&');
-      },
-      data: linkData
-    };
+  Delicious.addLink = function(linkData) {
+    var hash = localStorage.getItem('chrome-ext-delicious'),
+      options = {
+        method: 'POST',
+        url: 'https://api.del.icio.us/v1/posts/add',
+        headers: {'Authorization' : 'Basic ' + hash, 'Content-Type': 'application/x-www-form-urlencoded'},
+        transformRequest: function(obj) {
+          var str = [];
+          for (var p in obj) {
+            str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+          }
+          return str.join('&');
+        },
+        data: linkData
+      };
 
     return $http(options).success(function() {
       // Clear out links cache
@@ -92,19 +92,19 @@ services.factory('delicious', function($http, $q, $rootScope) {
     });
   };
 
-  DELICIOUS.removeLink = function(link) {
-    var hash = localStorage.getItem('chrome-ext-delicious');
-    var options = {
-      method: 'GET',
-      url: 'https://api.del.icio.us/v1/posts/delete',
-      headers: {'Authorization' : 'Basic '+ hash},
-      params: {md5: link.hash}
-    };
+  Delicious.removeLink = function(link) {
+    var hash = localStorage.getItem('chrome-ext-delicious'),
+      options = {
+        method: 'GET',
+        url: 'https://api.del.icio.us/v1/posts/delete',
+        headers: {'Authorization' : 'Basic '+ hash},
+        params: {md5: link.hash}
+      };
 
     return $http(options);
   };
 
-  DELICIOUS.getQueryStringByName = function(name) {
+  Delicious.getQueryStringByName = function(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
@@ -117,7 +117,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
     }
   };
 
-  DELICIOUS.getTab = function() {
+  Delicious.getTab = function() {
     var defer = $q.defer();
 
     if (chrome.tabs) {
@@ -135,7 +135,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
     return defer.promise;
   };
 
-  DELICIOUS.getLinks = function() {
+  Delicious.getLinks = function() {
     var defer = $q.defer(),
       links = JSON.parse(localStorage.getItem('chrome-ext-delicious-links'));
 
@@ -148,16 +148,16 @@ services.factory('delicious', function($http, $q, $rootScope) {
     return defer.promise;
   };
 
-  DELICIOUS.fetchLinks = (function() {
+  Delicious.fetchLinks = (function() {
     return function fetchLinks() {
-      var defer = $q.defer();
-      var hash = localStorage.getItem('chrome-ext-delicious');
-      var options = {
-        method: 'GET',
-        url: 'https://api.del.icio.us/v1/posts/all?',
-        headers: {'Authorization' : 'Basic ' + hash},
-        transformResponse: _parseLinksResponse
-      };
+      var defer = $q.defer(),
+        hash = localStorage.getItem('chrome-ext-delicious'),
+        options = {
+          method: 'GET',
+          url: 'https://api.del.icio.us/v1/posts/all?',
+          headers: {'Authorization' : 'Basic ' + hash},
+          transformResponse: _parseLinksResponse
+        };
 
       $http(options).then(function(resp) {
         localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
@@ -188,16 +188,16 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
-  DELICIOUS.getUpdate = (function () {
+  Delicious.getUpdate = (function () {
     return function getUpdate() {
-      var defer = $q.defer();
-      var hash = localStorage.getItem('chrome-ext-delicious');
-      var options = {
-        method: 'GET',
-        url: 'https://api.del.icio.us/v1/posts/update',
-        headers: {'Authorization' : 'Basic ' + hash},
-        transformResponse: _parseUpdateResponse
-      };
+      var defer = $q.defer(),
+        hash = localStorage.getItem('chrome-ext-delicious'),
+        options = {
+          method: 'GET',
+          url: 'https://api.del.icio.us/v1/posts/update',
+          headers: {'Authorization' : 'Basic ' + hash},
+          transformResponse: _parseUpdateResponse
+        };
 
       $http(options).then(function(resp) {
         defer.resolve(resp.data);
@@ -223,17 +223,16 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
-  DELICIOUS.getPopularSuggestedTags = (function () {
+  Delicious.getPopularSuggestedTags = (function () {
     return function getPopularSuggestedTags(url) {
-      var defer = $q.defer();
-
-      var hash = localStorage.getItem('chrome-ext-delicious');
-      var options = {
-        method: 'GET',
-        url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url,
-        headers: {'Authorization' : 'Basic ' + hash},
-        transformResponse: _parseSuggestionsResponse
-      };
+      var defer = $q.defer(),
+        hash = localStorage.getItem('chrome-ext-delicious'),
+        options = {
+          method: 'GET',
+          url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url,
+          headers: {'Authorization' : 'Basic ' + hash},
+          transformResponse: _parseSuggestionsResponse
+        };
 
       $http(options).then(function(resp) {
         defer.resolve(resp.data);
@@ -260,17 +259,16 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
-  DELICIOUS.getAllMyTags = (function () {
+  Delicious.getAllMyTags = (function () {
     return function getAllMyTags() {
-      var defer = $q.defer();
-
-      var hash = localStorage.getItem('chrome-ext-delicious');
-      var options = {
-        method: 'GET',
-        url: 'https://api.del.icio.us/v1/tags/get',
-        headers: {'Authorization' : 'Basic ' + hash},
-        transformResponse: _parseTags
-      };
+      var defer = $q.defer(),
+        hash = localStorage.getItem('chrome-ext-delicious'),
+        options = {
+          method: 'GET',
+          url: 'https://api.del.icio.us/v1/tags/get',
+          headers: {'Authorization' : 'Basic ' + hash},
+          transformResponse: _parseTags
+        };
 
       $http(options).then(function(resp) {
         defer.resolve(resp.data);
@@ -297,22 +295,22 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
-  DELICIOUS.logout = function() {
+  Delicious.logout = function() {
     localStorage.removeItem('chrome-ext-delicious');
   };
 
   // Check for updates
-  DELICIOUS.getUpdate().then(function(update) {
+  Delicious.getUpdate().then(function(update) {
     var lastUpdate = JSON.parse(localStorage.getItem('chrome-ext-delicious-last-update'));
 
     if (update.time !== lastUpdate) {
-      DELICIOUS.fetchLinks();
+      Delicious.fetchLinks();
     }
 
     localStorage.setItem('chrome-ext-delicious-last-update', update.time);        
   });
 
-  return DELICIOUS;
+  return Delicious;
 });
 
 
