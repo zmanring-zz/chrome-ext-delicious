@@ -444,6 +444,10 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
     });
   };
 
+  $scope.isPrivate = function(link) {
+    return (link.shared === 'no');
+  };
+
   $scope.$watch('query', function(newValue, oldValue) {
     $scope.linksLength = $filter('filter')($scope.links, newValue).length;
   });
