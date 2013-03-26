@@ -5,7 +5,7 @@
     <input class="filterinput" type="search" placeholder="Filter" ng-model="query" />
   </header>
   <ul class="links">
-    <li ng-repeat="link in links | filter:query" ng-class="{private: isPrivate(link)}">
+    <li ng-repeat="link in links | filterByWord:query" ng-class="{private: isPrivate(link)}">
       <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}">{{link.description}}</a>
       <p>
         <a ng-repeat="tag in link.tags" href="" class="link_tag">{{tag}}</a>

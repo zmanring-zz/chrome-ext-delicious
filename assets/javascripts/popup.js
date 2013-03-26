@@ -50,6 +50,22 @@ filters.filter('list', [function() {
   };
 }]);
 
+filters.filter('filterByWord', function () {
+  return function (links, query) {
+    if (angular.isString(query)) {
+      var words = query.split(' ');
+      return links.filter(function(link) {
+        var search = JSON.stringify(link);
+        return words.some(function(word) {
+          return (search.indexOf(word) !== -1);
+        });
+      });
+    } else {
+      return links;
+    }
+  };
+});
+
 
 // Services
 var services = angular.module('yum.services', []);
@@ -449,7 +465,7 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   };
 
   $scope.$watch('query', function(newValue, oldValue) {
-    $scope.linksLength = $filter('filter')($scope.links, newValue).length;
+    $scope.linksLength = $filter('filterByWord')($scope.links, newValue).length;
   });
 });
 
