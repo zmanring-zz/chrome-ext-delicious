@@ -195,6 +195,9 @@ services.factory('delicious', function($http, $q, $rootScope) {
           link[k] = rawLink[key];
         }
 
+        // domain root
+        link.domain = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/,"$1").split('/')[2];
+
         // Convert tag string to array of tags
         link.tags = link.tag.split('  ');
         delete link.tag;
