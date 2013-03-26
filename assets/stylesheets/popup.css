@@ -364,6 +364,7 @@ section#viewMyLinks header input {
 }
 
 section#viewMyLinks ul {
+  border-top: 1px solid #cecece;
   margin: 0;
   max-height: 400px;
   overflow-y: scroll;
@@ -371,18 +372,19 @@ section#viewMyLinks ul {
 }
 
 section#viewMyLinks ul li {
+  background-color: #fcfcfc;
   border-top: 1px solid #ccc;
   list-style-type: none;
   padding: 10px  20px;
   position: relative;
 }
 
-section#viewMyLinks ul li:last-child {
-  border-bottom: 1px solid #ccc;
+section#viewMyLinks ul li:first-child {
+  border-top: none;
 }
 
 section#viewMyLinks ul li:nth-child(odd) {
-  background-color: #f4f4f4;
+  background-color: #f7f7f7;
 }
 
 section#viewMyLinks ul li p {
@@ -394,7 +396,6 @@ section#viewMyLinks ul li p {
 
 section#viewMyLinks li p a.link_tag {
   color: #a4a4a4;
-  /*display: inline;*/
   font-size: 13px;
   margin-right: 3px;
 }
@@ -407,4 +408,9 @@ section#viewMyLinks ul li a {
 
 section#viewMyLinks ul li a:hover {
   text-decoration: underline;
+}
+
+section#viewMyLinks ul li.private {
+  border-top: 1px solid #EFCFBD;
+  background: #FBF3EF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQIW2P8/vzef05JJUYGJADmoEvAVSBLoGiDSaAIwowCABbcE8GJ8NQzAAAAAElFTkSuQmCC) repeat ;
 }
