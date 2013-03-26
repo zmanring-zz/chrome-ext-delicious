@@ -52,19 +52,17 @@ filters.filter('list', [function() {
 
 filters.filter('filterByWord', function () {
   return function (links, query) {
-
     // Only filter if there's a query string
     if (angular.isString(query)) {
       // Get array of words from query
       var words = query.split(' ');
       // Filter the links and return them
       return links.filter(function(link) {
-        // Convert entire link object to string
-        // (should be improved later for better accuracy)
+        // Combine link properties to search into string
         var search = [
           link['description'],
           link['href'],
-          ((link['private'] === 'yes') ? 'private' : ''),
+          ((link['shared'] === 'no') ? 'private' : ''),
           link['tags'].join(' '),
           link['time']
         ].join(' ');

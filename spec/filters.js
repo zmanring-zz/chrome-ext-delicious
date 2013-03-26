@@ -34,25 +34,27 @@ describe('filters', function() {
 
   describe('filterByWord', function() {
     var links = [
-      {description: 'verde', tags: ['foo', 'bar', 'baz']},
-      {description: 'carvers', tags: ['foo', 'bar', 'baz']},
-      {description: 'chipotle', tags: ['foo']},
-      {description: 'west egg', tags: ['bar', 'baz']}
+      {description: 'verde', href: 'http://verde-noms.com', tags: ['foo', 'bar', 'baz'], shared: 'yes', time: '03-2013'},
+      {description: 'carvers', href: 'http://carvers-noms.com', tags: ['foo', 'bar', 'baz'], shared: 'no', time: '01-2011'},
+      {description: 'chipotle', href: 'http://chipotles-noms.com', tags: ['foo'], shared: 'yes', time: '12-2012'},
+      {description: 'west egg', href: 'http://west-eggs-noms.com', tags: ['bar', 'baz'], shared: 'no', time: '03-2013'}
     ];
 
     describe('query is empty', function() {
-      var query = '';
+      var query = '',
+        expected = links;
 
       it('should return all links', inject(function(filterByWordFilter) {
-        expect(filterByWordFilter(links, query)).toEqual(links);
+        expect(filterByWordFilter(links, query)).toEqual(expected);
       }));
     });
 
     describe('query contains a word not present in any links', function() {
-      var query = 'pythagorean';
+      var query = 'pythagorean',
+        expected = [];
 
       it('should return no links', inject(function(filterByWordFilter) {
-        expect(filterByWordFilter(links, query)).toEqual([]);
+        expect(filterByWordFilter(links, query)).toEqual(expected);
       }));
     });
     
@@ -68,6 +70,51 @@ describe('filters', function() {
     describe('query equals "foo bar"', function() {
       var query = 'foo bar',
         expected = [links[0], links[1]];
+
+      it('should return correct results', inject(function(filterByWordFilter) {
+        expect(filterByWordFilter(links, query)).toEqual(expected);
+      }));
+    });
+
+    describe('query equals "private"', function() {
+      var query = 'private',
+        expected = [links[1], links[3]];
+
+      it('should return correct results', inject(function(filterByWordFilter) {
+        expect(filterByWordFilter(links, query)).toEqual(expected);
+      }));
+    });
+
+    describe('query equals "foo private"', function() {
+      var query = 'foo private',
+        expected = [links[1]];
+
+      it('should return correct results', inject(function(filterByWordFilter) {
+        expect(filterByWordFilter(links, query)).toEqual(expected);
+      }));
+    });
+
+    describe('query equals "03-2013"', function() {
+      var query = '03-2013',
+        expected = [links[0], links[3]];
+
+      it('should return correct results', inject(function(filterByWordFilter) {
+        expect(filterByWordFilter(links, query)).toEqual(expected);
+      }));
+    });
+
+    describe('query equals "foo 03-2013"', function() {
+      var query = 'foo 03-2013',
+        expected = [links[0]];
+
+      it('should return correct results', inject(function(filterByWordFilter) {
+        expect(filterByWordFilter(links, query)).toEqual(expected);
+      }));
+    });
+
+    describe('query equals "foo private 12-2012"', function() {
+      var query = 'foo private 12-2012',
+        expected = [];
 
       it('should return correct results', inject(function(filterByWordFilter) {
         expect(filterByWordFilter(links, query)).toEqual(expected);
