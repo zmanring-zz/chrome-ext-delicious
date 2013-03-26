@@ -415,6 +415,7 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
 });
 
 controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious) {
+  $scope.links = [];
   $scope.linksLength = 0;
 
   delicious.getLinks().then(function(links) {
@@ -465,6 +466,11 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
 
   $scope.isPrivate = function(link) {
     return (link.shared === 'no');
+  };
+
+  $scope.appendQuery = function(word) {
+    var query = $scope.query ? ($scope.query + ' ' + word) : word;
+    $scope.query = query.trim();
   };
 
   $scope.$watch('query', function(newValue, oldValue) {

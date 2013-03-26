@@ -7,9 +7,9 @@
   <ul class="links">
     <li ng-repeat="link in links | filterByWord:query" ng-class="{private: isPrivate(link)}">
       <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://www.google.com/s2/u/0/favicons?domain={{link.domain}}" />{{link.description}}</a>
-      <p>
-        <a ng-repeat="tag in link.tags" href="" class="link_tag">{{tag}}</a>
-      </p>
+      <ul class="tags">
+        <li ng-repeat="tag in link.tags" ><a href="" class="link_tag" ng-click="appendQuery(tag)">{{tag}}</a></li>
+      </ul>
       <!-- <div class="link-actions">
         <a class="edit" title="Edit this bookmark" ng-hide="link.confirmRemoval" ng-click="confirmUpdate(link)">☃</a>
         <a class="delete" title="Delete this bookmark" ng-hide="link.confirmRemoval" ng-click="confirmRemove(link)">×</a>
