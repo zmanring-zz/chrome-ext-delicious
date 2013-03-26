@@ -152,7 +152,7 @@ hgroup h2 {
 }
 
 section#content {
-  padding: 20px 0 0 0;
+  padding: 0;
 }
 
 form {
@@ -279,10 +279,10 @@ p.error {
 /* Nav */
 nav {
   background-color: #285da7;
-  border-bottom: 3px solid #fff;
-  padding: 0 15px;
+  padding: 0;
   position: relative;
   z-index: 1;
+  box-shadow: inset 0 0 7px #08254D;
 }
 
 nav ul {
@@ -291,18 +291,37 @@ nav ul {
 }
 
 nav ul li {
-  display: inline;
+  display: inline-block;
   list-style-type: none;
 }
 
-nav ul li#search input {
-    display: none;
-    position: absolute;
-    right: 20px;
-    top: 8px;
-    width: 170px;
+nav ul li a.button {
+  background-color: transparent;
+  color: #C0D6F5;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  -webkit-transition: color 0.2s;
 }
 
+nav ul li a.selected,
+nav ul li a:hover {
+  color: #fff;
+}
+
+nav ul li a.selected::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  left: 50%;
+  bottom: -6px;
+  background: #fff;
+  box-shadow: 0 0 7px #08254D;
+  -webkit-transform: rotate(45deg);
+}
 
 /* Login */
 section#login {
@@ -312,6 +331,8 @@ section#login {
 section#login header {
   background: #285da7 url(/assets/images/icon-32.png) no-repeat 20px center;
   padding-left: 42px;
+  box-shadow: inset 0 0 7px #08254D;
+  margin: 0;
 }
 
 form input:focus:invalid {
