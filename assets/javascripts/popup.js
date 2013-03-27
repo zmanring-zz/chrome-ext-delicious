@@ -239,7 +239,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
 
     function _parseUpdateResponse(data) {
-      var rawUpdate = xml.xmlToJSON(data).update, 
+      var rawUpdate = xml.xmlToJSON(data).update,
           update = {};
 
       // Remove '@' symbols from keys
@@ -339,7 +339,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
       Delicious.fetchLinks();
     }
 
-    localStorage.setItem('chrome-ext-delicious-last-update', update.time);        
+    localStorage.setItem('chrome-ext-delicious-last-update', update.time);
   });
 
   return Delicious;
