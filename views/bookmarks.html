@@ -6,32 +6,36 @@
   </header>
   <ul class="links">
     <li ng-repeat="link in links | filterByWord:query" ng-class="{private: isPrivate(link)}">
-      <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://www.google.com/s2/u/0/favicons?domain={{link.domain}}" />{{link.description}}</a>
-      <ul class="tags">
-        <li ng-repeat="tag in link.tags" ><a href="" class="link_tag" ng-click="appendQuery(tag)">{{tag}}</a></li>
-      </ul>
-      <!-- <div class="link-actions">
-        <a class="edit" title="Edit this bookmark" ng-hide="link.confirmRemoval" ng-click="confirmUpdate(link)">☃</a>
-        <a class="delete" title="Delete this bookmark" ng-hide="link.confirmRemoval" ng-click="confirmRemove(link)">×</a>
-        <div class="confirm" ng-show="link.confirmRemoval">
-          Are you sure?
-          <button class="cancel_confirm" ng-click="remove(link)">Yes</button>
-          /
-          <button class="delete_confirm" ng-click="cancelRemove(link)">No</button>
+      <article ng-show="!link.confirmUpdate">
+        <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://www.google.com/s2/u/0/favicons?domain={{link.domain}}" />{{link.description}}</a>
+        <ul class="tags">
+          <li ng-repeat="tag in link.tags" ><a href="" class="link_tag" ng-click="appendQuery(tag)">{{tag}}</a></li>
+        </ul>
+        <div class="link-actions">
+          <a href="" class="edit" title="Edit this link" ng-hide="link.confirmRemoval" ng-click="confirmUpdate(link)"></a>
+         <!--  <a class="delete" title="Delete this link" ng-hide="link.confirmRemoval" ng-click="confirmRemove(link)">×</a>
+          <div class="confirm" ng-show="link.confirmRemoval">
+            Are you sure?
+            <button class="cancel_confirm" ng-click="remove(link)">Yes</button>
+            /
+            <button class="delete_confirm" ng-click="cancelRemove(link)">No</button>
+          </div> -->
         </div>
-      </div> -->
-      <!-- <form ng-submit="update(link)" ng-show="link.confirmUpdate" class="edit-link">
+      </article>
+
+      <form ng-submit="update(link)" ng-show="link.confirmUpdate" class="edit-link">
         <input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" ng-model="link.description" />
-        <input type="text" name="tag" id="tag" placeholder="Tag, Tag" title="Edit tags (Comma delimited)" tabindex="2" ng-model="link.tags" ng-list />
+        <input type="text" name="tag" id="tag" placeholder="tag" tabindex="2" ng-model='tags' ng-list select-two='myTags' />
         <label for="private">
           <input id="private" type="checkbox" name="private" value="private" ng-model="link.share" />
           Private?
         </label>
-        <div>
-          <button type="submit" tabindex="3">Done</button>
+        <footer>
           <a href="" ng-click="cancelUpdate(link)">Cancel</a>
-        </div>
-      </form> -->
+          <button class="primary" type="submit" tabindex="3">Done</button>
+        </footer>
+      </form>
+
     </li>
   </ul>
 </section>

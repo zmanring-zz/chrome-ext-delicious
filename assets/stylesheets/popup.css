@@ -83,7 +83,7 @@ body {
   width: 500px;
 }
 
-footer {
+#content > footer {
   background-color: #f1f1f1;
   border-top: 1px solid #dedede;
   color: #a9a9a9;
@@ -92,17 +92,17 @@ footer {
   text-align: center;
 }
 
-footer p a {
+#content > footer p a {
   color: #a9a9a9;
   font-size: 13px;
 }
 
-footer p {
+#content > footer p {
   margin: 0;
   padding: 10px 0;
 }
 
-footer aside.share {
+#content > footer aside.share {
   position: absolute;
   left: 20px;
   top: 10px;
@@ -396,12 +396,8 @@ section#viewMyLinks header input {
   background-color: #fcfcfc;
   border-top: 1px solid #ccc;
   list-style-type: none;
-  padding: 10px  20px;
+  padding: 10px 55px 10px 41px;
   position: relative;
-}
-
-.links > li:first-child {
-  border-top: none;
 }
 
 .links > li:nth-child(odd) {
@@ -421,19 +417,24 @@ section#viewMyLinks header input {
   margin-right: 3px;
 }
 
-.links > li > a {
+.links > li > article > a {
   color: #285DA7;
   font-size: 15px;
   text-decoration: none;
+  text-indent: -21px;
 }
 
-.links > li > a:hover {
+.links > li > article > a:hover {
   text-decoration: underline;
 }
 
 .links > li.private {
   border-top: 1px solid #EFCFBD;
   background: #FBF3EF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQIW2P8/vzef05JJUYGJADmoEvAVSBLoGiDSaAIwowCABbcE8GJ8NQzAAAAAElFTkSuQmCC) repeat ;
+}
+
+.links > li:first-child {
+  border-top: none;
 }
 
 .links > li img.favicon{
@@ -444,7 +445,7 @@ section#viewMyLinks header input {
 
 .tags {
   margin: 0;
-  padding-left: 21px;
+  padding-left: 0;
   list-style: none;
 }
 
@@ -465,4 +466,33 @@ section#viewMyLinks header input {
 
 .tags li a {
   color: inherit;
+}
+
+.link-actions {
+  height: 0;
+}
+
+.links li:hover .edit::after {
+  background-size: 14px;
+  background: #ccc url(/assets/images/icon-edit.png) no-repeat center;
+  border-radius: 0 0 3px 3px;
+  content: '';
+  display: block;
+  height: 20px;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  width: 20px;
+}
+
+.links form {
+  margin: 0;
+}
+
+.links form footer {
+  text-align: right;
+}
+
+.links form label > input{
+  width: auto;
 }

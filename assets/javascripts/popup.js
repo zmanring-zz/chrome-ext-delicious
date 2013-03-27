@@ -430,6 +430,7 @@ controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious
 controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious) {
   $scope.links = [];
   $scope.linksLength = 0;
+  $scope.myTags = [];
 
   delicious.getLinks().then(function(links) {
     $scope.links = angular.extend(links, {confirmUpdate: false, confirmRemoval: false});
@@ -485,6 +486,10 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
     var query = $scope.query ? ($scope.query + ' ' + word) : word;
     $scope.query = query.trim();
   };
+
+  delicious.getAllMyTags().then(function(myTags) {
+    $scope.myTags = myTags;
+  });
 
   $scope.$watch('query', function(newValue, oldValue) {
     $scope.linksLength = $filter('filterByWord')($scope.links, newValue).length;
