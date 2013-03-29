@@ -18,8 +18,13 @@ app.config(['$routeProvider', function($routeProvider) {
       }
     }
   });
-  $routeProvider.when('/bookmarks', {templateUrl: 'views/bookmarks.html', controller: 'BookmarksCtrl'});
-  $routeProvider.otherwise({redirectTo: '/login'});
+  $routeProvider.when('/bookmarks', {
+    templateUrl: 'views/bookmarks.html',
+    controller: 'BookmarksCtrl'
+  });
+  $routeProvider.otherwise({
+    redirectTo: '/login'
+  });
 }]);
 
 app.config(function($compileProvider) {
@@ -50,8 +55,8 @@ filters.filter('list', [function() {
   };
 }]);
 
-filters.filter('filterByWord', function () {
-  return function (links, query) {
+filters.filter('filterByWord', function() {
+  return function(links, query) {
     // Only filter if there's a query string
     if (angular.isString(query)) {
       // Get array of words from query
@@ -60,12 +65,10 @@ filters.filter('filterByWord', function () {
       return links.filter(function(link) {
         // Combine link properties to search into string
         var search = [
-          link['description'],
-          link['href'],
-          ((link['shared'] === 'no') ? 'private' : ''),
-          link['tags'].join(' '),
-          link['time']
-        ].join(' ');
+        link['description'],
+        link['href'], ((link['shared'] === 'no') ? 'private' : ''),
+        link['tags'].join(' '),
+        link['time']].join(' ');
 
         // all of the words
         return words.every(function(word) {
@@ -91,7 +94,9 @@ services.factory('delicious', function($http, $q, $rootScope) {
       options = {
         method: 'GET',
         url: 'https://api.del.icio.us/v1/posts/update',
-        headers: {'Authorization' : 'Basic ' + hash}
+        headers: {
+          'Authorization': 'Basic ' + hash
+        }
       };
 
     return $http(options).success(function() {
@@ -104,7 +109,10 @@ services.factory('delicious', function($http, $q, $rootScope) {
       options = {
         method: 'POST',
         url: 'https://api.del.icio.us/v1/posts/add',
-        headers: {'Authorization' : 'Basic ' + hash, 'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {
+          'Authorization': 'Basic ' + hash,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
         transformRequest: function(obj) {
           var str = [];
           for (var p in obj) {
@@ -126,8 +134,12 @@ services.factory('delicious', function($http, $q, $rootScope) {
       options = {
         method: 'GET',
         url: 'https://api.del.icio.us/v1/posts/delete',
-        headers: {'Authorization' : 'Basic '+ hash},
-        params: {md5: link.hash}
+        headers: {
+          'Authorization': 'Basic ' + hash
+        },
+        params: {
+          md5: link.hash
+        }
       };
 
     return $http(options);
@@ -139,7 +151,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
     var regex = new RegExp(regexS);
     var results = regex.exec(window.location.search);
 
-    if(results === null) {
+    if (results === null) {
       return "";
     } else {
       return decodeURIComponent(results[1].replace(/\+/g, " "));
@@ -184,7 +196,9 @@ services.factory('delicious', function($http, $q, $rootScope) {
         options = {
           method: 'GET',
           url: 'https://api.del.icio.us/v1/posts/all?',
-          headers: {'Authorization' : 'Basic ' + hash},
+          headers: {
+            'Authorization': 'Basic ' + hash
+          },
           transformResponse: _parseLinksResponse
         };
 
@@ -209,7 +223,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
         }
 
         // domain root
-        link.domain = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/,"$1").split('/')[2];
+        link.domain = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1").split('/')[2];
 
         // Convert tag string to array of tags
         link.tags = link.tag.split('  ');
@@ -220,27 +234,31 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
-  Delicious.getUpdate = (function () {
+  Delicious.getUpdate = (function() {
     return function getUpdate() {
       var defer = $q.defer(),
         hash = localStorage.getItem('chrome-ext-delicious'),
         options = {
           method: 'GET',
           url: 'https://api.del.icio.us/v1/posts/update',
-          headers: {'Authorization' : 'Basic ' + hash},
+          headers: {
+            'Authorization': 'Basic ' + hash
+          },
           transformResponse: _parseUpdateResponse
         };
 
-      $http(options).then(function(resp) {
-        defer.resolve(resp.data);
-      });
+      if ($rootScope.loggedIn) {
+        $http(options).then(function(resp) {
+          defer.resolve(resp.data);
+        });
+      }
 
       return defer.promise;
     };
 
     function _parseUpdateResponse(data) {
       var rawUpdate = xml.xmlToJSON(data).update,
-          update = {};
+        update = {};
 
       // Remove '@' symbols from keys
       for (key in rawUpdate) {
@@ -255,14 +273,16 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
-  Delicious.getPopularSuggestedTags = (function () {
+  Delicious.getPopularSuggestedTags = (function() {
     return function getPopularSuggestedTags(url) {
       var defer = $q.defer(),
         hash = localStorage.getItem('chrome-ext-delicious'),
         options = {
           method: 'GET',
           url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url,
-          headers: {'Authorization' : 'Basic ' + hash},
+          headers: {
+            'Authorization': 'Basic ' + hash
+          },
           transformResponse: _parseSuggestionsResponse
         };
 
@@ -291,14 +311,16 @@ services.factory('delicious', function($http, $q, $rootScope) {
     };
   })();
 
-  Delicious.getAllMyTags = (function () {
+  Delicious.getAllMyTags = (function() {
     return function getAllMyTags() {
       var defer = $q.defer(),
         hash = localStorage.getItem('chrome-ext-delicious'),
         options = {
           method: 'GET',
           url: 'https://api.del.icio.us/v1/tags/get',
-          headers: {'Authorization' : 'Basic ' + hash},
+          headers: {
+            'Authorization': 'Basic ' + hash
+          },
           transformResponse: _parseTags
         };
 
@@ -350,10 +372,13 @@ services.factory('delicious', function($http, $q, $rootScope) {
 var controllers = angular.module('yum.controllers', []);
 
 controllers.controller('AppCtrl', function($scope, $location, delicious) {
-  $scope.menu = [
-    {path: '/new', text: 'Add link'},
-    {path: '/bookmarks', text: 'My links'}
-  ];
+  $scope.menu = [{
+    path: '/new',
+    text: 'Add link'
+  }, {
+    path: '/bookmarks',
+    text: 'My links'
+  }];
 
   $scope.isSelected = function(item) {
     var path = $location.path();
@@ -362,7 +387,7 @@ controllers.controller('AppCtrl', function($scope, $location, delicious) {
 
   $scope.logout = function(link) {
     delicious.logout();
-    $location.reload();
+    $location.path('/login');
   };
 
   $scope.extVersion = function() {
@@ -377,13 +402,13 @@ controllers.controller('LoginCtrl', function($scope, $rootScope, $location, deli
 
     delicious.authenticate($scope.username, $scope.password)
       .success(function(data) {
-        $rootScope.loggedIn = true;
-        $location.path('/new');
-      })
+      $rootScope.loggedIn = true;
+      $location.path('/new');
+    })
       .error(function(data) {
-        $rootScope.loginFailed = true;
-        $location.path('/new');
-      });
+      $rootScope.loginFailed = true;
+      $location.path('/new');
+    });
   };
 });
 
@@ -433,7 +458,10 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   $scope.myTags = [];
 
   delicious.getLinks().then(function(links) {
-    $scope.links = angular.extend(links, {confirmUpdate: false, confirmRemoval: false});
+    $scope.links = angular.extend(links, {
+      confirmUpdate: false,
+      confirmRemoval: false
+    });
     $scope.linksLength = $scope.links.length;
   });
 
@@ -463,9 +491,10 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
       tags: link.tags.toString(),
       replace: 'yes'
     }).then(null,
-      function() {
-        // Handle failed update request
-        link.confirmUpdate = true;
+
+    function() {
+      // Handle failed update request
+      link.confirmUpdate = true;
     });
   };
 

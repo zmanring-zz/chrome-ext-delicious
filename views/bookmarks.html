@@ -5,7 +5,7 @@
     <input class="filterinput" type="search" placeholder="Filter" ng-model="query" />
   </header>
   <ul class="links">
-    <li ng-repeat="link in links | filterByWord:query" ng-class="{private: isPrivate(link)}">
+    <li ng-repeat="link in links | filterByWord:query" ng-class="{private: isPrivate(link), edit: link.confirmUpdate}">
       <article ng-show="!link.confirmUpdate">
         <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://www.google.com/s2/u/0/favicons?domain={{link.domain}}" />{{link.description}}</a>
         <ul class="tags">
@@ -25,7 +25,7 @@
 
       <form ng-submit="update(link)" ng-show="link.confirmUpdate" class="edit-link">
         <input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" ng-model="link.description" />
-        <input type="text" name="tag" id="tag" placeholder="tag" tabindex="2" ng-model='link.tags' ng-list select-two='myTags' />
+        <input type="text" name="tag" id="tag" placeholder="tag" tabindex="2" ng-model='link.tags' ng-list />
         <label for="private">
           <input id="private" type="checkbox" name="private" value="private" ng-model="link.share" />
           Private?

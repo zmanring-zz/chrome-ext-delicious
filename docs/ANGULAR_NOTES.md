@@ -7,12 +7,12 @@ Features currently implemented:
   * View/Filter Bookmarks
   * Edit/Update Bookmark
   * Delete Bookmark
+  * Bookmark filtering by character *(currently uses simple string matching)*
+  * Social/Footer
 
 Broken/Missing Features *(aka Todo List)*:
 
   * CSS/UI updates
-  * Bookmark filtering by character *(currently uses simple string matching)*
-  * Social/Footer
   * Analytics
   * modal.js and background.js
   * Others I might be missing
