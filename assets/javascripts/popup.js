@@ -226,6 +226,9 @@ services.factory('delicious', function($http, $q, $rootScope) {
         link.domain = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1").split('/')[2];
 
         // Convert tag string to array of tags
+        // if (link.shared === 'no') {
+        //   link.tag = 'private  ' + link.tag;
+        // }
         link.tags = link.tag.split('  ');
         delete link.tag;
 
@@ -355,7 +358,14 @@ services.factory('delicious', function($http, $q, $rootScope) {
 
   // Check for updates
   Delicious.getUpdate().then(function(update) {
-    var lastUpdate = JSON.parse(localStorage.getItem('chrome-ext-delicious-last-update'));
+
+    var data = localStorage.getItem('chrome-ext-delicious-last-update');
+
+    if (data !== "NaN") {
+      var lastUpdate = JSON.parse(data);
+    } else {
+      lastUpdate = 0;
+    }
 
     if (update.time !== lastUpdate) {
       Delicious.fetchLinks();

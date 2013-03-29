@@ -423,6 +423,7 @@ section#viewMyLinks header input {
   font-size: 15px;
   text-decoration: none;
   text-indent: -21px;
+  word-break: break-all;
 }
 
 .links > li > article > a:hover {
@@ -453,15 +454,22 @@ section#viewMyLinks header input {
 .tags li {
   display: inline-block;
   font-size: 13px;
-  margin-right: 5px;
+  margin-right: 2px;
   color: #a9a9a9;
+}
+
+.tags li.private-tag {
+  color: #d06c2d;
 }
 
 .tags li::after {
   content: ',';
+  position: relative;
+  left: -4px;
 }
 
-.tags li:last-child::after {
+.tags li:last-child::after,
+.tags li.private-tag::after {
   display: none;
 }
 
