@@ -2,12 +2,23 @@
 <section id="viewMyLinks">
   <header>
     <h1>Links ({{linksLength}})</h1>
-    <input class="filterinput" type="search" placeholder="Filter" ng-model="query" />
+    <span>
+      <label>Sort by
+        <select>
+          <option value="Date">Date</option>
+          <option value="Description">Description</option>
+          <option value="Tag">Tag count</option>
+        </select>
+      </label>
+
+      <input class="filterinput" type="search" placeholder="Filter" ng-model="query" />
+    </span>
+
   </header>
   <ul class="links">
     <li ng-repeat="link in links | filterByWord:query" ng-class="{private: isPrivate(link), edit: link.confirmUpdate}">
       <article ng-show="!link.confirmUpdate">
-        <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://www.google.com/s2/u/0/favicons?domain={{link.domain}}" />{{link.description}}</a>
+        <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
         <ul class="tags">
           <li class="private-tag" ng-show="isPrivate(link)">
             <a href="" class="link_tag" ng-click="appendQuery('private')">private</a>
@@ -44,4 +55,7 @@
 
     </li>
   </ul>
+<!--   <footer>
+    <p>Displaying {{linksLength}} results</p>
+  </footer> -->
 </section>

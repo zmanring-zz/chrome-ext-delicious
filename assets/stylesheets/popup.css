@@ -378,11 +378,18 @@ section#viewMyLinks {
   padding: 0;
 }
 
-section#viewMyLinks header input {
-  position: absolute;
-  right: 0;
+section#viewMyLinks header span {
+  display: inline-block;
   top: 19px;
-  width: 150px;
+  right: 0;
+}
+
+section#viewMyLinks header input {
+  width: 165px;
+}
+
+section#viewMyLinks header label {
+  font-size: 13px;
 }
 
 .links {

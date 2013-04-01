@@ -142,7 +142,10 @@ services.factory('delicious', function($http, $q, $rootScope) {
         }
       };
 
-    return $http(options);
+    return $http(options).success(function() {
+      // Clear out links cache
+      localStorage.removeItem('chrome-ext-delicious-links');
+    });
   };
 
   Delicious.getQueryStringByName = function(name) {
@@ -223,7 +226,7 @@ services.factory('delicious', function($http, $q, $rootScope) {
         }
 
         // domain root
-        link.domain = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1").split('/')[2];
+        link.domain = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1");
 
         // Convert tag string to array of tags
         // if (link.shared === 'no') {
