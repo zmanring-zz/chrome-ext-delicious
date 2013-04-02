@@ -548,37 +548,39 @@ directives.directive('appVersion', ['version', function(version) {
   };
 }]);
 
+// TODO: Make select-two-show optional
 directives.directive('selectTwo', [function() {
-  function link(scope, element, attrs) {
-    var model = attrs['ngModel'],
-      select = angular.element(element);
+  function link(scope, element, attrs, a) {
+    var select = angular.element(element);
 
-    scope.$watch('myTags', function(newTags, oldTags) {
-      if (!newTags) return;
-      select.select2({
-        tags: newTags,
-        tokenSeparators: [',']
-      });
-    });
-
-    scope.$watch('tags', function(newTags, oldTags) {
-      if (!newTags) return;
-      select.select2('val', newTags);
+    scope.$watch('show', initSelectTwo);
+    scope.$watch('tags', initSelectTwo);
+    scope.$watch('val', function(newVal) {
+      select.select2('val', newVal);
     });
 
     select.bind('change', function(e) {
       scope.$apply(function() {
-        scope.tags = e.val;
+        scope.val = e.val;
       });
     });
+
+    function initSelectTwo() {
+      if (!scope.show) return;
+      select.select2({
+        tags: scope.tags,
+        tokenSeparators: [',']
+      });
+      select.select2('val', scope.val);
+    };
   };
 
   return {
     restrict: 'A',
-    require: 'ngModel',
     scope: {
-      tags: '=ngModel',
-      myTags: '=selectTwo'
+      val: '=ngModel',
+      tags: '=selectTwo',
+      show: '=selectTwoShow'
     },
     link: link
   };
