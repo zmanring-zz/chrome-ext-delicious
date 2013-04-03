@@ -226,12 +226,9 @@ services.factory('delicious', function($http, $q, $rootScope) {
         }
 
         // domain root
-        link.domain = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1");
+        link['domain'] = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1");
+        link['private'] = (link.shared === 'no') ? true : false;
 
-        // Convert tag string to array of tags
-        // if (link.shared === 'no') {
-        //   link.tag = 'private  ' + link.tag;
-        // }
         link.tags = link.tag.split('  ');
         delete link.tag;
 
@@ -500,7 +497,7 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
     delicious.addLink({
       url: link.href,
       description: link.description,
-      shared: (link.share ? 'yes' : 'no'),
+      shared: ((link['private']) ? 'no' : 'yes'),
       tags: link.tags.toString(),
       replace: 'yes'
     }).then(null,
@@ -521,7 +518,7 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   };
 
   $scope.isPrivate = function(link) {
-    return (link.shared === 'no');
+    return link['private'];
   };
 
   $scope.appendQuery = function(word) {
