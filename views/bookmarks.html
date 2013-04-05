@@ -1,13 +1,16 @@
 <!-- Tab 2 -->
 <section id="viewMyLinks">
   <header>
-    <h1>Links ({{linksLength}})</h1>
+    <h1>({{linksLength}})</h1>
     <span>
       <label>Sort by
-        <select>
-          <option value="Date">Date</option>
-          <option value="Description">Description</option>
-          <option value="Tag">Tag count</option>
+        <select ng-model="order">
+          <option value="time">Date</option>
+          <option value="description">Description</option>
+        </select>
+        <select ng-model="reverse">
+          <option value="true">Desc</option>
+          <option value="false">Asc</option>
         </select>
       </label>
 
@@ -16,7 +19,7 @@
 
   </header>
   <ul class="links">
-    <li ng-repeat="link in links | filterByWord:query" ng-class="{private: isPrivate(link), edit: link.confirmUpdate}">
+    <li ng-repeat="link in links | filterByWord:query | orderBy:order:reverse" ng-class="{private: isPrivate(link), edit: link.confirmUpdate}">
       <article ng-show="!link.confirmUpdate">
         <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
         <ul class="tags">

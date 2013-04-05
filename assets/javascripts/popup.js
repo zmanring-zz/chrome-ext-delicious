@@ -467,6 +467,9 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   $scope.links = [];
   $scope.linksLength = 0;
   $scope.myTags = [];
+  $scope.query = '';
+  $scope.order = 'time';
+  $scope.reverse = true;
 
   delicious.getLinks().then(function(links) {
     $scope.links = angular.extend(links, {
