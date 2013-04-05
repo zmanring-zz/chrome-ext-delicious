@@ -499,7 +499,7 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
       url: link.href,
       description: link.description,
       shared: ((link['private']) ? 'no' : 'yes'),
-      tags: link.tags.toString(),
+      tags: link.tags.join(', '),
       replace: 'yes'
     }).then(null,
 
