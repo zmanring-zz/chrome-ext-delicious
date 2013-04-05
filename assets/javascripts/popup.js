@@ -397,6 +397,7 @@ controllers.controller('AppCtrl', function($scope, $location, delicious) {
 
   $scope.logout = function(link) {
     delicious.logout();
+    $rootScope.loggedIn = false;
     $location.path('/login');
   };
 
