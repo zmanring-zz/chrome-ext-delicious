@@ -471,14 +471,6 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
   $scope.order = 'time';
   $scope.reverse = true;
 
-  delicious.getLinks().then(function(links) {
-    $scope.links = angular.extend(links, {
-      confirmUpdate: false,
-      confirmRemoval: false
-    });
-    $scope.linksLength = $scope.links.length;
-  });
-
   $scope.confirmRemove = function(link) {
     link.confirmRemoval = true;
   };
@@ -504,12 +496,7 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
       shared: ((link['private']) ? 'no' : 'yes'),
       tags: link.tags.join(', '),
       replace: 'yes'
-    }).then(null,
-
-    function() {
-      // Handle failed update request
-      link.confirmUpdate = true;
-    });
+    }).then($scope.getAllMyTags);
   };
 
   $scope.remove = function(link) {
@@ -530,9 +517,21 @@ controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, deli
     $scope.query = query.trim();
   };
 
-  delicious.getAllMyTags().then(function(myTags) {
-    $scope.myTags = myTags;
+  $scope.getAllMyTags = function() {
+    delicious.getAllMyTags().then(function(myTags) {
+      $scope.myTags = myTags;
+    });
+  };
+
+  delicious.getLinks().then(function(links) {
+    $scope.links = angular.extend(links, {
+      confirmUpdate: false,
+      confirmRemoval: false
+    });
+    $scope.linksLength = $scope.links.length;
   });
+
+  $scope.getAllMyTags();
 
   $scope.$watch('query', function(newValue, oldValue) {
     $scope.linksLength = $filter('filterByWord')($scope.links, newValue).length;
