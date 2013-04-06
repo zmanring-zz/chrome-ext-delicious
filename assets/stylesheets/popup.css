@@ -74,6 +74,7 @@
 body {
   -webkit-box-sizing: border-box;
   background-color:#fff;
+  border: 2px solid #fff;
   color: #444;
   font-family: 'helvetica','arial', sans-serif;
   font-weight: normal;
@@ -421,7 +422,7 @@ section#viewMyLinks header input {
   font-size: 13px;
   margin: 0;
   padding: 7px 0;
-  width: 315px;
+  width: 311px;
 }
 
 section#viewMyLinks header input:focus {
