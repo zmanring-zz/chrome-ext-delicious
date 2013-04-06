@@ -86,7 +86,7 @@
   // Services
   var services = angular.module('yum.services', []);
 
-  services.factory('delicious', function($http, $q, $rootScope) {
+  services.factory('delicious', function($http, $q, $rootScope, $location) {
     var Delicious = {};
 
     Delicious.authenticate = function(username, password) {
@@ -149,16 +149,11 @@
     };
 
     Delicious.getQueryStringByName = function(name) {
-      name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-      var regexS = "[\\?&]" + name + "=([^&#]*)";
-      var regex = new RegExp(regexS);
-      var results = regex.exec(window.location.search);
-
-      if (results === null) {
-        return "";
-      } else {
-        return decodeURIComponent(results[1].replace(/\+/g, " "));
-      }
+      name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
+      var regexS = '[\\?&]' + name + '=([^&#]*)',
+        regex = new RegExp(regexS),
+        results = regex.exec($location.$$absUrl);
+      return results ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
     };
 
     Delicious.getTab = function() {
@@ -171,8 +166,9 @@
           });
         });
       } else {
-        $rootScope.$apply(function() {
-          defer.resolve(DELICIOUS.getQueryStringByName('url'));
+        defer.resolve({
+          url: Delicious.getQueryStringByName('url'),
+          title: Delicious.getQueryStringByName('title')
         });
       }
 
