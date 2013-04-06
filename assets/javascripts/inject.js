@@ -7,7 +7,7 @@ $(function () {
       var html = [
          '<a accesskey="d">',
          '<div id="chrome-ext-delicious-frame">',
-            '<iframe id="chrome-ext-delicious-iframe" src="chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/popup.html?url=' + document.URL + '&title=' + document.title + '" />',
+            '<iframe seamless id="chrome-ext-delicious-iframe" src="chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/popup.html?url=' + document.URL + '&title=' + document.title + '" />',
             '<button class="close_frame" title="close">&times;</button>',
          '</div>'
       ].join('');
