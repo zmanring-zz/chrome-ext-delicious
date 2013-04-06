@@ -523,3 +523,18 @@ section#viewMyLinks header label {
   z-index: 1;
   padding: 25px;
 }
+
+.view-leave-setup, .view-enter-setup {
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -ms-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
+}
+ 
+.view-enter-setup {
+  opacity: 0;
+}
+.view-enter-setup.view-enter-start {
+  opacity: 1;
+}
