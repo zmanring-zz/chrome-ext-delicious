@@ -60,7 +60,7 @@ filters.filter('filterByWord', function() {
     // Only filter if there's a query string
     if (angular.isString(query)) {
       // Get array of words from query
-      var words = query.split(' ');
+      var words = query.toLowerCase().split(' ');
       // Filter the links and return them
       return links.filter(function(link) {
         // Combine link properties to search into string
@@ -68,7 +68,7 @@ filters.filter('filterByWord', function() {
         link['description'],
         link['href'], ((link['shared'] === 'no') ? 'private' : ''),
         link['tags'].join(' '),
-        link['time']].join(' ');
+        link['time']].join(' ').toLowerCase();
 
         // all of the words
         return words.every(function(word) {
