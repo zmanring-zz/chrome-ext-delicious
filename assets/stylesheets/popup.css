@@ -491,7 +491,7 @@ section#viewMyLinks header label {
   margin-bottom: 1px;
 }
 
-.tags {
+ul.tags {
   margin: 0;
   padding-left: 20px;
   list-style: none;
