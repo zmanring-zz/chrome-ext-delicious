@@ -126,8 +126,10 @@ section header > span {
 }
 
 section header > span > input {
-  width: auto;
+  font-size: 16px;
+  margin: 0;
   vertical-align: top;
+  width: auto;
 }
 
 h1 {
@@ -444,12 +446,22 @@ section#viewMyLinks header label {
   background-color: #fcfcfc;
   border-top: 1px solid #ccc;
   list-style-type: none;
-  padding: 10px 20px;
+  padding: 10px 45px 10px 20px;
   position: relative;
 }
 
 .links > li:nth-child(odd) {
   background-color: #f7f7f7;
+}
+
+.links > li label {
+  float: left;
+  margin-top: 10px;
+}
+
+.links > li label input {
+  margin-bottom: 0;
+  vertical-align: top;
 }
 
 .links > li p {
@@ -545,6 +557,7 @@ ul.tags {
 }
 
 .links form footer {
+  margin-top: 10px;
   text-align: right;
 }
 
