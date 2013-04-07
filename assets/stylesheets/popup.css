@@ -41,8 +41,7 @@
   -webkit-border-radius: 0;
   background: #fafafa;
   border-color: #285da7;
-  margin-top: -3px;
-  margin-left: -2px;
+  margin-top: -2px;
 }
 
 
@@ -75,13 +74,12 @@
 body {
   -webkit-box-sizing: border-box;
   background-color:#fff;
-  border: 2px solid #fff;
   color: #444;
   font-family: 'helvetica','arial', sans-serif;
   font-weight: normal;
   margin: 0;
   overflow: hidden;
-  padding:0;
+  padding:2px;
   position: relative;
   width: 500px;
 }

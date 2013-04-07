@@ -1,5 +1,17 @@
+//Google analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
+
 (function(angular) {
   'use strict';
+
+  // Google Analyitcs
+  var ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
 
   // App
   var app = angular.module('yum', ['yum.filters', 'yum.services', 'yum.controllers', 'yum.directives']);
@@ -57,6 +69,7 @@
 
   filters.filter('filterByWord', function() {
     return function(links, query) {
+
       // Only filter if there's a query string
       if (angular.isString(query)) {
         // Get array of words from query
@@ -230,7 +243,7 @@
 
           return link;
         });
-      };
+      }
     }());
 
     Delicious.getUpdate = (function() {
@@ -269,7 +282,7 @@
         update.time = new Date(update.time).getTime();
 
         return update;
-      };
+      }
     }());
 
     Delicious.getPopularSuggestedTags = (function() {
@@ -297,7 +310,7 @@
 
         if (json.suggest) {
           return json.suggest.popular.map(function(rawSuggestionTag) {
-            var suggestedTag = {}
+            var suggestedTag = {};
 
             // Remove '@' symbols from keys
             for (key in rawSuggestionTag) {
@@ -307,7 +320,7 @@
             return suggestedTag.tag;
           });
         }
-      };
+      }
     }());
 
     Delicious.getAllMyTags = (function() {
@@ -377,7 +390,7 @@
   // Controllers
   var controllers = angular.module('yum.controllers', []);
 
-  controllers.controller('AppCtrl', function($scope, $location, delicious) {
+  controllers.controller('AppCtrl', function($scope, $rootScope, $location, delicious) {
     $scope.menu = [{
       path: '/new',
       text: 'Add link'
@@ -404,6 +417,9 @@
   });
 
   controllers.controller('LoginCtrl', function($scope, $rootScope, $location, delicious) {
+
+    _gaq.push(['_trackPageview', '/login']);
+
     $scope.login = function() {
       $scope.loading = true;
 
@@ -426,6 +442,8 @@
     $scope.myTags = [];
     $scope.suggestedTags = [];
 
+    _gaq.push(['_trackPageview', '/new']);
+
     $scope.add = function() {
       $scope.loading = true;
 
@@ -437,6 +455,7 @@
         replace: 'yes'
       }).then(function() {
         $location.path('/bookmarks');
+        _gaq.push(['_trackEvent', 'link-added', 'action']);
       });
     };
 
@@ -467,6 +486,8 @@
     $scope.order = 'time';
     $scope.reverse = true;
 
+    _gaq.push(['_trackPageview', '/bookmarks']);
+
     $scope.confirmRemove = function(link) {
       link.confirmRemoval = true;
     };
@@ -477,6 +498,7 @@
 
     $scope.confirmUpdate = function(link) {
       link.confirmUpdate = true;
+      _gaq.push(['_trackEvent', 'link-btn-edit', 'clicked']);
     };
 
     $scope.cancelUpdate = function(link) {
@@ -492,7 +514,10 @@
         shared: ((link['private']) ? 'no' : 'yes'),
         tags: link.tags.join(', '),
         replace: 'yes'
-      }).then($scope.getAllMyTags);
+      }).then(function() {
+        $scope.getAllMyTags();
+        _gaq.push(['_trackEvent', 'link-updated', 'action']);
+      });
     };
 
     $scope.remove = function(link) {
@@ -501,6 +526,7 @@
 
       delicious.removeLink(link).then(null, function() {
         $scope.links.splice(index, 0, link);
+        _gaq.push(['_trackEvent', 'link-removed', 'action']);
       });
     };
 
@@ -531,6 +557,7 @@
 
     $scope.$watch('query', function(newValue, oldValue) {
       $scope.linksLength = $filter('filterByWord')($scope.links, newValue).length;
+      // _gaq.push(['_trackEvent', 'link-filter', 'action']);
     });
   });
 
@@ -568,8 +595,8 @@
           tokenSeparators: [',']
         });
         select.select2('val', scope.val);
-      };
-    };
+      }
+    }
 
     return {
       restrict: 'A',
