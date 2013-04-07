@@ -434,6 +434,10 @@ section#viewMyLinks header label {
   font-size: 13px;
 }
 
+a.remove.confirm {
+  color: #CE6C36;
+}
+
 .links {
   border-top: 1px solid #cecece;
   margin: 0;
@@ -583,7 +587,7 @@ ul.tags {
   -o-transition: all 0.4s;
   transition: all 0.4s;
 }
- 
+
 .view-enter-setup {
   opacity: 0;
 }
