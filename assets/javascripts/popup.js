@@ -485,7 +485,6 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
     $scope.query = '';
     $scope.order = 'time';
     $scope.reverse = true;
-    $scope.cleanLink = {};
 
     _gaq.push(['_trackPageview', '/bookmarks']);
 
@@ -499,12 +498,12 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
 
     $scope.confirmUpdate = function(link) {
       link.confirmUpdate = true;
-      angular.copy(link, $scope.cleanLink);
+      link.clean = angular.copy(link);
       _gaq.push(['_trackEvent', 'link-btn-edit', 'clicked']);
     };
 
     $scope.cancelUpdate = function(link) {
-      angular.copy($scope.cleanLink, link);
+      angular.copy(link.clean, link);
       link.confirmUpdate = false;
     };
 
