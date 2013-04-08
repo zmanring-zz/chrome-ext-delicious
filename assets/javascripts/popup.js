@@ -460,6 +460,7 @@
         tags: $scope.tags.join(', '),
         replace: 'yes'
       }).then(function() {
+        // Set presistant private checkmark
         localStorage.setItem('chrome-ext-delicious-private', $scope.share);
         $location.path('/bookmarks');
         analytics.push(['_trackEvent', 'link-added', 'action']);
