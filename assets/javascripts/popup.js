@@ -1,17 +1,5 @@
-//Google analytics
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
-
 (function(angular) {
   'use strict';
-
-  // Google Analyitcs
-  var ga = document.createElement('script');
-  ga.type = 'text/javascript';
-  ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(ga, s);
 
   // App
   var app = angular.module('yum', ['yum.filters', 'yum.services', 'yum.controllers', 'yum.directives']);
@@ -43,17 +31,21 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
     $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|chrome-extension):/);
   });
 
-  app.run(function($rootScope, $location) {
+  app.run(function($rootScope, $location, analytics) {
     $rootScope.loggedIn = localStorage.getItem('chrome-ext-delicious') ? true : false;
 
     if ($rootScope.loggedIn) {
       $location.path('/new');
     }
 
-    $rootScope.$on('$routeChangeStart', function(event, next, current) {
+    $rootScope.$on('$routeChangeStart', function(e, next, current) {
       if (!$rootScope.loggedIn && next.$route.controller !== 'LoginCtrl') {
         $location.path('/login');
       }
+    });
+
+    $rootScope.$on('$viewContentLoaded', function(e) {
+      analytics.push(['_trackPageview', $location.path()]);
     });
   });
 
@@ -386,6 +378,22 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
     return Delicious;
   });
 
+  services.factory('analytics', function($window, $document) {
+    //Google analytics
+    var analytics = $window._gaq || [];
+    analytics.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
+
+    // Google Analyitcs
+    var ga = $document[0].createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = 'https://ssl.google-analytics.com/ga.js';
+    var s = $document[0].getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+
+    return analytics;
+  });
+
 
   // Controllers
   var controllers = angular.module('yum.controllers', []);
@@ -417,9 +425,6 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
   });
 
   controllers.controller('LoginCtrl', function($scope, $rootScope, $location, delicious) {
-
-    _gaq.push(['_trackPageview', '/login']);
-
     $scope.login = function() {
       $scope.loading = true;
 
@@ -435,14 +440,12 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
     };
   });
 
-  controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious) {
+  controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious, analytics) {
     $scope.url = tab.url;
     $scope.description = tab.title;
     $scope.tags = [];
     $scope.myTags = [];
     $scope.suggestedTags = [];
-
-    _gaq.push(['_trackPageview', '/new']);
 
     $scope.add = function() {
       $scope.loading = true;
@@ -455,7 +458,7 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
         replace: 'yes'
       }).then(function() {
         $location.path('/bookmarks');
-        _gaq.push(['_trackEvent', 'link-added', 'action']);
+        analytics.push(['_trackEvent', 'link-added', 'action']);
       });
     };
 
@@ -478,15 +481,13 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
     });
   });
 
-  controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious) {
+  controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious, analytics) {
     $scope.links = [];
     $scope.linksLength = 0;
     $scope.myTags = [];
     $scope.query = '';
     $scope.order = 'time';
     $scope.reverse = true;
-
-    _gaq.push(['_trackPageview', '/bookmarks']);
 
     $scope.confirmRemove = function(link) {
       link.confirmRemoval = true;
@@ -518,7 +519,7 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
         replace: 'yes'
       }).then(function() {
         $scope.getAllMyTags();
-        _gaq.push(['_trackEvent', 'link-updated', 'action']);
+        analytics.push(['_trackEvent', 'link-updated', 'action']);
       });
     };
 
@@ -528,7 +529,7 @@ _gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
 
       delicious.removeLink(link).then(null, function() {
         $scope.links.splice(index, 0, link);
-        _gaq.push(['_trackEvent', 'link-removed', 'action']);
+        analytics.push(['_trackEvent', 'link-removed', 'action']);
       });
     };
 
