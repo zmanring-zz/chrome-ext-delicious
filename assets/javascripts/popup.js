@@ -354,7 +354,7 @@
     }());
 
     Delicious.logout = function() {
-      localStorage.removeItem('chrome-ext-delicious');
+      localStorage.clear();
     };
 
     // Check for updates
