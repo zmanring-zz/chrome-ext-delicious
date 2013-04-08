@@ -447,6 +447,9 @@
     $scope.myTags = [];
     $scope.suggestedTags = [];
 
+    // Get presistant private checkmark
+    $scope.share = (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? true : false;
+
     $scope.add = function() {
       $scope.loading = true;
 
@@ -457,6 +460,7 @@
         tags: $scope.tags.join(', '),
         replace: 'yes'
       }).then(function() {
+        localStorage.setItem('chrome-ext-delicious-private', $scope.share);
         $location.path('/bookmarks');
         analytics.push(['_trackEvent', 'link-added', 'action']);
       });
