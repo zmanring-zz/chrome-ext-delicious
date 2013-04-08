@@ -371,7 +371,7 @@
       }
 
       function setSetting(key, value) {
-        return localStorage.setItem(prefix + key, value);
+        return localStorage.setItem(prefix + key, JSON.stringify(value));
       }
 
       return function setting(key, value) {
