@@ -360,7 +360,9 @@
     Delicious.setting = (function() {
       var prefix = 'chrome-ext-delicious-setting-',
         defaults = {
-          'share': false
+          'share': false,
+          'order': 'time',
+          'reverse': true
         };
 
       function getSetting(key) {
@@ -516,8 +518,8 @@
     $scope.linksLength = 0;
     $scope.myTags = [];
     $scope.query = '';
-    $scope.order = 'time';
-    $scope.reverse = true;
+    $scope.order = delicious.setting('order');
+    $scope.reverse = delicious.setting('reverse');
 
     $scope.confirmRemove = function(link) {
       link.confirmRemoval = true;
@@ -591,6 +593,14 @@
     $scope.$watch('query', function(newValue, oldValue) {
       $scope.linksLength = $filter('filterByWord')($scope.links, newValue).length;
       // _gaq.push(['_trackEvent', 'link-filter', 'action']);
+    });
+
+    $scope.$watch('order', function(value) {
+      delicious.setting('order', value);
+    });
+
+    $scope.$watch('reverse', function(value) {
+      delicious.setting('reverse', value);
     });
   });
 
