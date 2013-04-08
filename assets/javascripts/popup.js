@@ -357,6 +357,28 @@
       localStorage.removeItem('chrome-ext-delicious');
     };
 
+    Delicious.setting = (function() {
+      var prefix = 'chrome-ext-delicious-setting-',
+        defaults = {
+          'share': false
+        };
+
+      function getSetting(key) {
+        var setting = localStorage.getItem(prefix + key),
+          defaultSetting = defaults[key];
+
+        return setting ? JSON.parse(setting) : defaultSetting;
+      }
+
+      function setSetting(key, value) {
+        return localStorage.setItem(prefix + key, value);
+      }
+
+      return function setting(key, value) {
+        return angular.isUndefined(value) ? getSetting(key) : setSetting(key, value);
+      }
+    }());
+
     // Check for updates
     Delicious.getUpdate().then(function(update) {
 
