@@ -470,7 +470,7 @@
     $scope.suggestedTags = [];
 
     // Get presistant private checkmark
-    $scope.share = (localStorage.getItem('chrome-ext-delicious-private') === 'true') ? true : false;
+    $scope.share = delicious.setting('share');
 
     $scope.add = function() {
       $scope.loading = true;
@@ -481,9 +481,7 @@
         shared: (!$scope.share ? 'yes' : 'no'),
         tags: $scope.tags.join(', '),
         replace: 'yes'
-      }).then(function() {
-        // Set presistant private checkmark
-        localStorage.setItem('chrome-ext-delicious-private', $scope.share);
+      }).then(function() {        
         $location.path('/bookmarks');
         analytics.push(['_trackEvent', 'link-added', 'action']);
       });
@@ -505,6 +503,11 @@
 
     delicious.getPopularSuggestedTags($scope.url).then(function(tags) {
       $scope.suggestedTags = tags;
+    });
+
+    $scope.$watch('share', function(value) {
+      // Set presistant private checkmark
+      delicious.setting('share', value);
     });
   });
 
