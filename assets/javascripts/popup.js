@@ -641,4 +641,28 @@
     };
   }]);
 
+  directives.directive('customCheckbox', [function() {
+    function link(scope, element, attrs) {
+      var className = attrs['customCheckbox'], $wrapper;
+
+      element.wrap('<div class="' + className +'" />');
+      $wrapper = element.parent();
+
+      $wrapper.on('click', function(e) {
+        scope.$apply(function() {
+          scope[attrs['ngModel']] = !scope[attrs['ngModel']];
+        });
+      });
+
+      scope.$watch(attrs['ngModel'], function(value) {
+        $wrapper.toggleClass(className + '-checked', value);
+      });
+    }
+
+    return {
+      restrict: 'A',
+      link: link
+    };
+  }]);
+
 }(angular));
