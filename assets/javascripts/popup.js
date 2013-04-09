@@ -402,20 +402,9 @@
     return Delicious;
   });
 
-  services.factory('analytics', function($window, $document) {
-    //Google analytics
-    var analytics = $window._gaq || [];
-    analytics.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
-
-    // Google Analyitcs
-    var ga = $document[0].createElement('script');
-    ga.type = 'text/javascript';
-    ga.async = true;
-    ga.src = 'https://ssl.google-analytics.com/ga.js';
-    var s = $document[0].getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(ga, s);
-
-    return analytics;
+  services.factory('analytics', function($window) {
+    $window._gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
+    return $window._gaq;
   });
 
 
@@ -532,7 +521,7 @@
     $scope.confirmUpdate = function(link) {
       link.confirmUpdate = true;
       link.clean = angular.copy(link);
-      _gaq.push(['_trackEvent', 'link-btn-edit', 'clicked']);
+      analytics.push(['_trackEvent', 'link-btn-edit', 'clicked']);
     };
 
     $scope.cancelUpdate = function(link) {
