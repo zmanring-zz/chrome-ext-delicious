@@ -476,8 +476,10 @@ a.remove.confirm {
   border-top: 1px solid #cecece;
   margin: 0;
   max-height: 398px;
+  overflow-x: hidden;
   overflow-y: scroll;
   padding: 0;
+  background-color: #f7f7f7;
 }
 
 .links > li {
@@ -614,7 +616,7 @@ ul.tags {
   padding: 20px;
 }
 
-.view-leave-setup, .view-enter-setup {
+.view-enter-setup {
   -webkit-transition: all 0.4s;
   -moz-transition: all 0.4s;
   -ms-transition: all 0.4s;
@@ -625,6 +627,38 @@ ul.tags {
 .view-enter-setup {
   opacity: 0;
 }
+
 .view-enter-setup.view-enter-start {
   opacity: 1;
 }
+
+.link-enter-setup, .link-leave-setup {
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -ms-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
+}
+
+.link-enter-setup {
+  position: relative;
+  left: 25px;
+  opacity: 0;
+}
+
+.link-enter-setup.link-enter-start {
+  left: 0;
+  opacity: 1;
+}
+
+.link-leave-setup {
+  position: relative;
+  left: 0;
+  opacity: 1;
+}
+
+.link-leave-setup.link-leave-start {
+  left: 25px;
+  opacity: 0;
+}
+
