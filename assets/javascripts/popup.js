@@ -39,7 +39,7 @@
     }
 
     $rootScope.$on('$routeChangeStart', function(e, next, current) {
-      if (!$rootScope.loggedIn && next.$route.controller !== 'LoginCtrl') {
+      if (!$rootScope.loggedIn && next.controller !== 'LoginCtrl') {
         $location.path('/login');
       }
     });
