@@ -217,29 +217,35 @@
       function _parseLinksResponse(data) {
         var json = xml.xmlToJSON(data);
 
-        if ( ! json.posts) {
-          return [];
-        }
-
-        return json.posts.post.map(function(rawLink) {
+        function _parseLink(rawLink) {
           var link = {};
 
           // Remove '@' symbols from keys
-          for (key in rawLink) {
+          for (var key in rawLink) {
             var k = key.split('@')[1];
             link[k] = rawLink[key];
           }
 
           // domain root
-          link['domain'] = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1");
+          link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, '$1');
           link['private'] = (link.shared === 'no') ? true : false;
 
           link.tags = link.tag.split('  ');
           delete link.tag;
 
           return link;
-        });
+        }
+        
+        if ( ! json.posts) {
+          return [];
+        } else if (angular.isArray(json.posts.post)) {
+          return json.posts.post.map(_parseLink);
+        } else {
+          return [_parseLink(json.posts.post)];
+        }
       }
+
+
     }());
 
     Delicious.getUpdate = (function() {
