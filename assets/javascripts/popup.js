@@ -244,8 +244,6 @@
           return [_parseLink(json.posts.post)];
         }
       }
-
-
     }());
 
     Delicious.getUpdate = (function() {
@@ -348,20 +346,24 @@
       function _parseTags(data) {
         var json = xml.xmlToJSON(data);
 
-        if ( ! json.tags) {
-          return [];
-        }
-
-        return json.tags.tag.map(function(myTag) {
+        function _parseTag(rawTag) {
           var tag = {};
 
           // Remove '@' symbols from keys
-          for (key in myTag) {
+          for (var key in rawTag) {
             var k = key.split('@')[1];
-            tag[k] = myTag[key];
+            tag[k] = rawTag[key];
           }
           return tag.tag;
-        });
+        }
+
+        if ( ! json.tags) {
+          return [];
+        } else if (angular.isArray(json.tags.tag)) {
+          return json.tags.tag.map(_parseTag);
+        } else {
+          return [_parseTag(json.tags.tag)];
+        }
       };
     }());
 
