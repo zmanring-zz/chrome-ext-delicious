@@ -18,7 +18,7 @@
           <li class="private-tag" ng-show="isPrivate(link)">
             <a href="" class="link_tag" ng-click="appendQuery('private')">private</a>
           </li>
-          <li ng-repeat="tag in link.tags" >
+          <li ng-repeat="tag in link.tags.sort()" >
             <a href="" class="link_tag" ng-click="appendQuery(tag)">{{tag}}</a>
           </li>
         </ul>
