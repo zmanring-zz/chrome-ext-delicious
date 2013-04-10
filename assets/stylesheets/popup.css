@@ -631,34 +631,3 @@ ul.tags {
 .view-enter-setup.view-enter-start {
   opacity: 1;
 }
-
-.link-enter-setup, .link-leave-setup {
-  -webkit-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  -ms-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  transition: all 0.4s;
-}
-
-.link-enter-setup {
-  position: relative;
-  left: 25px;
-  opacity: 0;
-}
-
-.link-enter-setup.link-enter-start {
-  left: 0;
-  opacity: 1;
-}
-
-.link-leave-setup {
-  position: relative;
-  left: 0;
-  opacity: 1;
-}
-
-.link-leave-setup.link-leave-start {
-  left: 25px;
-  opacity: 0;
-}
-

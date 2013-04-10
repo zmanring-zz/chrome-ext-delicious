@@ -11,7 +11,7 @@
     </div>
   </header>
   <ul class="links">
-    <li ng-repeat="link in links | filterByWord:query | orderBy:order:reverse" ng-class="{private: isPrivate(link), edit: link.confirmUpdate}" ng-animate="{enter: 'link-enter', leave: 'link-leave'}">
+    <li ng-repeat="link in links | filterByWord:query | orderBy:order:reverse" ng-class="{private: isPrivate(link), edit: link.confirmUpdate}">
       <article ng-show="!link.confirmUpdate">
         <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
         <ul class="tags">
