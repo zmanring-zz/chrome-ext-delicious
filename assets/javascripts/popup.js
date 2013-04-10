@@ -217,6 +217,10 @@
       function _parseLinksResponse(data) {
         var json = xml.xmlToJSON(data);
 
+        if ( ! json.posts) {
+          return [];
+        }
+
         return json.posts.post.map(function(rawLink) {
           var link = {};
 
@@ -338,18 +342,20 @@
       function _parseTags(data) {
         var json = xml.xmlToJSON(data);
 
-        if (json.tags) {
-          return json.tags.tag.map(function(myTag) {
-            var tag = {};
-
-            // Remove '@' symbols from keys
-            for (key in myTag) {
-              var k = key.split('@')[1];
-              tag[k] = myTag[key];
-            }
-            return tag.tag;
-          });
+        if ( ! json.tags) {
+          return [];
         }
+
+        return json.tags.tag.map(function(myTag) {
+          var tag = {};
+
+          // Remove '@' symbols from keys
+          for (key in myTag) {
+            var k = key.split('@')[1];
+            tag[k] = myTag[key];
+          }
+          return tag.tag;
+        });
       };
     }());
 
