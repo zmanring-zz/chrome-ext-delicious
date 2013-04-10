@@ -392,6 +392,10 @@ section#viewMyLinks .sort-options {
   margin-left: 10px;
 }
 
+section#viewMyLinks .sort-options select {
+  height: 32px;
+}
+
 section#viewMyLinks header select {
   -webkit-appearance: menulist-text;
   padding: 8px 10px;
@@ -420,7 +424,7 @@ section#viewMyLinks header select:last-child {
   float: left;
   font-size: 13px;
   margin: 0;
-  padding: 7px 0;
+  padding: 7px 2px;
   width: 311px;
 }
 
@@ -431,15 +435,15 @@ section#viewMyLinks header select:last-child {
 }
 
 .filter-toggle {
-  position: relative;
-  float: left;
-  width: 30px;
-  height: 32px;
-  line-height: 32px;
-  text-align: center;
   background: #285da7;
   color: #fff;
   cursor: pointer;
+  float: left;
+  height: 32px;
+  line-height: 32px;
+  position: relative;
+  text-align: center;
+  width: 30px;
 }
 
 .filter-toggle::before {
