@@ -43,7 +43,10 @@
       </form>
 
     </li>
-    <li>
+    <li ng-hide='links.length'>
+      <p><a href="#/new">No Bookmarks Added Yet</a></p>
+    </li>
+    <li ng-show='links.length'>
       <p>{{linksLength}} results</p>
     </li>
   </ul>
