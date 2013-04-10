@@ -553,9 +553,11 @@
     $scope.remove = function(link) {
       var index = $scope.links.indexOf(link);
       $scope.links.splice(index, 1);
+      $scope.setLinksLength();
 
       delicious.removeLink(link).then(null, function() {
         $scope.links.splice(index, 0, link);
+        $scope.setLinksLength();
         analytics.push(['_trackEvent', 'link-removed', 'action']);
       });
     };
@@ -575,20 +577,21 @@
       });
     };
 
+    $scope.setLinksLength = function() {
+      $scope.linksLength = $filter('filterByWord')($scope.links, $scope.query).length;
+    };
+
     delicious.getLinks().then(function(links) {
       $scope.links = angular.extend(links, {
         confirmUpdate: false,
         confirmRemoval: false
       });
-      $scope.linksLength = $scope.links.length;
     });
 
     $scope.getAllMyTags();
 
-    $scope.$watch('query', function(newValue, oldValue) {
-      $scope.linksLength = $filter('filterByWord')($scope.links, newValue).length;
-      // _gaq.push(['_trackEvent', 'link-filter', 'action']);
-    });
+    $scope.$watch('query', $scope.setLinksLength);
+    $scope.$watch('links', $scope.setLinksLength);
 
     $scope.$watch('order', function(value) {
       delicious.setting('order', value);
