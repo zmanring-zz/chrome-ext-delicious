@@ -417,7 +417,7 @@
   });
 
   services.factory('analytics', function($window) {
-    $window._gaq.push(['_setAccount', 'UA-38039307-2'],['_trackPageview', '/']);
+    $window._gaq.push(['_setAccount', 'UA-38039307-2']);
     return $window._gaq;
   });
 
