@@ -590,9 +590,11 @@
     };
 
     delicious.getLinks().then(function(links) {
-      $scope.links = angular.extend(links, {
-        confirmUpdate: false,
-        confirmRemoval: false
+      $scope.links = links.map(function(link) {
+        return angular.extend(link, {
+          confirmUpdate: false, 
+          confirmRemoval: false
+        });
       });
     });
 
