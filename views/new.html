@@ -1,7 +1,7 @@
 <!-- Tab 1 -->
 <section id="addToDelicious">
   <header>
-    <h1>Add new link to Delicious</h1>
+    <h1>{{header}}</h1>
     <span class="private">
       <input id="private" type="checkbox" name="private" value="private" ng-model='share' />
       <label for="private">Private?</label>
@@ -17,7 +17,7 @@
         <button type="button" tabindex="3" ng-click="addSuggestedTag(tag)" ng-repeat='tag in suggestedTags' class="link">{{tag}}</button>
       </span>
       <img ng-show="loading" class="loading" src="assets/images/loading.gif" />
-      <button class='primary' type="submit" tabindex="3">Add</button>
+      <button class='primary' type="submit" tabindex="3">{{submitLabel}}</button>
     </span>
   </form>
 </section>

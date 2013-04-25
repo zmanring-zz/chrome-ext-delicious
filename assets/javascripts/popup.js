@@ -235,7 +235,7 @@
 
           return link;
         }
-        
+
         if ( ! json.posts) {
           return [];
         } else if (angular.isArray(json.posts.post)) {
@@ -244,6 +244,59 @@
           return [_parseLink(json.posts.post)];
         }
       }
+    }());
+
+    Delicious.getDeliciousLinkDataByUrl = (function () {
+        return function getDeliciousLinkDataByUrl(url) {
+          var defer = $q.defer(),
+            hash = localStorage.getItem('chrome-ext-delicious'),
+            options = {
+              method: 'GET',
+              url: 'https://api.del.icio.us/v1/posts/get?url=' + url,
+              headers: {
+                'Authorization': 'Basic ' + hash
+              },
+              transformResponse: _parseLinksResponse
+            };
+
+          $http(options).then(function(resp) {
+            defer.resolve(resp.data);
+          });
+
+          return defer.promise;
+        };
+
+        function _parseLinksResponse(data) {
+          var json = xml.xmlToJSON(data);
+
+          function _parseLink(rawLink) {
+            var link = {};
+
+            // Remove '@' symbols from keys
+            for (var key in rawLink) {
+              var k = key.split('@')[1];
+              link[k] = rawLink[key];
+            }
+
+            // domain root
+            link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, '$1');
+            link['private'] = (link.shared === 'no') ? true : false;
+
+            link.tags = link.tag.split('  ');
+            delete link.tag;
+
+            return link;
+          }
+
+          if ( ! json.posts) {
+            return [];
+          } else if (angular.isArray(json.posts.post)) {
+            return json.posts.post.map(_parseLink);
+          } else {
+            return [_parseLink(json.posts.post)];
+          }
+        }
+
     }());
 
     Delicious.getUpdate = (function() {
@@ -468,11 +521,13 @@
   });
 
   controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious, analytics) {
-    $scope.url = tab.url;
     $scope.description = tab.title;
-    $scope.tags = [];
+    $scope.header = 'Add link to Delicious';
     $scope.myTags = [];
+    $scope.submitLabel = 'Add';
     $scope.suggestedTags = [];
+    $scope.tags = [];
+    $scope.url = tab.url;
 
     // Get presistant private checkmark
     $scope.share = delicious.setting('share');
@@ -486,7 +541,7 @@
         shared: (!$scope.share ? 'yes' : 'no'),
         tags: $scope.tags.join(', '),
         replace: 'yes'
-      }).then(function() {        
+      }).then(function() {
         $location.path('/bookmarks');
         analytics.push(['_trackEvent', 'link-added', 'action']);
       });
@@ -506,13 +561,27 @@
       $scope.myTags = myTags;
     });
 
-    delicious.getPopularSuggestedTags($scope.url).then(function(tags) {
-      $scope.suggestedTags = tags;
-    });
-
     $scope.$watch('share', function(value) {
       // Set presistant private checkmark
       delicious.setting('share', value);
+    });
+
+    delicious.getDeliciousLinkDataByUrl($scope.url).then(function (data) {
+
+      var link = data[0];
+      if (link) {
+        $scope.description = link['description'];
+        $scope.header = 'Modify your Delicious link';
+        $scope.menu[0]['text'] = 'Modify link';
+        $scope.share = link['private'];
+        $scope.submitLabel = 'Modify';
+        $scope.tags = link['tags'];
+      } else {
+        delicious.getPopularSuggestedTags($scope.url).then(function(tags) {
+          $scope.suggestedTags = tags;
+        });
+      }
+
     });
   });
 
@@ -592,7 +661,7 @@
     delicious.getLinks().then(function(links) {
       $scope.links = links.map(function(link) {
         return angular.extend(link, {
-          confirmUpdate: false, 
+          confirmUpdate: false,
           confirmRemoval: false
         });
       });
