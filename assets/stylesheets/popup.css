@@ -1,3 +1,7 @@
+* {
+  -webkit-box-sizing: border-box;
+}
+
 /* select2 overrides */
 .select2-container.select2-container-multi {
   display: block;
@@ -71,15 +75,20 @@
 
 
 /* Global */
+html {
+  margin: 2px;
+  padding: 0 0 4px 0;
+}
+
 body {
-  -webkit-box-sizing: border-box;
+  /*-webkit-box-sizing: border-box;*/
   background-color:#fff;
   color: #444;
   font-family: 'helvetica','arial', sans-serif;
   font-weight: normal;
   margin: 0;
   overflow: hidden;
-  padding:2px;
+  padding:0;
   position: relative;
   width: 500px;
 }
@@ -398,7 +407,7 @@ section#viewMyLinks .sort-options select {
 
 section#viewMyLinks header select {
   -webkit-appearance: menulist-text;
-  padding: 8px 10px;
+  padding: 8px 0 8px 10px;
   border-radius: 0;
   background: #285da7;
   font-size: 13px;
@@ -538,9 +547,9 @@ a.remove.confirm {
 }
 
 .links > li img.favicon{
-  padding-right: 5px;
-  vertical-align: bottom;
   margin-bottom: 1px;
+  margin-right: 5px;
+  vertical-align: bottom;
 }
 
 ul.tags {
