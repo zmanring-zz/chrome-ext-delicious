@@ -614,6 +614,7 @@
 
     $scope.update = function(link) {
       link.confirmUpdate = false;
+      link.description = link.tempDescription;
 
       delicious.addLink({
         url: link.href,
@@ -662,7 +663,8 @@
       $scope.links = links.map(function(link) {
         return angular.extend(link, {
           confirmUpdate: false,
-          confirmRemoval: false
+          confirmRemoval: false,
+          tempDescription: link.description
         });
       });
     });
