@@ -165,9 +165,9 @@
       var defer = $q.defer();
 
       if (chrome.tabs) {
-        chrome.tabs.getSelected(null, function(tab) {
+        chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT, active: true}, function(tab) {
           $rootScope.$apply(function() {
-            defer.resolve(tab);
+            defer.resolve(tab[0]);
           });
         });
       } else {
