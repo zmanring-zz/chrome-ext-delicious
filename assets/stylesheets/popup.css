@@ -2,53 +2,6 @@
   -webkit-box-sizing: border-box;
 }
 
-/* select2 overrides */
-.select2-container.select2-container-multi {
-  display: block;
-  position: relative;
-  text-overflow: ellipsis;
-  width: 100%;
-  font-size: 16px;
-}
-
-.select2-container-multi .select2-choices {
-  -webkit-border-radius: 0;
-  background-image: none;
-  font-size: 16px;
-  background-color: #fafafa;
-  padding: 2px 0 0 0;
-}
-
-.select2-results {
-  max-height: 100px;
-}
-
-.select2-results .select2-highlighted {
-  background: #285da7;
-}
-
-.select2-container-multi.select2-container-active .select2-choices {
-  -webkit-box-shadow: 0 0 5px 0 #BDD2EF;
-  border: 1px solid #285da7;
-}
-
-.select2-container-multi .select2-choices .select2-search-field input {
-  background-color: #fafafa !important;
-  font-size: 16px;
-}
-
-.select2-container-multi .select2-choices {
-  border: 1px solid #ccc;
-}
-
-.select2-drop {
-  -webkit-border-radius: 0;
-  background: #fafafa;
-  border-color: #285da7;
-  margin-top: -2px;
-}
-
-
 /* validations */
 ::-webkit-validation-bubble-icon {
   display: none;

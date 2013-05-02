@@ -1,19 +1,10 @@
 <!doctype html>
 <html ng-csp="" ng-app="yum"> <!-- Because 'yum' is easier to type than 'delicious'; yeah I'm that lazy. -->
   <head>
-    <link rel="stylesheet" type="text/css" href="/vendor/stylesheets/select2-3.3.1.css"/>
     <link rel="stylesheet" type="text/css" href="/assets/stylesheets/popup.css"/>
   </head>
   <body>
     <section id="content" ng-controller="AppCtrl">
-      <!--     <header>
-            <div>
-              <p class="error"></p>
-              <p class="log">
-                <span></span>
-              </p>
-            </div>
-          </header> -->
       <nav ng-show="loggedIn">
         <ul>
           <li ng-repeat="item in menu">
@@ -34,11 +25,9 @@
         </p>
       </footer>
     </section>
-
     <script src="https://ssl.google-analytics.com/ga.js"></script>
     <script src="/vendor/javascripts/xmlToJson.js"></script>
     <script src="/vendor/javascripts/jquery-1.9.0.min.js"></script>
-    <script src="/vendor/javascripts/select2-3.3.1.js"></script>
     <script src="/vendor/javascripts/angular-1.1.4.js"></script>
     <script src="/assets/javascripts/popup.js"></script>
   </body>
