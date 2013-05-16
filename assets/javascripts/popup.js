@@ -585,6 +585,7 @@
   });
 
   controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious, analytics) {
+    $scope.limit = 0;
     $scope.links = [];
     $scope.linksLength = 0;
     $scope.myTags = [];
@@ -658,6 +659,14 @@
       $scope.linksLength = $filter('filterByWord')($scope.links, $scope.query).length;
     };
 
+    $scope.loadMore = function() {
+      for (var i = 0; i < 8; i++) {
+        if ($scope.limit < $scope.links.length) {
+          $scope.limit += 1;
+        }
+      }
+    };
+
     delicious.getLinks().then(function(links) {
       $scope.links = links.map(function(link) {
         return angular.extend(link, {
@@ -666,6 +675,7 @@
           tempDescription: link.description
         });
       });
+      $scope.loadMore();
     });
 
     $scope.getAllMyTags();
@@ -752,5 +762,17 @@
       link: link
     };
   }]);
+
+  directives.directive('whenScrolled', function() {
+    return function(scope, elm, attr) {
+      var raw = elm[0];
+
+      elm.bind('scroll', function() {
+        if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+          scope.$apply(attr.whenScrolled);
+        }
+      });
+    };
+  });
 
 }(angular));
