@@ -29,7 +29,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "2.1",
+  "version": "2.2",
   "web_accessible_resources": [ "/popup.html" ]
 
 }

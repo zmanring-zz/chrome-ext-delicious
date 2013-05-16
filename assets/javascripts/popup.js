@@ -692,6 +692,43 @@
     };
   }]);
 
+  // TODO: Make select-two-show optional
+  directives.directive('selectTwo', [function() {
+    function link(scope, element, attrs, a) {
+      var select = angular.element(element);
+
+      scope.$watch('show', initSelectTwo);
+      scope.$watch('tags', initSelectTwo);
+      scope.$watch('val', function(newVal) {
+        select.select2('val', newVal);
+      });
+
+      select.bind('change', function(e) {
+        scope.$apply(function() {
+          scope.val = e.val;
+        });
+      });
+    function initSelectTwo() {
+        if (!scope.show) return;
+        select.select2({
+          tags: scope.tags,
+          tokenSeparators: [',']
+        });
+        select.select2('val', scope.val);
+      }
+    }
+
+    return {
+      restrict: 'A',
+      scope: {
+        val: '=ngModel',
+        tags: '=selectTwo',
+        show: '=selectTwoShow'
+      },
+      link: link
+    };
+  }]);
+
   directives.directive('customCheckbox', [function() {
     function link(scope, element, attrs) {
       var className = attrs['customCheckbox'], $wrapper;

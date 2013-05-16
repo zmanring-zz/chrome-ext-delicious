@@ -29,7 +29,7 @@
 
       <form ng-submit="update(link)" ng-show="link.confirmUpdate" class="edit-link">
         <input type="text" name="description" id="description" placeholder="Description" title="Edit description" tabindex="1" ng-model="link.tempDescription" />
-        <input type="text" placeholder="tag" tabindex="2" ng-model='link.tags' ng-list />
+        <input type="text" placeholder="tag" tabindex="2" ng-model='link.tags' ng-list select-two='myTags' select-two-show='link.confirmUpdate' />
         <label for="private-{{$index + 1}}">
           <input id="private-{{$index + 1}}" type="checkbox" name="private" value="private" ng-model="link.private" />
           Private?
