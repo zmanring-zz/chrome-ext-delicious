@@ -524,6 +524,7 @@
     $scope.description = tab.title;
     $scope.header = 'Add link to Delicious';
     $scope.myTags = [];
+    $scope.myTagsLoaded = false;
     $scope.submitLabel = 'Add';
     $scope.suggestedTags = [];
     $scope.tags = [];
@@ -559,6 +560,7 @@
 
     delicious.getAllMyTags().then(function(myTags) {
       $scope.myTags = myTags;
+      $scope.myTagsLoaded = true;
     });
 
     $scope.$watch('share', function(value) {
@@ -660,10 +662,10 @@
     };
 
     $scope.loadMore = function() {
-      for (var i = 0; i < 8; i++) {
-        if ($scope.limit < $scope.links.length) {
-          $scope.limit += 1;
-        }
+      var count = 8;
+      if ($scope.limit < $scope.links.length) {
+        $scope.limit += count;
+        analytics.push(['_trackEvent', 'link-pages-loaded', ($scope.limit/count).toString()]);
       }
     };
 
