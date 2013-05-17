@@ -9,9 +9,8 @@
   </header>
   <form ng-submit='add()'>
     <input autofocus="autofocus" type="text" name="description" id="description" placeholder="description" tabindex="1" ng-model='description' required />
-    <input type="text" name="tag" id="tag" placeholder="tag, tag" tabindex="2" ng-model='tags' ng-list tabindex="2" ng-model='tags' ng-list select-two='myTags' select-two-show='myTagsLoaded' />
+    <input type="text" name="tag" id="tag" placeholder="tag" tabindex="2" ng-model='tags' ng-list />
     <span>
-
       <span ng-show="suggestedTags.length > 0" class="tags">
         <p>Popular:</p>
         <button type="button" tabindex="3" ng-click="addSuggestedTag(tag)" ng-repeat='tag in suggestedTags' class="link">{{tag}}</button>

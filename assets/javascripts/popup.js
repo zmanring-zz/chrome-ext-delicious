@@ -390,7 +390,8 @@
           };
 
         $http(options).then(function(resp) {
-          defer.resolve(resp.data);
+          // defer.resolve(resp.data);
+          defer.resolve(["jquery","wordpress","css","mobile","tips","css3","maps","responsive","menu","forms","gallery","framework","iphone","html5","tutorial","icons","mac","ajax","themes","inspiration","slider","fonts","design","resources","pictos","ipad","animation","photoshop","tunes","plugin","php","patterns","images","developer","slideshow","grid","compass","fullscreen","ecommerce","ie","3d","software","sass","weather","snippets","video","evangelism","cms","email","parallax","google","audio","javascript","tooltips","microformats","navigation","plugins","vector","optimization","scroll","geolocation","ui","tabs","git","premium","daily","travel","magazine","textures","social","development","svg","loremipsum","templates","typography","seo","webapp","accordion","tools","shortcodes","calendar","carousel","facebook","generator","rss","invoice","brushes","tutorials","flash","spam","ebook","mozilla","conditional","toggle","showcase","editor","documentation","ios","qr","jquerymobile","prototype","demo","firefox","layout","corners","meta","html","art","lightbox","mysql","masonry","pdf","help","type","mootools","builder","retina","htaccess","forum","indesign","tables","logos","loading","weekly","library","illustration","validation","strand","flickr","bootstrap","search","illustrator","apache","canvas","sifr","coda","color","wysiwyg","kitche","js","ads","hover","admin","c4d","form","directory","coupons","management","toolkit","sprites","less","personal","psd","login","mvc","electronics","tour","filter","testing","jailbrake","podcast","wireframe","merge","pages","panel","network","printer","publishing","text","xml","syntax","android","photography","compression","analytics","timeline","modal","mamp","app","scripts","presentation","blog","zoom","hosting","touch","programming","epub","foundation","polyfill","grunge","script","hcal","preloader","graphs","youtube","health","webevangelism","tinymce","flexbox","jplayer","supplies","windows","collection","sticky","geocoder","newsletter","widgets","gui","stock","caption","for","filesharing","graphics","tides","2012","markdown","portfolio","ical","powerpoint","preprocessor","fancybox","charts","comments","hcard","screencast","staging","fax","learn","node","sencha","css compression","music","mail","photo","categories","gmail","spa","snippet","dropdown","cloudshare","backup","cheatsheet","twitter","passbook","security","playground","thumbnails","favicon","wood","packaging","banners","uploader","events","png","actions","ebooks","ftp","slides","json","joomla","reference","sidebar","hotrod","data-merge","collaboration","augmented","shop","remote","function","safari","utilities","mosaic","stats","vpn","seasonal","featured","truncated","html5 experiment","joke","yable","hashtag","self-publishing","image","avatar","scrollbar","timer","popup","simulator","excel","carousels","history","rem","toolbar","broadcast","dock","transparency","embedding","photoedit","invoices","holiday","detection","galleria","trim","compilation","off","recipe","ellipsis","highlight","firefox","scrapbook","tincymce","keynote","church","publications","client-login","quicktime","hardware","browser","encoding","oembed","links","delicious","megamenu","usps","location","enkoder","calculator","steampunk","overlay","apple","dojo","testimonials","webdesign","fileshare","resource","grammar","kwicks","gradients","hacks","loader","demos","sunburst","system","flicks","tinyurl","xhtml","folders","ornaments","custom-field","slide","wordress","dns","bluetooth","tv","posters","sidebars","jquery scroll","eot","gravatar","gps","maintenance","iframe","transitions","netflix","showhide","microformat","conflicts","functions","unicode","svn","effect","fireworks","tooltip","subdirectory","geektool","hoverbox","html5 audio","bugs","bit.ly","config","wine","tidy","shopify","alert","h.264","cdn","mochikit","beautify","launch","mockup","picasa","logo","blank","rotator","theme","automation","dictionary","bbpress","triggers","pagination","mac software","resize","startups","pets","pictograms","cards","font","countdown","notifications","mansonry","movies","calltoaction","share","custom_fields","backgrounds","the","deals","vcard","lib","clients"]);
         });
 
         return defer.promise;
@@ -417,7 +418,7 @@
         } else {
           return [_parseTag(json.tags.tag)];
         }
-      };
+      }
     }());
 
     Delicious.logout = function() {
@@ -445,7 +446,7 @@
 
       return function setting(key, value) {
         return angular.isUndefined(value) ? getSetting(key) : setSetting(key, value);
-      }
+      };
     }());
 
     // Check for updates
@@ -558,16 +559,6 @@
       $scope.suggestedTags.splice(index, 1);
     };
 
-    delicious.getAllMyTags().then(function(myTags) {
-      $scope.myTags = myTags;
-      $scope.myTagsLoaded = true;
-    });
-
-    $scope.$watch('share', function(value) {
-      // Set presistant private checkmark
-      delicious.setting('share', value);
-    });
-
     delicious.getDeliciousLinkDataByUrl($scope.url).then(function (data) {
 
       var link = data[0];
@@ -584,6 +575,30 @@
         });
       }
     });
+
+    delicious.getAllMyTags().then(function(myTags) {
+      $scope.myTags = myTags;
+      $scope.myTagsLoaded = true;
+
+      //init (way faster than directive) | Todo: move this out to a function
+      var select = angular.element('#tag'); // only target the 'New' page
+      select.select2({
+        tags: myTags,
+        tokenSeparators: [',']
+      });
+
+      select.bind('change', function(e) {
+        $scope.$apply(function() {
+          $scope.tags = e.val;
+        });
+      });
+    });
+
+    $scope.$watch('share', function(value) {
+      // Set presistant private checkmark
+      delicious.setting('share', value);
+    });
+
   });
 
   controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious, analytics) {
@@ -709,8 +724,16 @@
     function link(scope, element, attrs, a) {
       var select = angular.element(element);
 
-      scope.$watch('show', initSelectTwo);
-      scope.$watch('tags', initSelectTwo);
+      scope.$watch('show', function() {
+        if(scope.tags.length > 0) {
+          initSelectTwo();
+        }
+      });
+      scope.$watch('tags', function() {
+        if(scope.tags.length > 0) {
+          initSelectTwo();
+        }
+      });
       scope.$watch('val', function(newVal) {
         select.select2('val', newVal);
       });
@@ -720,7 +743,7 @@
           scope.val = e.val;
         });
       });
-    function initSelectTwo() {
+      function initSelectTwo() {
         if (!scope.show) return;
         select.select2({
           tags: scope.tags,
