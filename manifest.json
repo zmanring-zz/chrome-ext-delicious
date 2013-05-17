@@ -10,7 +10,7 @@
   "content_scripts": [
     {
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["/vendor/javascripts/jquery-1.9.0.min.js","/assets/javascripts/inject.js"],
+    "js": ["/vendor/javascripts/jquery-2.0.0.min.js","/assets/javascripts/inject.js"],
     "css": ["/assets/stylesheets/background.css"]
     }
   ],
@@ -29,7 +29,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "2.2",
+  "version": "2.3",
   "web_accessible_resources": [ "/popup.html" ]
 
 }
