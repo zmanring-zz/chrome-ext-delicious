@@ -1,24 +1,24 @@
 {
 
  "background": {
-    "scripts": ["background.js"]
+    "scripts": ["/assets/javascripts/background.js"]
   },
   "browser_action": {
-    "default_icon": "images/icon.png",
+    "default_icon": "/assets/images/icon.png",
     "default_popup": "popup.html"
   },
   "content_scripts": [
     {
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["vendor/jquery-1.9.0.min.js","inject.js"],
-    "css": ["background.css"]
+    "js": ["/vendor/javascripts/jquery-1.9.0.min.js","/assets/javascripts/inject.js"],
+    "css": ["/assets/stylesheets/background.css"]
     }
   ],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "description": "Feature rich Chrome extension with the ability to add, edit, remove, and filter bookmarks from your Delicious account.",
   "icons": {
-    "16": "images/icon-16.png",
-    "128":"images/icon-128.png"
+    "16": "/assets/images/icon-16.png",
+    "128":"/assets/images/icon-128.png"
   },
   "manifest_version": 2,
   "name": "@Delicious",
@@ -29,7 +29,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "1.9",
-  "web_accessible_resources": [ "popup.html" ]
+  "version": "2.2",
+  "web_accessible_resources": [ "/popup.html" ]
 
 }

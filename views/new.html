@@ -1,0 +1,22 @@
+<!-- Tab 1 -->
+<section id="addToDelicious">
+  <header>
+    <h1>{{header}}</h1>
+    <span class="private">
+      <input id="private" type="checkbox" name="private" value="private" ng-model='share' />
+      <label for="private">Private?</label>
+    </span>
+  </header>
+  <form ng-submit='add()'>
+    <input autofocus="autofocus" type="text" name="description" id="description" placeholder="description" tabindex="1" ng-model='description' required />
+    <input type="text" name="tag" id="tag" placeholder="tag" tabindex="2" ng-model='tags' ng-list />
+    <span>
+      <span ng-show="suggestedTags.length > 0" class="tags">
+        <p>Popular:</p>
+        <button type="button" tabindex="3" ng-click="addSuggestedTag(tag)" ng-repeat='tag in suggestedTags' class="link">{{tag}}</button>
+      </span>
+      <img ng-show="loading" class="loading" src="assets/images/loading.gif" />
+      <button class='primary' type="submit" tabindex="3">{{submitLabel}}</button>
+    </span>
+  </form>
+</section>
