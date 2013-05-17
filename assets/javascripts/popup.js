@@ -591,6 +591,11 @@
           $scope.tags = e.val;
         });
       });
+
+      $scope.$watch('tags', function(newVal) {
+        select.select2('val', newVal);
+      });
+
     });
 
     $scope.$watch('share', function(value) {
