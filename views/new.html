@@ -9,7 +9,7 @@
   </header>
   <form ng-submit='add()'>
     <input autofocus="autofocus" type="text" name="description" id="description" placeholder="description" tabindex="1" ng-model='description' required />
-    <input type="text" name="tag" id="tag" placeholder="tag" tabindex="2" ng-model='tags' ng-list />
+    <input type="text" name="tag" id="tag" tabindex="2" ng-model='tags' ng-list />
     <span>
       <span ng-show="suggestedTags.length > 0" class="tags">
         <p>Popular:</p>

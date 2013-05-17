@@ -583,15 +583,18 @@
       var select = angular.element('#tag'); // only target the 'New' page
       select.select2({
         tags: myTags,
-        tokenSeparators: [',']
+        tokenSeparators: [','],
+        placeholder: 'tag'
       });
 
+      // Needed for saving link
       select.bind('change', function(e) {
         $scope.$apply(function() {
           $scope.tags = e.val;
         });
       });
 
+      // Used during suggest click event
       $scope.$watch('tags', function(newVal) {
         select.select2('val', newVal);
       });
