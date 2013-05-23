@@ -326,7 +326,7 @@
           update = {};
 
         // Remove '@' symbols from keys
-        for (key in rawUpdate) {
+        for (var key in rawUpdate) {
           var k = key.split('@')[1];
           update[k] = rawUpdate[key];
         }
@@ -366,7 +366,7 @@
             var suggestedTag = {};
 
             // Remove '@' symbols from keys
-            for (key in rawSuggestionTag) {
+            for (var key in rawSuggestionTag) {
               var k = key.split('@')[1];
               suggestedTag[k] = rawSuggestionTag[key];
             }
