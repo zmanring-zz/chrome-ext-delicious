@@ -451,19 +451,24 @@
     // Check for updates
     Delicious.getUpdate().then(function(update) {
 
-      var data = localStorage.getItem('chrome-ext-delicious-last-update');
+      var data = localStorage.getItem('chrome-ext-delicious-last-update'),
+        lastUpdate;
 
       if (data !== "NaN") {
-        var lastUpdate = JSON.parse(data);
+        lastUpdate = JSON.parse(data);
       } else {
         lastUpdate = 0;
       }
 
       if (update.time !== lastUpdate) {
-        Delicious.fetchLinks();
+        // Clear storage before fetching new links, this will keep it up to date if the fetch fails for any reason
+        delete localStorage['chrome-ext-delicious-last-update'];
+        delete localStorage['chrome-ext-delicious-links'];
+        Delicious.fetchLinks().then(function () {
+          localStorage.setItem('chrome-ext-delicious-last-update', update.time);
+        });
       }
 
-      localStorage.setItem('chrome-ext-delicious-last-update', update.time);
     });
 
     return Delicious;
