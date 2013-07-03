@@ -5,10 +5,11 @@
 /* select2 overrides */
 .select2-container.select2-container-multi {
   display: block;
+  font-size: 16px;
+  padding-bottom: 5px;
   position: relative;
   text-overflow: ellipsis;
   width: 100%;
-  font-size: 16px;
 }
 
 .select2-container-multi .select2-choices {
@@ -45,7 +46,7 @@
   -webkit-border-radius: 0;
   background: #fafafa;
   border-color: #285da7;
-  margin-top: -2px;
+  margin-top: -6px;
 }
 
 .select2-display-none {
@@ -194,7 +195,7 @@ form span p {
   margin: 0;
 }
 
-form input {
+form input, form textarea {
   -webkit-border-radius: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-box-sizing: border-box;
@@ -205,11 +206,16 @@ form input {
   margin: 0 0 5px;
   padding: 7px 5px;
   position: relative;
+  resize: none;
   text-overflow: ellipsis;
   width: 100%;
 }
 
-form input:focus {
+form textarea {
+  height: 68px;
+}
+
+form input:focus, form textarea:focus {
   -webkit-box-shadow: 0px 0px 5px 0px #BDD2EF;
   border: 1px solid #285da7;
   outline: none;
@@ -219,6 +225,15 @@ form input::-webkit-validation-bubble-message {
   position: absolute;
   right: -438px;
   top: -30px;
+}
+
+form input.description-input {
+  width: 356px;
+}
+
+form button.note-btn {
+  padding: 9px;
+  top: -1px;
 }
 
 button, a.button{

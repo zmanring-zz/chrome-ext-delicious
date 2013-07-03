@@ -71,6 +71,7 @@
           // Combine link properties to search into string
           var search = [
           link['description'],
+          link['extended'],
           link['href'], ((link['shared'] === 'no') ? 'private' : ''),
           link['tags'].join(' '),
           link['time']].join(' ').toLowerCase();
@@ -544,6 +545,7 @@
       delicious.addLink({
         url: $scope.url,
         description: $scope.description,
+        extended: $scope.note,
         shared: (!$scope.share ? 'yes' : 'no'),
         tags: $scope.tags.join(', '),
         replace: 'yes'
@@ -568,6 +570,7 @@
       var link = data[0];
       if (link) {
         $scope.description = link['description'];
+        $scope.note = link['extended'];
         $scope.header = 'Modify your Delicious link';
         $scope.menu[0]['text'] = 'Modify link';
         $scope.share = link['private'];
@@ -648,6 +651,7 @@
       delicious.addLink({
         url: link.href,
         description: link.description,
+        extended: link.note,
         shared: ((link['private']) ? 'no' : 'yes'),
         tags: link.tags.join(', '),
         replace: 'yes'
@@ -701,7 +705,8 @@
         return angular.extend(link, {
           confirmUpdate: false,
           confirmRemoval: false,
-          tempDescription: link.description
+          tempDescription: link.description,
+          note: link.extended
         });
       });
       $scope.loadMore();

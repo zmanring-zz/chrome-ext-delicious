@@ -5,7 +5,8 @@
   },
   "browser_action": {
     "default_icon": "/assets/images/icon.png",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "@Delicious"
   },
   "content_scripts": [
     {
@@ -29,7 +30,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "2.4",
+  "version": "2.5",
   "web_accessible_resources": [ "/popup.html" ]
 
 }

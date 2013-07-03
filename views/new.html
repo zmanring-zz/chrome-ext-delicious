@@ -3,20 +3,22 @@
   <header>
     <h1>{{header}}</h1>
     <span class="private">
-      <input id="private" type="checkbox" name="private" value="private" ng-model='share' />
+      <input id="private" type="checkbox" name="private" value="private" ng-model="share" />
       <label for="private">Private?</label>
     </span>
   </header>
-  <form ng-submit='add()'>
-    <input autofocus="autofocus" type="text" name="description" id="description" placeholder="description" tabindex="1" ng-model='description' required />
-    <input type="text" name="tag" id="tag" tabindex="2" ng-model='tags' ng-list />
+  <form ng-submit="add()">
+    <input maxlength="254" ng-class="{'description-input': !addNote}" autofocus="autofocus" type="text" name="description" id="description" placeholder="description" tabindex="1" ng-model="description" required />
+    <button ng-hide="addNote" ng-click="addNote=true" class="secondary note-btn" type="button" tabindex="4">Extend</button>
+    <textarea ng-show="addNote" type="text" name="ext-description" id="note" rows="2" tabindex="3" placeholder="extended description" maxlength="1000" ng-model="note"></textarea>
+    <input type="text" name="tag" id="tag" tabindex="2" ng-model="tags" ng-list />
     <span>
       <span ng-show="suggestedTags.length > 0" class="tags">
         <p>Popular:</p>
-        <button type="button" tabindex="3" ng-click="addSuggestedTag(tag)" ng-repeat='tag in suggestedTags' class="link">{{tag}}</button>
+        <button type="button" tabindex="3" ng-click="addSuggestedTag(tag)" ng-repeat="tag in suggestedTags" class="link">{{tag}}</button>
       </span>
       <img ng-show="loading" class="loading" src="assets/images/loading.gif" />
-      <button class='primary' type="submit" tabindex="3">{{submitLabel}}</button>
+      <button class="primary" type="submit" tabindex="3">{{submitLabel}}</button>
     </span>
   </form>
 </section>
