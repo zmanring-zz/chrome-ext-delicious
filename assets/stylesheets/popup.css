@@ -228,12 +228,13 @@ form input::-webkit-validation-bubble-message {
 }
 
 form input.description-input {
-  width: 356px;
+  width: 427px;
 }
 
 form button.note-btn {
+  float: right;
+  min-width: 0;
   padding: 9px;
-  top: -1px;
 }
 
 button, a.button{

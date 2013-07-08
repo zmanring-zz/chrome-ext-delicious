@@ -9,7 +9,7 @@
   </header>
   <form ng-submit="add()">
     <input maxlength="254" ng-class="{'description-input': !addNote}" autofocus="autofocus" type="text" name="description" id="description" placeholder="description" tabindex="1" ng-model="description" required />
-    <button ng-hide="addNote" ng-click="addNote=true" class="secondary note-btn" type="button" tabindex="4">Extend</button>
+    <button ng-hide="addNote" ng-click="addNote=true" class="secondary note-btn" type="button" tabindex="4" title="Extend description">&plus;</button>
     <textarea ng-show="addNote" type="text" name="ext-description" id="note" rows="2" tabindex="3" placeholder="extended description" maxlength="1000" ng-model="note"></textarea>
     <input type="text" name="tag" id="tag" tabindex="2" ng-model="tags" ng-list />
     <span>
