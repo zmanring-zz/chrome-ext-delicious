@@ -1,0 +1,21 @@
+<!-- Login -->
+<section id="login">
+  <header>
+    <hgroup>
+      <h1>Welcome to @Delicious</h1>
+      <h2>Please login using your Delicious account credentials</h2>
+    </hgroup>
+  </header>
+  <form name="loginForm" ng-submit="login()">
+    <input required type="text" ng-model="username" name="username" id="username" placeholder="username" tabindex="1" autofocus/>
+    <input required type="password" ng-model="password" name="password" id="password" placeholder="password" tabindex="2" />
+    <span>
+      <p ng-show="loginFailed" class="error">Invalid credentials <br />
+        <a href="https://delicious.com/forgot_pw">reset password</a>
+      </p>
+      <img ng-show="loading" class="loading" src="/assets/images/loading.gif" />
+      <a tabindex="4" class="button secondary" target="_blank" href="https://delicious.com/join">Join</a>
+      <button tabindex="3" class="primary" type="submit">Login</button>
+    </span>
+  </form>
+</section>

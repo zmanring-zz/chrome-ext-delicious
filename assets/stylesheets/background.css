@@ -2,24 +2,21 @@
   -webkit-animation:pop-in 0.5s;
   -webkit-box-shadow: 0 0 100px #222;
   background-color:#fff;
-  border-radius: 7px;
-  border: 3px solid #fff;
-  height: 596px;
+  border-radius: 0;
   left: 50%;
-  margin-left: -250px;
-  margin-top: -289px;
+  margin-left: -253px;
+  margin-top: -276px;
   position: fixed;
   top: 50%;
-  width: 506px;
   z-index:2147483647;
 }
 
 #chrome-ext-delicious-frame > #chrome-ext-delicious-iframe {
   border:0;
-  height:578px;
-  margin:0;
+  height:546px;
+  margin:2px 2px 4px;
   overflow:hidden;
-  width:500px;
+  width:504px;
 }
 
 #chrome-ext-delicious-frame button.close_frame {
@@ -38,6 +35,7 @@
   line-height: 0;
   padding: 0;
   position: absolute;
+  text-align: center;
   top: -13px;
   width: 26px;
 }
