@@ -5,8 +5,8 @@ $(function () {
       $('#chrome-ext-delicious-frame').remove();
 
       var html = [
-         '<a accesskey="d">',
          '<div id="chrome-ext-delicious-frame">',
+            '<a accesskey="d"></a>',
             '<iframe seamless id="chrome-ext-delicious-iframe" src="chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/popup.html?url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + '" />',
             '<button class="close_frame" title="close">&times;</button>',
          '</div>'

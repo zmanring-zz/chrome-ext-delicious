@@ -22,6 +22,10 @@
       templateUrl: 'views/bookmarks.html',
       controller: 'BookmarksCtrl'
     });
+    $routeProvider.when('/options', {
+      templateUrl: 'views/options.html',
+      controller: 'OptionsCtrl'
+    });
     $routeProvider.otherwise({
       redirectTo: '/login'
     });
@@ -33,9 +37,14 @@
 
   app.run(function($rootScope, $location, analytics) {
     $rootScope.loggedIn = localStorage.getItem('chrome-ext-delicious') ? true : false;
+    $rootScope.defaultTab = (localStorage.getItem('chrome-ext-delicious-default-tab')) === 'true' ? true : false;
 
-    if ($rootScope.loggedIn) {
-      $location.path('/new');
+    if ($rootScope.defaultTab) {
+      $location.path('/bookmarks');
+    } else {
+      if ($rootScope.loggedIn) {
+        $location.path('/new');
+      }
     }
 
     $rootScope.$on('$routeChangeStart', function(e, next, current) {
@@ -724,6 +733,16 @@
     $scope.$watch('reverse', function(value) {
       delicious.setting('reverse', value);
     });
+  });
+
+  controllers.controller('OptionsCtrl', function($scope, analytics) {
+
+    $scope.defaultTab = (localStorage.getItem('chrome-ext-delicious-default-tab')) === 'true' ? true : false;
+
+    $scope.$watch('defaultTab', function(value) {
+      localStorage.setItem('chrome-ext-delicious-default-tab', value);
+    });
+
   });
 
 

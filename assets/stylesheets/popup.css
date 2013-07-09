@@ -126,9 +126,14 @@ section {
   position: relative;
 }
 
-section header {
+section header,
+section main {
   position: relative;
   margin: 0 20px;
+}
+
+section main {
+  padding-bottom: 25px;
 }
 
 section header > span {
@@ -657,4 +662,9 @@ ul.tags {
 
 .view-enter-setup.view-enter-start {
   opacity: 1;
+}
+
+/* Section Options */
+#options a{
+ font-size: 16px;
 }
