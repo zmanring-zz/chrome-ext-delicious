@@ -554,7 +554,7 @@
       delicious.addLink({
         url: $scope.url,
         description: $scope.description,
-        extended: $scope.note,
+        extended: ($scope.note) ? $scope.note : '',
         shared: (!$scope.share ? 'yes' : 'no'),
         tags: $scope.tags.join(', '),
         replace: 'yes'
@@ -622,7 +622,6 @@
       // Set presistant private checkmark
       delicious.setting('share', value);
     });
-
   });
 
   controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious, analytics) {
@@ -742,7 +741,6 @@
     $scope.$watch('defaultTab', function(value) {
       localStorage.setItem('chrome-ext-delicious-default-tab', value);
     });
-
   });
 
 

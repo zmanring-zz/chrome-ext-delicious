@@ -57,7 +57,7 @@ describe('filters', function() {
         expect(filterByWordFilter(links, query)).toEqual(expected);
       }));
     });
-    
+
     describe('query equals "foo"', function() {
       var query = 'foo',
         expected = [links[0], links[1], links[2]];

@@ -207,6 +207,7 @@ form input, form textarea {
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   background-color: #fafafa;
   border: 1px solid #cccccc;
+  font-family: 'helvetica','arial', sans-serif;
   font-size: 16px;
   margin: 0 0 5px;
   padding: 7px 5px;
