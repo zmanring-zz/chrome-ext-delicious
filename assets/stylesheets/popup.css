@@ -404,7 +404,7 @@ span.tags p {
 
 span.tags button {
   font-size: 13px;
-  min-width: auto;
+  min-width: inherit;
   padding: 0 0 0 4px;
 }
 
@@ -513,6 +513,10 @@ a.remove.confirm {
   overflow-y: scroll;
   padding: 0;
   background-color: #f7f7f7;
+}
+
+.links::-webkit-scrollbar {
+  display: none;
 }
 
 .links > li {
