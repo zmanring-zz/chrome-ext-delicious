@@ -632,6 +632,47 @@
     $scope.query = '';
     $scope.order = delicious.setting('order');
     $scope.reverse = delicious.setting('reverse');
+    $scope.urlListToOpen = [];
+
+    $scope.addUrlToList = function(link) {
+      link.linkAdded = true;
+      $scope.urlListToOpen.push(link);
+      analytics.push(['_trackEvent', 'link-btn-add-link-to-list', 'clicked']);
+    };
+
+    $scope.removeUrlToList = function(link) {
+      link.linkAdded = false;
+      var index = $scope.urlListToOpen.indexOf(link);
+      $scope.urlListToOpen.splice(index, 1);
+      analytics.push(['_trackEvent', 'link-btn-remove-link-from-list', 'clicked']);
+    };
+
+    $scope.clearUrlList = function() {
+
+      // clear links
+      for (var i = 0; i < $scope.urlListToOpen.length; i++) {
+        $scope.urlListToOpen[i].linkAdded = false;
+      }
+
+      // reset list
+      $scope.urlListToOpen = [];
+
+    };
+
+    $scope.openUrlList = function() {
+      for (var i = 0; i < $scope.urlListToOpen.length; i++) {
+        chrome.tabs.create({
+          url: $scope.urlListToOpen[i].href,
+          active: false
+        });
+      }
+
+      analytics.push(['_trackEvent', 'link-btn-open-links', $scope.urlListToOpen.length]);
+
+      // last thing is to clear the list
+      $scope.clearUrlList();
+
+    };
 
     $scope.confirmRemove = function(link) {
       link.confirmRemoval = true;

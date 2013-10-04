@@ -10,7 +10,7 @@
     </div>
   </header>
   <ul class="links" when-scrolled="loadMore()">
-    <li ng-repeat="link in links | filterByWord:query | orderBy:order:reverse | limitTo:limit" ng-class="{private: isPrivate(link), edit: link.confirmUpdate}">
+    <li ng-repeat="link in links | filterByWord:query | orderBy:order:reverse | limitTo:limit" ng-class="{private: isPrivate(link), edit: link.confirmUpdate, linkAdded: link.linkAdded }">
       <article ng-show="!link.confirmUpdate">
         <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
         <ul class="tags">
@@ -22,7 +22,9 @@
           </li>
         </ul>
         <div class="link-actions">
-          <a href="" class="edit" title="Edit this link" ng-click="confirmUpdate(link)"></a>
+          <a href="" class="edit" title="Edit link" ng-click="confirmUpdate(link)"></a>
+          <a href="" class="add-url" title="Add to link list" ng-click="addUrlToList(link)" ng-hide="link.linkAdded"></a>
+          <a href="" class="remove-url" title="Remove from link list" ng-click="removeUrlToList(link)" ng-show="link.linkAdded"></a>
         </div>
       </article>
 
@@ -50,4 +52,8 @@
       <p>{{linksLength}} Results<p>
     </li>
   </ul>
+  <footer class="open-urls animated" ng-class="{fadeInUp: urlListToOpen.length > 1}" ng-show="urlListToOpen.length > 1">
+    <a href="" ng-click="openUrlList()">Open your {{urlListToOpen.length}} links in new tabs</a>
+    <button ng-click="clearUrlList()" title="Clear selection" class="clear">&times;</button>
+  </footer>
 </section>
