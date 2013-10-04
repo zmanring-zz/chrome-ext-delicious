@@ -81,3 +81,10 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
 });
 
 chrome.omnibox.setDefaultSuggestion({"description":" "});
+
+chrome.runtime.onInstalled.addListener(function () {
+  chrome.tabs.create({
+    url: '/updated.html',
+    active: true
+  });
+});
