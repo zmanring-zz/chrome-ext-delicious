@@ -3,7 +3,33 @@
     <h1>Options</h1>
   </header>
   <main>
-    <input type="checkbox" id="default-tab" ng-model="defaultTab" ng-checked="defaultTab" />
-    <label for="default-tab">Make <a ng-href="#/bookmarks">My links</a> the default tab</label>
+    <fieldset>
+      <legend>Tab</legend>
+      <input type="checkbox" id="default-tab" ng-model="defaultTab" ng-checked="defaultTab" />
+      <label for="default-tab">Make <a ng-href="#/bookmarks">My links</a> the default tab</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Filter settings</legend>
+
+      <p>Include these values when filtering.</p>
+
+      <input type="checkbox" id="filter-description" ng-model="filterDescription" ng-checked="filterDescription" />
+      <label for="filter-description">Description</label>
+      <br/>
+      <input type="checkbox" id="filter-extended" ng-model="filterExtended" ng-checked="filterExtended" />
+      <label for="filter-extended">Extended</label>
+      <br/>
+      <input type="checkbox" id="filter-url" ng-model="filterUrl" ng-checked="filterUrl" />
+      <label for="filter-url">Url</label>
+      <br/>
+      <input type="checkbox" id="filter-tags" ng-model="filterTags" ng-checked="filterTags" />
+      <label for="filter-tags">Tags</label>
+      <br/>
+      <input type="checkbox" id="filter-time" ng-model="filterTime" ng-checked="filterTime" />
+      <label for="filter-time">Time</label>
+
+    </fieldset>
+
   </main>
 </section>

@@ -13,6 +13,7 @@ var _gaq = _gaq || [];
 function injectModal(info, tab) {
   chrome.tabs.insertCSS(null, { file:"/assets/stylesheets/background.css" });
   chrome.tabs.executeScript(null, { file:"/assets/javascripts/context.js" });
+  _gaq.push(['_trackEvent', 'modalOpened', 'contextMenu']);
 }
 
 chrome.contextMenus.create({
@@ -21,6 +22,16 @@ chrome.contextMenus.create({
   'onclick': injectModal
 });
 
+
+// tabs
+chrome.runtime.onMessage.addListener(function(msg) {
+  if (msg.url) {
+    chrome.tabs.create({
+      url: msg.url,
+      active: false
+    });
+  }
+});
 
 // Omnibox
 function htmlSpecialChars(unsafe) {

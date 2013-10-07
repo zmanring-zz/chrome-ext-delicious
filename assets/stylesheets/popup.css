@@ -85,7 +85,8 @@ html {
 }
 
 body {
-  background-color:#fff;
+  background: #fff url(../images/atlanta-skyline-bw.png) no-repeat center;
+  background-position-y: 0;
   color: #444;
   font-family: 'helvetica','arial', sans-serif;
   font-weight: normal;
@@ -174,6 +175,7 @@ hgroup h2 {
 
 section#content {
   padding: 0;
+  background: #fff;
 }
 
 form {
@@ -741,7 +743,21 @@ ul.tags {
   opacity: 1;
 }
 
+#content > footer p a.donate {
+  color: #A45328;
+}
+
 /* Section Options */
 #options a{
  font-size: 16px;
+}
+
+#options p {
+  margin: 5px 0;
+}
+
+#options fieldset {
+  margin-bottom: 15px;
+  color: #444;
+  border: 1px solid #bbb;
 }

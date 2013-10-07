@@ -38,6 +38,16 @@
   app.run(function($rootScope, $location, analytics) {
     $rootScope.loggedIn = localStorage.getItem('chrome-ext-delicious') ? true : false;
     $rootScope.defaultTab = (localStorage.getItem('chrome-ext-delicious-default-tab')) === 'true' ? true : false;
+    $rootScope.firstTimeFilter = localStorage.getItem('chrome-ext-delicious-filter-description');
+
+    //  first time loading without filters (all checked by default)
+    if ($rootScope.firstTimeFilter === null) {
+      localStorage.setItem('chrome-ext-delicious-filter-description', 'true');
+      localStorage.setItem('chrome-ext-delicious-filter-extended', 'true');
+      localStorage.setItem('chrome-ext-delicious-filter-url', 'true');
+      localStorage.setItem('chrome-ext-delicious-filter-tags', 'true');
+      localStorage.setItem('chrome-ext-delicious-filter-time', 'true');
+    }
 
     if ($rootScope.defaultTab) {
       $location.path('/bookmarks');
@@ -79,11 +89,12 @@
         return links.filter(function(link) {
           // Combine link properties to search into string
           var search = [
-          link['description'],
-          link['extended'],
-          link['href'], ((link['shared'] === 'no') ? 'private' : ''),
-          link['tags'].join(' '),
-          link['time']].join(' ').toLowerCase();
+          (localStorage.getItem('chrome-ext-delicious-filter-description')) === 'true' ? link['description'] : '',
+          (localStorage.getItem('chrome-ext-delicious-filter-extended')) === 'true' ? link['extended'] : '',
+          (localStorage.getItem('chrome-ext-delicious-filter-url')) === 'true' ? link['href'] : '',
+          ((link['shared'] === 'no') ? 'private' : ''),
+          (localStorage.getItem('chrome-ext-delicious-filter-tags')) === 'true' ? link['tags'].join(' ') : '',
+          (localStorage.getItem('chrome-ext-delicious-filter-time')) === 'true' ? link['time'] : ''].join(' ').toLowerCase();
 
           // all of the words
           return words.every(function(word) {
@@ -660,14 +671,20 @@
     };
 
     $scope.openUrlList = function() {
+
       for (var i = 0; i < $scope.urlListToOpen.length; i++) {
-        chrome.tabs.create({
-          url: $scope.urlListToOpen[i].href,
-          active: false
-        });
+        if (chrome.tabs) {
+          chrome.tabs.create({
+            url: $scope.urlListToOpen[i].href,
+            active: false
+          });
+        } else {
+          // Send message to background to open!
+          chrome.runtime.sendMessage({url: $scope.urlListToOpen[i].href});
+        }
       }
 
-      analytics.push(['_trackEvent', 'link-btn-open-links', $scope.urlListToOpen.length]);
+      analytics.push(['_trackEvent', 'link-btn-open-links', 'open-' + $scope.urlListToOpen.length]);
 
       // last thing is to clear the list
       $scope.clearUrlList();
@@ -777,11 +794,40 @@
 
   controllers.controller('OptionsCtrl', function($scope, analytics) {
 
+    // tabs options
     $scope.defaultTab = (localStorage.getItem('chrome-ext-delicious-default-tab')) === 'true' ? true : false;
 
     $scope.$watch('defaultTab', function(value) {
       localStorage.setItem('chrome-ext-delicious-default-tab', value);
     });
+
+    // filters
+    $scope.filterDescription = (localStorage.getItem('chrome-ext-delicious-filter-description')) === 'true' ? true : false;
+    $scope.filterExtended = (localStorage.getItem('chrome-ext-delicious-filter-extended')) === 'true' ? true : false;
+    $scope.filterUrl = (localStorage.getItem('chrome-ext-delicious-filter-url')) === 'true' ? true : false;
+    $scope.filterTags = (localStorage.getItem('chrome-ext-delicious-filter-tags')) === 'true' ? true : false;
+    $scope.filterTime = (localStorage.getItem('chrome-ext-delicious-filter-time')) === 'true' ? true : false;
+
+    $scope.$watch('filterDescription', function(value) {
+      localStorage.setItem('chrome-ext-delicious-filter-description', value);
+    });
+
+    $scope.$watch('filterExtended', function(value) {
+      localStorage.setItem('chrome-ext-delicious-filter-extended', value);
+    });
+
+    $scope.$watch('filterUrl', function(value) {
+      localStorage.setItem('chrome-ext-delicious-filter-url', value);
+    });
+
+    $scope.$watch('filterTags', function(value) {
+      localStorage.setItem('chrome-ext-delicious-filter-tags', value);
+    });
+
+    $scope.$watch('filterTime', function(value) {
+      localStorage.setItem('chrome-ext-delicious-filter-time', value);
+    });
+
   });
 
 

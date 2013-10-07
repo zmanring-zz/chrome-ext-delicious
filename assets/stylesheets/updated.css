@@ -18,10 +18,10 @@ body {
 }
 
 a {
-  color:#285da7;
-  text-decoration: none;
   background-color: transparent;
+  color:#285da7;
   display: inline-block;
+  text-decoration: none;
 }
 
 a:hover {
@@ -30,24 +30,24 @@ a:hover {
 
 /* updated page */
 .updated-page header {
-  margin: 15px 0 0 0;
   background: #285da7 url(../images/icon-128.png) 20px center no-repeat;
   background-size: 64px;
-  padding: 40px 20px 40px 100px;
   color: #fff;
+  margin: 0;
+  padding: 40px 20px 40px 100px;
   width: 100%;
 }
 
 .updated-page header h1 {
   font-size: 36px;
-  padding: 0;
-  margin: 0;
   font-weight: normal;
+  margin: 0;
+  padding: 0;
 }
 
 .updated-page h2 {
-  padding-bottom: 2px;
   border-bottom: 1px solid #dedede;
+  padding-bottom: 2px;
 }
 
 .updated-page section {
@@ -55,14 +55,13 @@ a:hover {
 }
 
 .updated-page .arrow {
-  height:0;
-  width:0;
-  border: 10px solid;
   border-color: transparent transparent #285da7 transparent;
-  /*margin-left:50%;*/
+  border: 10px solid;
+  height:0;
   position: absolute;
-  top: -19px;
   right: 37px;
+  top: -19px;
+  width:0;
 }
 
 .updated-page .latest {
