@@ -16,12 +16,34 @@ function injectModal(info, tab) {
   _gaq.push(['_trackEvent', 'modalOpened', 'contextMenu']);
 }
 
+function htmlSpecialChars(unsafe) {
+  return unsafe
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+}
+
+chrome.tabs.onActivated.addListener(function() {
+
+  var searchString = localStorage.getItem('chrome-ext-delicious-links');
+
+  chrome.tabs.getSelected(null,function(tab) {
+
+    if (searchString.indexOf(tab.url) >= 0 ) {
+      chrome.browserAction.setBadgeText({text:'√'});
+      chrome.browserAction.setBadgeBackgroundColor({color: '#468ED9'});
+    } else {
+      chrome.browserAction.setBadgeText({text:''});
+    }
+  });
+});
+
 chrome.contextMenus.create({
   'id': 'chrome-ext-delicious-private-context',
   'title':'Add to Delicious',
   'onclick': injectModal
 });
-
 
 // tabs
 chrome.runtime.onMessage.addListener(function(msg) {
@@ -31,19 +53,19 @@ chrome.runtime.onMessage.addListener(function(msg) {
       active: false
     });
   }
+
+});
+
+// update page
+chrome.runtime.onInstalled.addListener(function () {
+  chrome.tabs.create({
+    url: '/updated.html',
+    active: true
+  });
 });
 
 // Omnibox
-function htmlSpecialChars(unsafe) {
-  return unsafe
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;");
-}
-
-chrome.omnibox.onInputChanged.addListener(
-function(query, suggest) {
+chrome.omnibox.onInputChanged.addListener(function(query, suggest) {
 
   var links = JSON.parse(localStorage.getItem('chrome-ext-delicious-links')),
     words = query.toLowerCase().split(' ');
@@ -76,7 +98,6 @@ function(query, suggest) {
 
     suggest(suggestedList);
   }
-
 });
 
 chrome.omnibox.onInputEntered.addListener(function(input) {
@@ -88,14 +109,6 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
     _gaq.push(['_trackEvent', 'onInputEntered', 'omnibox']);
     chrome.tabs.update(null, {url: input});
   }
-
 });
 
 chrome.omnibox.setDefaultSuggestion({"description":" "});
-
-chrome.runtime.onInstalled.addListener(function () {
-  chrome.tabs.create({
-    url: '/updated.html',
-    active: true
-  });
-});

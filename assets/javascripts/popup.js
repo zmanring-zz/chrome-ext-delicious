@@ -49,11 +49,13 @@
       localStorage.setItem('chrome-ext-delicious-filter-time', 'true');
     }
 
-    if ($rootScope.defaultTab) {
-      $location.path('/bookmarks');
-    } else {
-      if ($rootScope.loggedIn) {
-        $location.path('/new');
+    if ($location.$$path !== '/bookmarks' && $location.$$path !== '/new') {
+      if ($rootScope.defaultTab) {
+        $location.path('/bookmarks');
+      } else {
+        if ($rootScope.loggedIn) {
+          $location.path('/new');
+        }
       }
     }
 
@@ -728,15 +730,19 @@
     };
 
     $scope.remove = function(link) {
-      var index = $scope.links.indexOf(link);
-      $scope.links.splice(index, 1);
-      $scope.setLinksLength();
+      link.removed = true;
 
-      delicious.removeLink(link).then(null, function() {
-        $scope.links.splice(index, 0, link);
+      $timeout(function() {
+        var index = $scope.links.indexOf(link);
+        $scope.links.splice(index, 1);
         $scope.setLinksLength();
-        analytics.push(['_trackEvent', 'link-removed', 'action']);
-      });
+
+        delicious.removeLink(link).then(null, function() {
+          $scope.links.splice(index, 0, link);
+          $scope.setLinksLength();
+          analytics.push(['_trackEvent', 'link-removed', 'action']);
+        });
+      }, 500);
     };
 
     $scope.isPrivate = function(link) {
@@ -827,7 +833,6 @@
     $scope.$watch('filterTime', function(value) {
       localStorage.setItem('chrome-ext-delicious-filter-time', value);
     });
-
   });
 
 
