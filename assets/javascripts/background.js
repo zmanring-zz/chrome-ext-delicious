@@ -2,71 +2,29 @@
 var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-38039307-2']);
 
-// Had to load it via js or it throws a tantrum
+// Had to load it via js or google analytics throws a tantrum
 (function() {
   var ga = document.createElement('script');
   ga.src = 'https://ssl.google-analytics.com/ga.js';
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 
-// Context menu
-function injectModal(info, tab) {
-  chrome.tabs.insertCSS(null, { file:"/assets/stylesheets/background.css" });
-  chrome.tabs.executeScript(null, { file:"/assets/javascripts/context.js" });
-  _gaq.push(['_trackEvent', 'modalOpened', 'contextMenu']);
-}
 
-function htmlSpecialChars(unsafe) {
-  return unsafe
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;");
-}
+// Function
+YUM = {};
 
-chrome.tabs.onActivated.addListener(function() {
-
-  var searchString = localStorage.getItem('chrome-ext-delicious-links');
-
-  chrome.tabs.getSelected(null,function(tab) {
-
-    if (searchString.indexOf(tab.url) >= 0 ) {
-      chrome.browserAction.setBadgeText({text:'√'});
-      chrome.browserAction.setBadgeBackgroundColor({color: '#468ED9'});
-    } else {
-      chrome.browserAction.setBadgeText({text:''});
-    }
+YUM.createContextMenu = function() {
+  chrome.contextMenus.create({
+    'type': 'separator'
   });
-});
-
-chrome.contextMenus.create({
-  'id': 'chrome-ext-delicious-private-context',
-  'title':'Add to Delicious',
-  'onclick': injectModal
-});
-
-// tabs
-chrome.runtime.onMessage.addListener(function(msg) {
-  if (msg.url) {
-    chrome.tabs.create({
-      url: msg.url,
-      active: false
-    });
-  }
-
-});
-
-// update page
-chrome.runtime.onInstalled.addListener(function () {
-  chrome.tabs.create({
-    url: '/updated.html',
-    active: true
+  chrome.contextMenus.create({
+    'id': 'chrome-ext-delicious-private-context',
+    'title':'Add link',
+    'onclick': YUM.injectModal
   });
-});
+};
 
-// Omnibox
-chrome.omnibox.onInputChanged.addListener(function(query, suggest) {
-
+YUM.getSuggestion = function(query) {
   var links = JSON.parse(localStorage.getItem('chrome-ext-delicious-links')),
     words = query.toLowerCase().split(' ');
 
@@ -91,24 +49,82 @@ chrome.omnibox.onInputChanged.addListener(function(query, suggest) {
       var obj = {};
 
       obj.content = filteredList[i].href;
-      obj.description = htmlSpecialChars((filteredList[i].extended !== '') ? filteredList[i].description + ' | ' + filteredList[i].extended : filteredList[i].description);
+      obj.description = YUM.htmlSpecialChars((filteredList[i].extended !== '') ? filteredList[i].description + ' | ' + filteredList[i].extended : filteredList[i].description);
 
       suggestedList.push(obj);
     }
 
-    suggest(suggestedList);
+    return suggestedList;
   }
-});
+};
 
-chrome.omnibox.onInputEntered.addListener(function(input) {
+YUM.htmlSpecialChars = function(unsafe) {
+  return unsafe
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+};
 
+YUM.injectModal = function(info, tab) {
+  chrome.tabs.insertCSS(null, { file:"/assets/stylesheets/tab.css" });
+  chrome.tabs.executeScript(null, { file:"/assets/javascripts/context.js" });
+  _gaq.push(['_trackEvent', 'modalOpened', 'contextMenu']);
+};
+
+YUM.isCurrentTabSaved = function() {
+  var searchString = localStorage.getItem('chrome-ext-delicious-links');
+  if (searchString) {
+    chrome.tabs.getSelected(null,function(tab) {
+
+      if (searchString.indexOf(tab.url) >= 0 ) {
+        chrome.browserAction.setBadgeText({text:'√'});
+        chrome.browserAction.setBadgeBackgroundColor({color: '#468ED9'});
+        chrome.contextMenus.update('chrome-ext-delicious-private-context', {
+          'title':'Modify link'
+        });
+      } else {
+        chrome.browserAction.setBadgeText({text:''});
+        chrome.contextMenus.update('chrome-ext-delicious-private-context', {
+          'title':'Add link'
+        });
+      }
+    });
+  }
+};
+
+YUM.openNewTab = function(url) {
+  chrome.tabs.create({
+    url: url,
+    active: false
+  });
+};
+
+YUM.openSelectedSuggestion = function(selection) {
   var urlExpression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
   var regex = new RegExp(urlExpression);
 
-  if (input.match(regex)) {
+  if (selection.match(regex)) {
     _gaq.push(['_trackEvent', 'onInputEntered', 'omnibox']);
-    chrome.tabs.update(null, {url: input});
+    chrome.tabs.update(null, {url: selection});
   }
-});
+};
 
+YUM.openUpdatePage = function() {
+  chrome.tabs.create({
+    url: '/updated.html',
+    active: true
+  });
+};
+
+
+// Events
+YUM.createContextMenu();
+
+chrome.omnibox.onInputChanged.addListener(function(query, suggest) { suggest(YUM.getSuggestion(query)); });
+chrome.omnibox.onInputEntered.addListener(function(input) { YUM.openSelectedSuggestion(input); });
 chrome.omnibox.setDefaultSuggestion({"description":" "});
+chrome.runtime.onInstalled.addListener(function () { YUM.openUpdatePage(); });
+chrome.runtime.onMessage.addListener(function(message) { if (message.url) { YUM.openNewTab(message.url); } });
+chrome.tabs.onActivated.addListener(function() { YUM.isCurrentTabSaved(); });
+chrome.tabs.onUpdated.addListener(function() { YUM.isCurrentTabSaved(); });

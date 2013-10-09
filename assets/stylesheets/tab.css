@@ -1,5 +1,10 @@
+/* This stylesheet will be available on all tabs */
+
+.chrome-ext-delicious-blur-me {
+  -webkit-filter: blur(3px);
+}
+
 #chrome-ext-delicious-frame {
-  -webkit-animation:pop-in 0.5s;
   -webkit-box-shadow: 0 0 100px #222;
   background-color:#fff;
   border-radius: 0;
@@ -43,10 +48,4 @@
 #chrome-ext-delicious-frame button.close_frame:hover {
   -webkit-box-shadow: 0 0 8px #222;
   top: -12px;
-}
-
-@-webkit-keyframes pop-in {
-  0% {opacity:0; -webkit-transform: scale(0.75); }
-  50% {opacity:1; -webkit-transform: scale(1.05); }
-  100% {-webkit-transform: scale(1); }
 }
