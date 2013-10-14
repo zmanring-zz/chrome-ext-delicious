@@ -1,7 +1,6 @@
 $(function () {
 
   var closeModal = function() {
-    $('.chrome-ext-delicious-blur-me').removeClass('chrome-ext-delicious-blur-me');
     $('#chrome-ext-delicious-frame').remove();
   };
 
@@ -13,15 +12,9 @@ $(function () {
         '<iframe seamless id="chrome-ext-delicious-iframe" src="chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/popup.html?origin=shortcut&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + view + '" />',
         '<button class="close_frame" title="close">&times;</button>',
       '</div>'
-    ].join('');
+    ].join('\n');
 
-    $('body > *').addClass('chrome-ext-delicious-blur-me');
     $('body').append(html);
-
-    //Events
-    $('#chrome-ext-delicious-frame button.close_frame').on('click', function () {
-      closeModal();
-    });
 
   };
 
@@ -29,20 +22,26 @@ $(function () {
   //Events
   $(document).keydown(function (e) {
 
-    // shift-alt-d
     if (e.altKey && e.shiftKey && e.keyCode === 68) {
+      // shift-alt-d
       loadModal('#/new');
-    }
-
-    // shift-alt-b
-    if (e.altKey && e.shiftKey && e.keyCode === 66) {
+    } else if (e.altKey && e.shiftKey && e.keyCode === 66) {
+      // shift-alt-b
       loadModal('#/bookmarks');
     }
 
   });
 
-  $(document).on('click', function() {
+  //Events
+  $(document).on('click', '#chrome-ext-delicious-frame button.close_frame', function () {
     closeModal();
+  });
+
+  $(document).on('click', function(e) {
+    // On windows the shortcut keys cause a "click" event, using the screen attributes tell the difference
+    if (e.screenX !== 0 && e.screenY !== 0) {
+      closeModal();
+    }
   });
 
 });

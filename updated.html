@@ -6,10 +6,12 @@
   </head>
   <body class="updated-page">
     <header>
-      <h1>@Delicious 2.9.3</h1>
+      <h1>@Delicious 2.9.4</h1>
     </header>
 
     <section class="animated fadeIn">
+
+      <h4 class="latest">Note: When using Delicious.com and this extension, multiple tags could return as one tag. This is due to how the API returns these tags. Sometimes they're returned as double-spaced delimited, sometimes tags are single space delimited. This extension uses double-spaced delimiting for the ability to have multi-word tags. So as long as you save tags through this extension it will work in both locations. -Zach</h4>
 
       <p class="twitter">Get New Feature updates on Twitter - <a href="https://twitter.com/@deliciousext">@DeliciousExt</a></p>
 
@@ -21,16 +23,16 @@
       <h2>New Features</h2>
       <ul>
         <li class="latest">
-          Added visual cue on the icon if page is already saved in your bookmarks.
+          Added visual cue on the icon if page is already saved in your bookmarks. - Thanks @Jelle
         </li>
         <li class="latest">
-          @Ian - Added new shortcut for modal view. <b>[shift]-[alt]-[d]</b> will open add link view and <b>[shift]-[alt]-[b]</b> will open your bookmarks view.
+          Added new shortcut for modal view. <b>[shift]-[alt]-[d]</b> will open add link view and <b>[shift]-[alt]-[b]</b> will open your bookmarks view. Thanks @Ian
         </li>
         <li class="latest">
-          @Jelle - Ability to change what you want to filter on in the options menu.
+          Ability to change what you want to filter on in the options menu. Thanks @Jelle
         </li>
         <li>
-          @Robert - Ability to open more than one link at a time!
+          Ability to open more than one link at a time! Thanks @Robert
         </li>
         <li>
           Bookmark your current tab, change descriptions, add tags, mark private or add notes.
@@ -45,7 +47,7 @@
           Omnibox | Search from within Chrome's address bar, just type '@del+space' + keyword.
         </li>
         <li>
-          Shortcut access via 'shift-alt-d'
+          Shortcut access via <b>[shift]-[alt]-[d]</b> & <b>[shift]-[alt]-[b]</b> for straight to bookmarks. <em>Note: Some websites block this ability</em>
         </li>
         <li>
           Context menu access, just 'right click' on the page and select 'Add to Delicious'
@@ -54,18 +56,24 @@
           Support for Mac, Windows, Linux.
         </li>
         <li>
-          Customize the extension via the Options panel.
+          Customize the extension via the <b>Options</b> panel.
         </li>
       </ul>
 
-
       <h2>Changelog</h2>
+      <p>Found an issue or want to see a feature implemented? <a href="https://chrome.google.com/webstore/support/pplcoloalmjgljnbpkhcojpjnjbggppe?hl=en&gl=US#bug" target="_blank">Send Feedback</a></p>
 
       <article class="latest">
-        <h4>Version 2.9.3</h4>
+        <h4>Version 2.9.4</h4>
         <ul>
           <li>
-            Feature - Added visual cue on the icon if page is already saved in your bookmarks.
+            Bug - Fixed issue where the shortcut <b>[shift]-[alt]-[d]</b> would only sometimes work... silly click events, why register as mouse when you're a keyboard? Thanks @Ian
+          </li>
+          <li>
+            Bug - Removed the blur due to performance, now ultra-fast, no animation or blur. Thanks @Ian
+          </li>
+          <li>
+            Feature - Added visual cue on the icon if page is already saved in your bookmarks. (fixed defect for this)
           </li>
           <li>
             Feature - Clicking outside the modal will now close the modal.
@@ -77,7 +85,7 @@
             Feature - Added ability to change what you want to filter on. Check it out on the options page located in the footer.
           </li>
           <li>
-            Fixed - Issue where you couldnt open multiple links from inside the modal window. Screw popup blockers! :D
+            Bug - Issue where you couldnt open multiple links from inside the modal window. Screw popup blockers! :D
           </li>
           <li>
             Styling - Changed up some styling for the modal popup... enjoy the Atlanta skyline.
@@ -101,7 +109,7 @@
         <h4>Version 2.8</h4>
         <ul>
           <li>
-            Weird error fixed that showed up in Chrome 29
+            Bug - Weird error fixed that showed up in Chrome 29
           </li>
         </ul>
       </article>

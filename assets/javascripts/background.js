@@ -77,7 +77,7 @@ YUM.isCurrentTabSaved = function() {
   if (searchString) {
     chrome.tabs.getSelected(null,function(tab) {
 
-      if (searchString.indexOf(tab.url) >= 0 ) {
+      if (searchString.indexOf('"' + tab.url + '"') >= 0 ) {
         chrome.browserAction.setBadgeText({text:'√'});
         chrome.browserAction.setBadgeBackgroundColor({color: '#468ED9'});
         chrome.contextMenus.update('chrome-ext-delicious-private-context', {

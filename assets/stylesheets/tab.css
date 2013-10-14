@@ -1,9 +1,5 @@
 /* This stylesheet will be available on all tabs */
 
-.chrome-ext-delicious-blur-me {
-  -webkit-filter: blur(3px);
-}
-
 #chrome-ext-delicious-frame {
   -webkit-box-shadow: 0 0 100px #222;
   background-color:#fff;
