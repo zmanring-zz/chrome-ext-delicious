@@ -7,8 +7,10 @@
   left: 50%;
   margin-left: -253px;
   margin-top: -276px;
+  overflow: visible;
   position: fixed;
   top: 50%;
+  width: auto;
   z-index:2147483647;
 }
 

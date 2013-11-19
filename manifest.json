@@ -29,7 +29,7 @@
     }
   ],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
-  "description": "Feature rich Chrome extension with the ability to add, edit, filter, and remove bookmarks from your Delicious account.",
+  "description": "Feature rich extension with the ability to add, edit, filter, and remove bookmarks from your Delicious account.",
   "incognito": "spanning",
   "icons": {
     "16": "/assets/images/icon-16.png",
@@ -47,7 +47,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "2.9.4",
+  "version": "2.9.5",
   "web_accessible_resources": [ "/popup.html" ]
 
 }

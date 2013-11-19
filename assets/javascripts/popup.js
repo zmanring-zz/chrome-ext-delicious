@@ -196,6 +196,7 @@
       } else {
         defer.resolve({
           url: Delicious.getQueryStringByName('url'),
+          selectionText: Delicious.getQueryStringByName('selected'),
           title: Delicious.getQueryStringByName('title')
         });
       }
@@ -553,6 +554,7 @@
     $scope.header = 'Add link to Delicious';
     $scope.myTags = [];
     $scope.myTagsLoaded = false;
+    $scope.note = tab.selectionText;
     $scope.submitLabel = 'Add';
     $scope.suggestedTags = [];
     $scope.tags = [];

@@ -32,7 +32,6 @@ $(function () {
 
   });
 
-  //Events
   $(document).on('click', '#chrome-ext-delicious-frame button.close_frame', function () {
     closeModal();
   });

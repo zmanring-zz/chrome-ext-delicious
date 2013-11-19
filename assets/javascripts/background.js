@@ -15,10 +15,12 @@ YUM = {};
 
 YUM.createContextMenu = function() {
   chrome.contextMenus.create({
+    'contexts': ['page', 'selection'],
     'type': 'separator'
   });
   chrome.contextMenus.create({
     'id': 'chrome-ext-delicious-private-context',
+    'contexts': ['page', 'selection'],
     'title':'Add link',
     'onclick': YUM.injectModal
   });
@@ -69,6 +71,11 @@ YUM.htmlSpecialChars = function(unsafe) {
 YUM.injectModal = function(info, tab) {
   chrome.tabs.insertCSS(null, { file:"/assets/stylesheets/tab.css" });
   chrome.tabs.executeScript(null, { file:"/assets/javascripts/context.js" });
+
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {data: info});
+  });
+
   _gaq.push(['_trackEvent', 'modalOpened', 'contextMenu']);
 };
 
