@@ -223,7 +223,7 @@
           hash = localStorage.getItem('chrome-ext-delicious'),
           options = {
             method: 'GET',
-            url: 'https://api.del.icio.us/v1/posts/all?',
+            url: 'https://api.del.icio.us/v1/posts/all?results=10000',
             headers: {
               'Authorization': 'Basic ' + hash
             },
@@ -320,7 +320,6 @@
             return [_parseLink(json.posts.post)];
           }
         }
-
     }());
 
     Delicious.getUpdate = (function() {
