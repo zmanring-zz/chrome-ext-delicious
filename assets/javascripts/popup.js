@@ -217,28 +217,8 @@
       return defer.promise;
     };
 
-    Delicious.fetchLinks = (function() {
-      return function fetchLinks() {
-        var defer = $q.defer(),
-          hash = localStorage.getItem('chrome-ext-delicious'),
-          options = {
-            method: 'GET',
-            url: 'https://api.del.icio.us/v1/posts/all?results=10000',
-            headers: {
-              'Authorization': 'Basic ' + hash
-            },
-            transformResponse: _parseLinksResponse
-          };
-
-        $http(options).then(function(resp) {
-          localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
-          defer.resolve(resp.data);
-        });
-
-        return defer.promise;
-      };
-
-      function _parseLinksResponse(data) {
+    Delicious.parseLinks = (function() {
+      return function parseLinksResponse(data) {
         var json = xml.xmlToJSON(data);
 
         function _parseLink(rawLink) {
@@ -254,7 +234,8 @@
           link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, '$1');
           link['private'] = (link.shared === 'no') ? true : false;
 
-          link.tags = link.tag.split('  ');
+          var split = (localStorage.getItem('chrome-ext-delicious-parse-single-space')) === 'true' ? / [ ]?/ : "  ";
+          link.tags = link.tag.split(split);
           delete link.tag;
 
           return link;
@@ -270,6 +251,28 @@
       }
     }());
 
+    Delicious.fetchLinks = (function() {
+      return function fetchLinks() {
+        var defer = $q.defer(),
+          hash = localStorage.getItem('chrome-ext-delicious'),
+          options = {
+            method: 'GET',
+            url: 'https://api.del.icio.us/v1/posts/all?results=10000',
+            headers: {
+              'Authorization': 'Basic ' + hash
+            },
+            transformResponse: Delicious.parseLinks
+          };
+
+        $http(options).then(function(resp) {
+          localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
+          defer.resolve(resp.data);
+        });
+
+        return defer.promise;
+      };
+    }());
+
     Delicious.getDeliciousLinkDataByUrl = (function () {
         return function getDeliciousLinkDataByUrl(url) {
           var defer = $q.defer(),
@@ -280,7 +283,7 @@
               headers: {
                 'Authorization': 'Basic ' + hash
               },
-              transformResponse: _parseLinksResponse
+              transformResponse: Delicious.parseLinks
             };
 
           $http(options).then(function(resp) {
@@ -289,37 +292,6 @@
 
           return defer.promise;
         };
-
-        function _parseLinksResponse(data) {
-          var json = xml.xmlToJSON(data);
-
-          function _parseLink(rawLink) {
-            var link = {};
-
-            // Remove '@' symbols from keys
-            for (var key in rawLink) {
-              var k = key.split('@')[1];
-              link[k] = rawLink[key];
-            }
-
-            // domain root
-            link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, '$1');
-            link['private'] = (link.shared === 'no') ? true : false;
-
-            link.tags = link.tag.split('  ');
-            delete link.tag;
-
-            return link;
-          }
-
-          if ( ! json.posts) {
-            return [];
-          } else if (angular.isArray(json.posts.post)) {
-            return json.posts.post.map(_parseLink);
-          } else {
-            return [_parseLink(json.posts.post)];
-          }
-        }
     }());
 
     Delicious.getUpdate = (function() {
@@ -833,6 +805,15 @@
 
     $scope.$watch('filterTime', function(value) {
       localStorage.setItem('chrome-ext-delicious-filter-time', value);
+    });
+
+    // api options
+    $scope.parseSingleSpace = (localStorage.getItem('chrome-ext-delicious-parse-single-space')) === 'true' ? true : false;
+
+    $scope.$watch('parseSingleSpace', function(value) {
+      localStorage.setItem('chrome-ext-delicious-parse-single-space', value);
+      // need to reload links when this setting is changed
+      localStorage.removeItem('chrome-ext-delicious-links');
     });
   });
 
