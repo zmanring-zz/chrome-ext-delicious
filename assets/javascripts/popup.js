@@ -234,7 +234,8 @@
           link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, '$1');
           link['private'] = (link.shared === 'no') ? true : false;
 
-          link.tags = link.tag.split('  ');
+          var split = (localStorage.getItem('chrome-ext-delicious-parse-single-space')) === 'true' ? / [ ]?/ : "  ";
+          link.tags = link.tag.split(split);
           delete link.tag;
 
           return link;
@@ -804,6 +805,15 @@
 
     $scope.$watch('filterTime', function(value) {
       localStorage.setItem('chrome-ext-delicious-filter-time', value);
+    });
+
+    // api options
+    $scope.parseSingleSpace = (localStorage.getItem('chrome-ext-delicious-parse-single-space')) === 'true' ? true : false;
+
+    $scope.$watch('parseSingleSpace', function(value) {
+      localStorage.setItem('chrome-ext-delicious-parse-single-space', value);
+      // need to reload links when this setting is changed
+      localStorage.removeItem('chrome-ext-delicious-links');
     });
   });
 
