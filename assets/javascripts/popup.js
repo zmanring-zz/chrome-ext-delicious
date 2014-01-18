@@ -502,6 +502,10 @@
       var manifest = chrome.runtime.getManifest();
       return manifest.name + ' ' + manifest.version;
     };
+
+    $scope.username = function() {
+      return localStorage.getItem('chrome-ext-delicious-username');
+    };
   });
 
   controllers.controller('LoginCtrl', function($scope, $rootScope, $location, delicious) {
@@ -510,10 +514,12 @@
 
       delicious.authenticate($scope.username, $scope.password)
         .success(function(data) {
+        localStorage.setItem('chrome-ext-delicious-username', $scope.username);
         $rootScope.loggedIn = true;
         $location.path('/new');
       })
         .error(function(data) {
+        localStorage.removeItem('chrome-ext-delicious-username', $scope.username);
         $rootScope.loginFailed = true;
         $location.path('/new');
       });
