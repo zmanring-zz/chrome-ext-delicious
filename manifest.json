@@ -47,7 +47,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "2.9.5",
+  "version": "2.9.6",
   "web_accessible_resources": [ "/popup.html" ]
 
 }
