@@ -1,16 +1,16 @@
-$(function () {
+$(function() {
 
   var closeModal = function() {
     $('#chrome-ext-delicious-frame').remove();
   };
 
-  var loadModal = function (view) {
+  var loadModal = function(view) {
 
     var html = [
       '<div id="chrome-ext-delicious-frame">',
-        '<a accesskey="d"></a>',
-        '<iframe seamless id="chrome-ext-delicious-iframe" src="chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/popup.html?origin=shortcut&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + view + '" />',
-        '<button class="close_frame" title="close">&times;</button>',
+      '<a accesskey="d"></a>',
+      '<iframe seamless id="chrome-ext-delicious-iframe" src="chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/popup.html?origin=shortcut&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + view + '" />',
+      '<button class="close_frame" title="close">&times;</button>',
       '</div>'
     ].join('\n');
 
@@ -20,7 +20,7 @@ $(function () {
 
 
   //Events
-  $(document).keydown(function (e) {
+  $(document).keydown(function(e) {
 
     if (e.altKey && e.shiftKey && e.keyCode === 68) {
       // shift-alt-d
@@ -32,7 +32,7 @@ $(function () {
 
   });
 
-  $(document).on('click', '#chrome-ext-delicious-frame button.close_frame', function () {
+  $(document).on('click', '#chrome-ext-delicious-frame button.close_frame', function() {
     closeModal();
   });
 

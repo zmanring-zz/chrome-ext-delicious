@@ -1,12 +1,13 @@
 // Analytics
 var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38039307-2']);
+_gaq.push(['_setAccount', 'UA-38039307-2']);
 
 // Had to load it via js or google analytics throws a tantrum
 (function() {
   var ga = document.createElement('script');
   ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
 })();
 
 
@@ -21,7 +22,7 @@ YUM.createContextMenu = function() {
   chrome.contextMenus.create({
     'id': 'chrome-ext-delicious-private-context',
     'contexts': ['page', 'selection'],
-    'title':'Add link',
+    'title': 'Add link',
     'onclick': YUM.injectModal
   });
 };
@@ -38,7 +39,8 @@ YUM.getSuggestion = function(query) {
         link['extended'],
         link['href'], ((link['shared'] === 'no') ? 'private' : ''),
         link['tags'].join(' '),
-        link['time']].join(' ').toLowerCase();
+        link['time']
+      ].join(' ').toLowerCase();
 
       return words.every(function(word) {
         return (search.indexOf(word) !== -1);
@@ -47,7 +49,7 @@ YUM.getSuggestion = function(query) {
     });
 
     var suggestedList = [];
-    for (var i=0; i<filteredList.length && i<5; i++) {
+    for (var i = 0; i < filteredList.length && i < 5; i++) {
       var obj = {};
 
       obj.content = filteredList[i].href;
@@ -62,18 +64,27 @@ YUM.getSuggestion = function(query) {
 
 YUM.htmlSpecialChars = function(unsafe) {
   return unsafe
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 };
 
 YUM.injectModal = function(info, tab) {
-  chrome.tabs.insertCSS(null, { file:"/assets/stylesheets/tab.css" });
-  chrome.tabs.executeScript(null, { file:"/assets/javascripts/context.js" });
+  chrome.tabs.insertCSS(null, {
+    file: "/assets/stylesheets/tab.css"
+  });
+  chrome.tabs.executeScript(null, {
+    file: "/assets/javascripts/context.js"
+  });
 
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {data: info});
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {
+      data: info
+    });
   });
 
   _gaq.push(['_trackEvent', 'modalOpened', 'contextMenu']);
@@ -82,18 +93,24 @@ YUM.injectModal = function(info, tab) {
 YUM.isCurrentTabSaved = function() {
   var searchString = localStorage.getItem('chrome-ext-delicious-links');
   if (searchString) {
-    chrome.tabs.getSelected(null,function(tab) {
+    chrome.tabs.getSelected(null, function(tab) {
 
-      if (searchString.indexOf('"' + tab.url + '"') >= 0 ) {
-        chrome.browserAction.setBadgeText({text:'√'});
-        chrome.browserAction.setBadgeBackgroundColor({color: '#468ED9'});
+      if (searchString.indexOf('"' + tab.url + '"') >= 0) {
+        chrome.browserAction.setBadgeText({
+          text: '√'
+        });
+        chrome.browserAction.setBadgeBackgroundColor({
+          color: '#468ED9'
+        });
         chrome.contextMenus.update('chrome-ext-delicious-private-context', {
-          'title':'Modify link'
+          'title': 'Modify link'
         });
       } else {
-        chrome.browserAction.setBadgeText({text:''});
+        chrome.browserAction.setBadgeText({
+          text: ''
+        });
         chrome.contextMenus.update('chrome-ext-delicious-private-context', {
-          'title':'Add link'
+          'title': 'Add link'
         });
       }
     });
@@ -113,7 +130,9 @@ YUM.openSelectedSuggestion = function(selection) {
 
   if (selection.match(regex)) {
     _gaq.push(['_trackEvent', 'onInputEntered', 'omnibox']);
-    chrome.tabs.update(null, {url: selection});
+    chrome.tabs.update(null, {
+      url: selection
+    });
   }
 };
 
@@ -128,10 +147,24 @@ YUM.openUpdatePage = function() {
 // Events
 YUM.createContextMenu();
 
-chrome.omnibox.onInputChanged.addListener(function(query, suggest) { suggest(YUM.getSuggestion(query)); });
-chrome.omnibox.onInputEntered.addListener(function(input) { YUM.openSelectedSuggestion(input); });
-chrome.omnibox.setDefaultSuggestion({"description":" "});
-chrome.runtime.onInstalled.addListener(function () { YUM.openUpdatePage(); });
-chrome.runtime.onMessage.addListener(function(message) { if (message.url) { YUM.openNewTab(message.url); } });
-chrome.tabs.onActivated.addListener(function() { YUM.isCurrentTabSaved(); });
-chrome.tabs.onUpdated.addListener(function() { YUM.isCurrentTabSaved(); });
+chrome.omnibox.onInputChanged.addListener(function(query, suggest) {
+  suggest(YUM.getSuggestion(query));
+});
+chrome.omnibox.onInputEntered.addListener(function(input) {
+  YUM.openSelectedSuggestion(input);
+});
+chrome.omnibox.setDefaultSuggestion({
+  "description": " "
+});
+// chrome.runtime.onInstalled.addListener(function () { YUM.openUpdatePage(); });
+chrome.runtime.onMessage.addListener(function(message) {
+  if (message.url) {
+    YUM.openNewTab(message.url);
+  }
+});
+chrome.tabs.onActivated.addListener(function() {
+  YUM.isCurrentTabSaved();
+});
+chrome.tabs.onUpdated.addListener(function() {
+  YUM.isCurrentTabSaved();
+});

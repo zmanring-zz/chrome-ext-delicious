@@ -4,32 +4,34 @@
   // App
   var app = angular.module('yum', ['yum.filters', 'yum.services', 'yum.controllers', 'yum.directives']);
 
-  app.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/login', {
-      templateUrl: 'views/login.html',
-      controller: 'LoginCtrl'
-    });
-    $routeProvider.when('/new', {
-      templateUrl: 'views/new.html',
-      controller: 'NewLinkCtrl',
-      resolve: {
-        tab: function($q, delicious) {
-          return delicious.getTab();
+  app.config(['$routeProvider',
+    function($routeProvider) {
+      $routeProvider.when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      });
+      $routeProvider.when('/new', {
+        templateUrl: 'views/new.html',
+        controller: 'NewLinkCtrl',
+        resolve: {
+          tab: function($q, delicious) {
+            return delicious.getTab();
+          }
         }
-      }
-    });
-    $routeProvider.when('/bookmarks', {
-      templateUrl: 'views/bookmarks.html',
-      controller: 'BookmarksCtrl'
-    });
-    $routeProvider.when('/options', {
-      templateUrl: 'views/options.html',
-      controller: 'OptionsCtrl'
-    });
-    $routeProvider.otherwise({
-      redirectTo: '/login'
-    });
-  }]);
+      });
+      $routeProvider.when('/bookmarks', {
+        templateUrl: 'views/bookmarks.html',
+        controller: 'BookmarksCtrl'
+      });
+      $routeProvider.when('/options', {
+        templateUrl: 'views/options.html',
+        controller: 'OptionsCtrl'
+      });
+      $routeProvider.otherwise({
+        redirectTo: '/login'
+      });
+    }
+  ]);
 
   app.config(function($compileProvider) {
     $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|chrome-extension):/);
@@ -74,11 +76,13 @@
   // Filters
   var filters = angular.module('yum.filters', []);
 
-  filters.filter('list', [function() {
-    return function(arr) {
-      return arr.join(', ');
-    };
-  }]);
+  filters.filter('list', [
+    function() {
+      return function(arr) {
+        return arr.join(', ');
+      };
+    }
+  ]);
 
   filters.filter('filterByWord', function() {
     return function(links, query) {
@@ -91,12 +95,8 @@
         return links.filter(function(link) {
           // Combine link properties to search into string
           var search = [
-          (localStorage.getItem('chrome-ext-delicious-filter-description')) === 'true' ? link['description'] : '',
-          (localStorage.getItem('chrome-ext-delicious-filter-extended')) === 'true' ? link['extended'] : '',
-          (localStorage.getItem('chrome-ext-delicious-filter-url')) === 'true' ? link['href'] : '',
-          ((link['shared'] === 'no') ? 'private' : ''),
-          (localStorage.getItem('chrome-ext-delicious-filter-tags')) === 'true' ? link['tags'].join(' ') : '',
-          (localStorage.getItem('chrome-ext-delicious-filter-time')) === 'true' ? link['time'] : ''].join(' ').toLowerCase();
+            (localStorage.getItem('chrome-ext-delicious-filter-description')) === 'true' ? link['description'] : '', (localStorage.getItem('chrome-ext-delicious-filter-extended')) === 'true' ? link['extended'] : '', (localStorage.getItem('chrome-ext-delicious-filter-url')) === 'true' ? link['href'] : '', ((link['shared'] === 'no') ? 'private' : ''), (localStorage.getItem('chrome-ext-delicious-filter-tags')) === 'true' ? link['tags'].join(' ') : '', (localStorage.getItem('chrome-ext-delicious-filter-time')) === 'true' ? link['time'] : ''
+          ].join(' ').toLowerCase();
 
           // all of the words
           return words.every(function(word) {
@@ -188,7 +188,10 @@
       var defer = $q.defer();
 
       if (chrome.tabs) {
-        chrome.tabs.query({windowId: chrome.windows.WINDOW_ID_CURRENT, active: true}, function(tab) {
+        chrome.tabs.query({
+          windowId: chrome.windows.WINDOW_ID_CURRENT,
+          active: true
+        }, function(tab) {
           $rootScope.$apply(function() {
             defer.resolve(tab[0]);
           });
@@ -241,7 +244,7 @@
           return link;
         }
 
-        if ( ! json.posts) {
+        if (!json.posts) {
           return [];
         } else if (angular.isArray(json.posts.post)) {
           return json.posts.post.map(_parseLink);
@@ -273,25 +276,25 @@
       };
     }());
 
-    Delicious.getDeliciousLinkDataByUrl = (function () {
-        return function getDeliciousLinkDataByUrl(url) {
-          var defer = $q.defer(),
-            hash = localStorage.getItem('chrome-ext-delicious'),
-            options = {
-              method: 'GET',
-              url: 'https://api.del.icio.us/v1/posts/get?url=' + url,
-              headers: {
-                'Authorization': 'Basic ' + hash
-              },
-              transformResponse: Delicious.parseLinks
-            };
+    Delicious.getDeliciousLinkDataByUrl = (function() {
+      return function getDeliciousLinkDataByUrl(url) {
+        var defer = $q.defer(),
+          hash = localStorage.getItem('chrome-ext-delicious'),
+          options = {
+            method: 'GET',
+            url: 'https://api.del.icio.us/v1/posts/get?url=' + url,
+            headers: {
+              'Authorization': 'Basic ' + hash
+            },
+            transformResponse: Delicious.parseLinks
+          };
 
-          $http(options).then(function(resp) {
-            defer.resolve(resp.data);
-          });
+        $http(options).then(function(resp) {
+          defer.resolve(resp.data);
+        });
 
-          return defer.promise;
-        };
+        return defer.promise;
+      };
     }());
 
     Delicious.getUpdate = (function() {
@@ -405,7 +408,7 @@
           return tag.tag;
         }
 
-        if ( ! json.tags) {
+        if (!json.tags) {
           return [];
         } else if (angular.isArray(json.tags.tag)) {
           return json.tags.tag.map(_parseTag);
@@ -459,7 +462,7 @@
         // Clear storage before fetching new links, this will keep it up to date if the fetch fails for any reason
         delete localStorage['chrome-ext-delicious-last-update'];
         delete localStorage['chrome-ext-delicious-links'];
-        Delicious.fetchLinks().then(function () {
+        Delicious.fetchLinks().then(function() {
           localStorage.setItem('chrome-ext-delicious-last-update', update.time);
         });
       }
@@ -514,15 +517,15 @@
 
       delicious.authenticate($scope.username, $scope.password)
         .success(function(data) {
-        localStorage.setItem('chrome-ext-delicious-username', $scope.username);
-        $rootScope.loggedIn = true;
-        $location.path('/new');
-      })
+          localStorage.setItem('chrome-ext-delicious-username', $scope.username);
+          $rootScope.loggedIn = true;
+          $location.path('/new');
+        })
         .error(function(data) {
-        localStorage.removeItem('chrome-ext-delicious-username', $scope.username);
-        $rootScope.loginFailed = true;
-        $location.path('/new');
-      });
+          localStorage.removeItem('chrome-ext-delicious-username', $scope.username);
+          $rootScope.loginFailed = true;
+          $location.path('/new');
+        });
     };
   });
 
@@ -566,7 +569,7 @@
       $scope.suggestedTags.splice(index, 1);
     };
 
-    delicious.getDeliciousLinkDataByUrl($scope.url).then(function (data) {
+    delicious.getDeliciousLinkDataByUrl($scope.url).then(function(data) {
 
       var link = data[0];
       if (link) {
@@ -661,7 +664,9 @@
           });
         } else {
           // Send message to background to open!
-          chrome.runtime.sendMessage({url: $scope.urlListToOpen[i].href});
+          chrome.runtime.sendMessage({
+            url: $scope.urlListToOpen[i].href
+          });
         }
       }
 
@@ -747,7 +752,7 @@
       var count = 8;
       if ($scope.limit < $scope.links.length) {
         $scope.limit += count;
-        analytics.push(['_trackEvent', 'link-pages-loaded', ($scope.limit/count).toString()]);
+        analytics.push(['_trackEvent', 'link-pages-loaded', ($scope.limit / count).toString()]);
       }
     };
 
@@ -827,80 +832,88 @@
   // Directives
   var directives = angular.module('yum.directives', []);
 
-  directives.directive('appVersion', ['version', function(version) {
-    return function(scope, elm, attrs) {
-      elm.text(version);
-    };
-  }]);
+  directives.directive('appVersion', ['version',
+    function(version) {
+      return function(scope, elm, attrs) {
+        elm.text(version);
+      };
+    }
+  ]);
 
   // TODO: Make select-two-show optional
-  directives.directive('selectTwo', [function() {
-    function link(scope, element, attrs, a) {
-      var select = angular.element(element);
+  directives.directive('selectTwo', [
+    function() {
+      function link(scope, element, attrs, a) {
+        var select = angular.element(element);
 
-      scope.$watch('show', function() {
-        if(scope.tags.length > 0) {
-          initSelectTwo();
-        }
-      });
-      scope.$watch('tags', function() {
-        if(scope.tags.length > 0) {
-          initSelectTwo();
-        }
-      });
-      scope.$watch('val', function(newVal) {
-        select.select2('val', newVal);
-      });
+        scope.$watch('show', function() {
+          if (scope.tags.length > 0) {
+            initSelectTwo();
+          }
+        });
+        scope.$watch('tags', function() {
+          if (scope.tags.length > 0) {
+            initSelectTwo();
+          }
+        });
+        scope.$watch('val', function(newVal) {
+          select.select2('val', newVal);
+        });
 
-      select.bind('change', function(e) {
-        scope.$apply(function() {
-          scope.val = e.val;
+        select.bind('change', function(e) {
+          scope.$apply(function() {
+            scope.val = e.val;
+          });
         });
-      });
-      function initSelectTwo() {
-        if (!scope.show) return;
-        select.select2({
-          tags: scope.tags,
-          tokenSeparators: [',']
-        });
-        select.select2('val', scope.val);
+
+        function initSelectTwo() {
+          if (!scope.show) return;
+          select.select2({
+            tags: scope.tags,
+            tokenSeparators: [',']
+          });
+          select.select2('val', scope.val);
+        }
       }
+
+      return {
+        restrict: 'A',
+        scope: {
+          val: '=ngModel',
+          tags: '=selectTwo',
+          show: '=selectTwoShow'
+        },
+        link: link
+      };
     }
+  ]);
 
-    return {
-      restrict: 'A',
-      scope: {
-        val: '=ngModel',
-        tags: '=selectTwo',
-        show: '=selectTwoShow'
-      },
-      link: link
-    };
-  }]);
+  directives.directive('customCheckbox', [
+    function() {
+      function link(scope, element, attrs) {
+        var className = attrs['customCheckbox'],
+          $wrapper;
 
-  directives.directive('customCheckbox', [function() {
-    function link(scope, element, attrs) {
-      var className = attrs['customCheckbox'], $wrapper;
+        element.wrap('<div class="' + className + '" />');
+        $wrapper = element.parent();
 
-      element.wrap('<div class="' + className +'" />');
-      $wrapper = element.parent();
-
-      $wrapper.on('click', function(e) {
-        scope.$apply(function() {
-          scope[attrs['ngModel']] = !scope[attrs['ngModel']];
+        $wrapper.on('click', function(e) {
+          scope.$apply(function() {
+            scope[attrs['ngModel']] = !scope[attrs['ngModel']];
+          });
         });
-      });
 
-      scope.$watch(attrs['ngModel'], function(value) {
-        $wrapper.toggleClass(className + '-checked', value);
-      });
+        scope.$watch(attrs['ngModel'], function(value) {
+          $wrapper.toggleClass(className + '-checked', value);
+        });
+      }
+
+      return {
+        restrict: 'A',
+        link: link
+      };
     }
-
-    return {
-      restrict: 'A',
-      link: link
-    };
-  }]);
+  ]);
 
   directives.directive('whenScrolled', function() {
     return function(scope, elm, attr) {

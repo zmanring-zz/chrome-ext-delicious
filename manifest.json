@@ -1,6 +1,6 @@
 {
 
- "background": {
+  "background": {
     "scripts": [
       "/assets/javascripts/background.js"
     ]
@@ -18,27 +18,25 @@
       }
     }
   },
-  "content_scripts": [
-    {
+  "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
     "js": [
       "/vendor/javascripts/jquery-2.0.0.min.js",
       "/assets/javascripts/tab.js"
     ],
-    "css": [ "/assets/stylesheets/tab.css" ]
-    }
-  ],
+    "css": ["/assets/stylesheets/tab.css"]
+  }],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "description": "Feature rich extension with the ability to add, edit, filter, and remove bookmarks from your Delicious account.",
   "incognito": "spanning",
   "icons": {
     "16": "/assets/images/icon-16.png",
-    "128":"/assets/images/icon-128.png"
+    "128": "/assets/images/icon-128.png"
   },
   "manifest_version": 2,
   "name": "@Delicious",
   "omnibox": {
-    "keyword" : "@del"
+    "keyword": "@del"
   },
   "permissions": [
     "contextMenus",
@@ -47,7 +45,7 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "2.9.6",
-  "web_accessible_resources": [ "/popup.html" ]
+  "version": "2.9.7",
+  "web_accessible_resources": ["/popup.html"]
 
 }
