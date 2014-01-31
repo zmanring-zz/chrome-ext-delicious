@@ -1,11 +1,11 @@
-(function(angular) {
+(function (angular) {
   'use strict';
 
   // App
   var app = angular.module('yum', ['yum.filters', 'yum.services', 'yum.controllers', 'yum.directives']);
 
   app.config(['$routeProvider',
-    function($routeProvider) {
+    function ($routeProvider) {
       $routeProvider.when('/login', {
         templateUrl: 'views/login.html',
         controller: 'LoginCtrl'
@@ -14,7 +14,7 @@
         templateUrl: 'views/new.html',
         controller: 'NewLinkCtrl',
         resolve: {
-          tab: function($q, delicious) {
+          tab: function ($q, delicious) {
             return delicious.getTab();
           }
         }
@@ -33,11 +33,11 @@
     }
   ]);
 
-  app.config(function($compileProvider) {
+  app.config(function ($compileProvider) {
     $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|chrome-extension):/);
   });
 
-  app.run(function($rootScope, $location, analytics) {
+  app.run(function ($rootScope, $location, analytics) {
     $rootScope.loggedIn = localStorage.getItem('chrome-ext-delicious') ? true : false;
     $rootScope.defaultTab = (localStorage.getItem('chrome-ext-delicious-default-tab')) === 'true' ? true : false;
     $rootScope.firstTimeFilter = localStorage.getItem('chrome-ext-delicious-filter-description');
@@ -61,13 +61,13 @@
       }
     }
 
-    $rootScope.$on('$routeChangeStart', function(e, next, current) {
+    $rootScope.$on('$routeChangeStart', function (e, next, current) {
       if (!$rootScope.loggedIn && next.controller !== 'LoginCtrl') {
         $location.path('/login');
       }
     });
 
-    $rootScope.$on('$viewContentLoaded', function(e) {
+    $rootScope.$on('$viewContentLoaded', function (e) {
       analytics.push(['_trackPageview', $location.path()]);
     });
   });
@@ -77,29 +77,29 @@
   var filters = angular.module('yum.filters', []);
 
   filters.filter('list', [
-    function() {
-      return function(arr) {
+    function () {
+      return function (arr) {
         return arr.join(', ');
       };
     }
   ]);
 
-  filters.filter('filterByWord', function() {
-    return function(links, query) {
+  filters.filter('filterByWord', function () {
+    return function (links, query) {
 
       // Only filter if there's a query string
       if (angular.isString(query)) {
         // Get array of words from query
         var words = query.toLowerCase().split(' ');
         // Filter the links and return them
-        return links.filter(function(link) {
+        return links.filter(function (link) {
           // Combine link properties to search into string
           var search = [
             (localStorage.getItem('chrome-ext-delicious-filter-description')) === 'true' ? link['description'] : '', (localStorage.getItem('chrome-ext-delicious-filter-extended')) === 'true' ? link['extended'] : '', (localStorage.getItem('chrome-ext-delicious-filter-url')) === 'true' ? link['href'] : '', ((link['shared'] === 'no') ? 'private' : ''), (localStorage.getItem('chrome-ext-delicious-filter-tags')) === 'true' ? link['tags'].join(' ') : '', (localStorage.getItem('chrome-ext-delicious-filter-time')) === 'true' ? link['time'] : ''
           ].join(' ').toLowerCase();
 
           // all of the words
-          return words.every(function(word) {
+          return words.every(function (word) {
             return (search.indexOf(word) !== -1);
           });
         });
@@ -114,10 +114,10 @@
   // Services
   var services = angular.module('yum.services', []);
 
-  services.factory('delicious', function($http, $q, $rootScope, $location) {
+  services.factory('delicious', function ($http, $q, $rootScope, $location) {
     var Delicious = {};
 
-    Delicious.authenticate = function(username, password) {
+    Delicious.authenticate = function (username, password) {
       var hash = btoa(username + ":" + password),
         options = {
           method: 'GET',
@@ -127,12 +127,12 @@
           }
         };
 
-      return $http(options).success(function() {
+      return $http(options).success(function () {
         localStorage.setItem('chrome-ext-delicious', hash);
       });
     };
 
-    Delicious.addLink = function(linkData) {
+    Delicious.addLink = function (linkData) {
       var hash = localStorage.getItem('chrome-ext-delicious'),
         options = {
           method: 'POST',
@@ -141,7 +141,7 @@
             'Authorization': 'Basic ' + hash,
             'Content-Type': 'application/x-www-form-urlencoded'
           },
-          transformRequest: function(obj) {
+          transformRequest: function (obj) {
             var str = [];
             for (var p in obj) {
               str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
@@ -151,13 +151,13 @@
           data: linkData
         };
 
-      return $http(options).success(function() {
+      return $http(options).success(function () {
         // Clear out links cache
         localStorage.removeItem('chrome-ext-delicious-links');
       });
     };
 
-    Delicious.removeLink = function(link) {
+    Delicious.removeLink = function (link) {
       var hash = localStorage.getItem('chrome-ext-delicious'),
         options = {
           method: 'GET',
@@ -170,13 +170,13 @@
           }
         };
 
-      return $http(options).success(function() {
+      return $http(options).success(function () {
         // Clear out links cache
         localStorage.removeItem('chrome-ext-delicious-links');
       });
     };
 
-    Delicious.getQueryStringByName = function(name) {
+    Delicious.getQueryStringByName = function (name) {
       name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
       var regexS = '[\\?&]' + name + '=([^&#]*)',
         regex = new RegExp(regexS),
@@ -184,15 +184,15 @@
       return results ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
     };
 
-    Delicious.getTab = function() {
+    Delicious.getTab = function () {
       var defer = $q.defer();
 
       if (chrome.tabs) {
         chrome.tabs.query({
           windowId: chrome.windows.WINDOW_ID_CURRENT,
           active: true
-        }, function(tab) {
-          $rootScope.$apply(function() {
+        }, function (tab) {
+          $rootScope.$apply(function () {
             defer.resolve(tab[0]);
           });
         });
@@ -207,7 +207,7 @@
       return defer.promise;
     };
 
-    Delicious.getLinks = function() {
+    Delicious.getLinks = function () {
       var defer = $q.defer(),
         links = JSON.parse(localStorage.getItem('chrome-ext-delicious-links'));
 
@@ -220,7 +220,7 @@
       return defer.promise;
     };
 
-    Delicious.parseLinks = (function() {
+    Delicious.parseLinks = (function () {
       return function parseLinksResponse(data) {
         var json = xml.xmlToJSON(data);
 
@@ -254,7 +254,7 @@
       }
     }());
 
-    Delicious.fetchLinks = (function() {
+    Delicious.fetchLinks = (function () {
       return function fetchLinks() {
         var defer = $q.defer(),
           hash = localStorage.getItem('chrome-ext-delicious'),
@@ -267,7 +267,7 @@
             transformResponse: Delicious.parseLinks
           };
 
-        $http(options).then(function(resp) {
+        $http(options).then(function (resp) {
           localStorage.setItem('chrome-ext-delicious-links', JSON.stringify(resp.data));
           defer.resolve(resp.data);
         });
@@ -276,7 +276,7 @@
       };
     }());
 
-    Delicious.getDeliciousLinkDataByUrl = (function() {
+    Delicious.getDeliciousLinkDataByUrl = (function () {
       return function getDeliciousLinkDataByUrl(url) {
         var defer = $q.defer(),
           hash = localStorage.getItem('chrome-ext-delicious'),
@@ -289,7 +289,7 @@
             transformResponse: Delicious.parseLinks
           };
 
-        $http(options).then(function(resp) {
+        $http(options).then(function (resp) {
           defer.resolve(resp.data);
         });
 
@@ -297,7 +297,7 @@
       };
     }());
 
-    Delicious.getUpdate = (function() {
+    Delicious.getUpdate = (function () {
       return function getUpdate() {
         var defer = $q.defer(),
           hash = localStorage.getItem('chrome-ext-delicious'),
@@ -311,7 +311,7 @@
           };
 
         if ($rootScope.loggedIn) {
-          $http(options).then(function(resp) {
+          $http(options).then(function (resp) {
             defer.resolve(resp.data);
           });
         }
@@ -336,7 +336,7 @@
       }
     }());
 
-    Delicious.getPopularSuggestedTags = (function() {
+    Delicious.getPopularSuggestedTags = (function () {
       return function getPopularSuggestedTags(url) {
         var defer = $q.defer(),
           hash = localStorage.getItem('chrome-ext-delicious'),
@@ -349,7 +349,7 @@
             transformResponse: _parseSuggestionsResponse
           };
 
-        $http(options).then(function(resp) {
+        $http(options).then(function (resp) {
           defer.resolve(resp.data);
         });
 
@@ -360,7 +360,7 @@
         var json = xml.xmlToJSON(data);
 
         if (json.suggest) {
-          return json.suggest.popular.map(function(rawSuggestionTag) {
+          return json.suggest.popular.map(function (rawSuggestionTag) {
             var suggestedTag = {};
 
             // Remove '@' symbols from keys
@@ -374,7 +374,7 @@
       }
     }());
 
-    Delicious.getAllMyTags = (function() {
+    Delicious.getAllMyTags = (function () {
       return function getAllMyTags() {
         var defer = $q.defer(),
           hash = localStorage.getItem('chrome-ext-delicious'),
@@ -387,7 +387,7 @@
             transformResponse: _parseTags
           };
 
-        $http(options).then(function(resp) {
+        $http(options).then(function (resp) {
           defer.resolve(resp.data);
         });
 
@@ -418,11 +418,11 @@
       }
     }());
 
-    Delicious.logout = function() {
+    Delicious.logout = function () {
       localStorage.clear();
     };
 
-    Delicious.setting = (function() {
+    Delicious.setting = (function () {
       var prefix = 'chrome-ext-delicious-setting-',
         defaults = {
           'share': false,
@@ -447,7 +447,7 @@
     }());
 
     // Check for updates
-    Delicious.getUpdate().then(function(update) {
+    Delicious.getUpdate().then(function (update) {
 
       var data = localStorage.getItem('chrome-ext-delicious-last-update'),
         lastUpdate;
@@ -462,7 +462,7 @@
         // Clear storage before fetching new links, this will keep it up to date if the fetch fails for any reason
         delete localStorage['chrome-ext-delicious-last-update'];
         delete localStorage['chrome-ext-delicious-links'];
-        Delicious.fetchLinks().then(function() {
+        Delicious.fetchLinks().then(function () {
           localStorage.setItem('chrome-ext-delicious-last-update', update.time);
         });
       }
@@ -472,7 +472,7 @@
     return Delicious;
   });
 
-  services.factory('analytics', function($window) {
+  services.factory('analytics', function ($window) {
     $window._gaq.push(['_setAccount', 'UA-38039307-2']);
     return $window._gaq;
   });
@@ -481,7 +481,7 @@
   // Controllers
   var controllers = angular.module('yum.controllers', []);
 
-  controllers.controller('AppCtrl', function($scope, $rootScope, $location, delicious) {
+  controllers.controller('AppCtrl', function ($scope, $rootScope, $location, delicious) {
     $scope.menu = [{
       path: '/new',
       text: 'Add link'
@@ -490,46 +490,50 @@
       text: 'My links'
     }];
 
-    $scope.isSelected = function(item) {
+    $scope.isSelected = function (item) {
       var path = $location.path();
       return (path === item.path);
     };
 
-    $scope.logout = function(link) {
+    $scope.logout = function (link) {
       delicious.logout();
       $rootScope.loggedIn = false;
       $location.path('/login');
     };
 
-    $scope.extVersion = function() {
+    $scope.extVersion = function () {
       var manifest = chrome.runtime.getManifest();
       return manifest.name + ' ' + manifest.version;
     };
 
-    $scope.username = function() {
+    $scope.username = function () {
       return localStorage.getItem('chrome-ext-delicious-username');
     };
   });
 
-  controllers.controller('LoginCtrl', function($scope, $rootScope, $location, delicious) {
-    $scope.login = function() {
+  controllers.controller('LoginCtrl', function ($scope, $rootScope, $location, delicious) {
+    $scope.login = function () {
       $scope.loading = true;
 
       delicious.authenticate($scope.username, $scope.password)
-        .success(function(data) {
+        .success(function (data) {
           localStorage.setItem('chrome-ext-delicious-username', $scope.username);
           $rootScope.loggedIn = true;
           $location.path('/new');
         })
-        .error(function(data) {
+        .error(function (data, code) {
+          var json = xml.xmlToJSON(data);
+          var verboseResult = (json.result) ? ' ' + json.result['@code'] : '';
+
           localStorage.removeItem('chrome-ext-delicious-username', $scope.username);
+          $rootScope.errorCode = code + verboseResult;
           $rootScope.loginFailed = true;
           $location.path('/new');
         });
     };
   });
 
-  controllers.controller('NewLinkCtrl', function($scope, $location, tab, delicious, analytics) {
+  controllers.controller('NewLinkCtrl', function ($scope, $location, tab, delicious, analytics) {
     $scope.description = tab.title;
     $scope.header = 'Add link to Delicious';
     $scope.myTags = [];
@@ -543,7 +547,7 @@
     // Get presistant private checkmark
     $scope.share = delicious.setting('share');
 
-    $scope.add = function() {
+    $scope.add = function () {
       $scope.loading = true;
 
       delicious.addLink({
@@ -553,13 +557,13 @@
         shared: (!$scope.share ? 'yes' : 'no'),
         tags: $scope.tags.join(', '),
         replace: 'yes'
-      }).then(function() {
+      }).then(function () {
         $location.path('/bookmarks');
         analytics.push(['_trackEvent', 'link-added', 'action']);
       });
     };
 
-    $scope.addSuggestedTag = function(tag) {
+    $scope.addSuggestedTag = function (tag) {
       var tags = angular.copy($scope.tags);
       tags.push(tag);
       $scope.tags = tags;
@@ -569,7 +573,7 @@
       $scope.suggestedTags.splice(index, 1);
     };
 
-    delicious.getDeliciousLinkDataByUrl($scope.url).then(function(data) {
+    delicious.getDeliciousLinkDataByUrl($scope.url).then(function (data) {
 
       var link = data[0];
       if (link) {
@@ -581,13 +585,13 @@
         $scope.submitLabel = 'Modify';
         $scope.tags = link['tags'];
       } else {
-        delicious.getPopularSuggestedTags($scope.url).then(function(tags) {
+        delicious.getPopularSuggestedTags($scope.url).then(function (tags) {
           $scope.suggestedTags = tags;
         });
       }
     });
 
-    delicious.getAllMyTags().then(function(myTags) {
+    delicious.getAllMyTags().then(function (myTags) {
       $scope.myTags = myTags;
       $scope.myTagsLoaded = true;
 
@@ -600,26 +604,26 @@
       });
 
       // Needed for saving link
-      select.bind('change', function(e) {
-        $scope.$apply(function() {
+      select.bind('change', function (e) {
+        $scope.$apply(function () {
           $scope.tags = e.val;
         });
       });
 
       // Used during suggest click event
-      $scope.$watch('tags', function(newVal) {
+      $scope.$watch('tags', function (newVal) {
         select.select2('val', newVal);
       });
 
     });
 
-    $scope.$watch('share', function(value) {
+    $scope.$watch('share', function (value) {
       // Set presistant private checkmark
       delicious.setting('share', value);
     });
   });
 
-  controllers.controller('BookmarksCtrl', function($scope, $timeout, $filter, delicious, analytics) {
+  controllers.controller('BookmarksCtrl', function ($scope, $timeout, $filter, delicious, analytics) {
     $scope.limit = 0;
     $scope.links = [];
     $scope.linksLength = 0;
@@ -629,20 +633,20 @@
     $scope.reverse = delicious.setting('reverse');
     $scope.urlListToOpen = [];
 
-    $scope.addUrlToList = function(link) {
+    $scope.addUrlToList = function (link) {
       link.linkAdded = true;
       $scope.urlListToOpen.push(link);
       analytics.push(['_trackEvent', 'link-btn-add-link-to-list', 'clicked']);
     };
 
-    $scope.removeUrlToList = function(link) {
+    $scope.removeUrlToList = function (link) {
       link.linkAdded = false;
       var index = $scope.urlListToOpen.indexOf(link);
       $scope.urlListToOpen.splice(index, 1);
       analytics.push(['_trackEvent', 'link-btn-remove-link-from-list', 'clicked']);
     };
 
-    $scope.clearUrlList = function() {
+    $scope.clearUrlList = function () {
 
       // clear links
       for (var i = 0; i < $scope.urlListToOpen.length; i++) {
@@ -654,7 +658,7 @@
 
     };
 
-    $scope.openUrlList = function() {
+    $scope.openUrlList = function () {
 
       for (var i = 0; i < $scope.urlListToOpen.length; i++) {
         if (chrome.tabs) {
@@ -677,26 +681,26 @@
 
     };
 
-    $scope.confirmRemove = function(link) {
+    $scope.confirmRemove = function (link) {
       link.confirmRemoval = true;
     };
 
-    $scope.cancelRemove = function(link) {
+    $scope.cancelRemove = function (link) {
       link.confirmRemoval = false;
     };
 
-    $scope.confirmUpdate = function(link) {
+    $scope.confirmUpdate = function (link) {
       link.confirmUpdate = true;
       link.clean = angular.copy(link);
       analytics.push(['_trackEvent', 'link-btn-edit', 'clicked']);
     };
 
-    $scope.cancelUpdate = function(link) {
+    $scope.cancelUpdate = function (link) {
       angular.copy(link.clean, link);
       link.confirmUpdate = false;
     };
 
-    $scope.update = function(link) {
+    $scope.update = function (link) {
       link.confirmUpdate = false;
       link.description = link.tempDescription;
 
@@ -707,21 +711,21 @@
         shared: ((link['private']) ? 'no' : 'yes'),
         tags: link.tags.join(', '),
         replace: 'yes'
-      }).then(function() {
+      }).then(function () {
         $scope.getAllMyTags();
         analytics.push(['_trackEvent', 'link-updated', 'action']);
       });
     };
 
-    $scope.remove = function(link) {
+    $scope.remove = function (link) {
       link.removed = true;
 
-      $timeout(function() {
+      $timeout(function () {
         var index = $scope.links.indexOf(link);
         $scope.links.splice(index, 1);
         $scope.setLinksLength();
 
-        delicious.removeLink(link).then(null, function() {
+        delicious.removeLink(link).then(null, function () {
           $scope.links.splice(index, 0, link);
           $scope.setLinksLength();
           analytics.push(['_trackEvent', 'link-removed', 'action']);
@@ -729,26 +733,26 @@
       }, 500);
     };
 
-    $scope.isPrivate = function(link) {
+    $scope.isPrivate = function (link) {
       return link['private'];
     };
 
-    $scope.appendQuery = function(word) {
+    $scope.appendQuery = function (word) {
       var query = $scope.query ? ($scope.query + ' ' + word) : word;
       $scope.query = query.trim();
     };
 
-    $scope.getAllMyTags = function() {
-      delicious.getAllMyTags().then(function(myTags) {
+    $scope.getAllMyTags = function () {
+      delicious.getAllMyTags().then(function (myTags) {
         $scope.myTags = myTags;
       });
     };
 
-    $scope.setLinksLength = function() {
+    $scope.setLinksLength = function () {
       $scope.linksLength = $filter('filterByWord')($scope.links, $scope.query).length;
     };
 
-    $scope.loadMore = function() {
+    $scope.loadMore = function () {
       var count = 8;
       if ($scope.limit < $scope.links.length) {
         $scope.limit += count;
@@ -756,8 +760,8 @@
       }
     };
 
-    delicious.getLinks().then(function(links) {
-      $scope.links = links.map(function(link) {
+    delicious.getLinks().then(function (links) {
+      $scope.links = links.map(function (link) {
         return angular.extend(link, {
           confirmUpdate: false,
           confirmRemoval: false,
@@ -773,21 +777,21 @@
     $scope.$watch('query', $scope.setLinksLength);
     $scope.$watch('links', $scope.setLinksLength);
 
-    $scope.$watch('order', function(value) {
+    $scope.$watch('order', function (value) {
       delicious.setting('order', value);
     });
 
-    $scope.$watch('reverse', function(value) {
+    $scope.$watch('reverse', function (value) {
       delicious.setting('reverse', value);
     });
   });
 
-  controllers.controller('OptionsCtrl', function($scope, analytics) {
+  controllers.controller('OptionsCtrl', function ($scope, analytics) {
 
     // tabs options
     $scope.defaultTab = (localStorage.getItem('chrome-ext-delicious-default-tab')) === 'true' ? true : false;
 
-    $scope.$watch('defaultTab', function(value) {
+    $scope.$watch('defaultTab', function (value) {
       localStorage.setItem('chrome-ext-delicious-default-tab', value);
     });
 
@@ -798,30 +802,30 @@
     $scope.filterTags = (localStorage.getItem('chrome-ext-delicious-filter-tags')) === 'true' ? true : false;
     $scope.filterTime = (localStorage.getItem('chrome-ext-delicious-filter-time')) === 'true' ? true : false;
 
-    $scope.$watch('filterDescription', function(value) {
+    $scope.$watch('filterDescription', function (value) {
       localStorage.setItem('chrome-ext-delicious-filter-description', value);
     });
 
-    $scope.$watch('filterExtended', function(value) {
+    $scope.$watch('filterExtended', function (value) {
       localStorage.setItem('chrome-ext-delicious-filter-extended', value);
     });
 
-    $scope.$watch('filterUrl', function(value) {
+    $scope.$watch('filterUrl', function (value) {
       localStorage.setItem('chrome-ext-delicious-filter-url', value);
     });
 
-    $scope.$watch('filterTags', function(value) {
+    $scope.$watch('filterTags', function (value) {
       localStorage.setItem('chrome-ext-delicious-filter-tags', value);
     });
 
-    $scope.$watch('filterTime', function(value) {
+    $scope.$watch('filterTime', function (value) {
       localStorage.setItem('chrome-ext-delicious-filter-time', value);
     });
 
     // api options
     $scope.parseSingleSpace = (localStorage.getItem('chrome-ext-delicious-parse-single-space')) === 'true' ? true : false;
 
-    $scope.$watch('parseSingleSpace', function(value) {
+    $scope.$watch('parseSingleSpace', function (value) {
       localStorage.setItem('chrome-ext-delicious-parse-single-space', value);
       // need to reload links when this setting is changed
       localStorage.removeItem('chrome-ext-delicious-links');
@@ -833,8 +837,8 @@
   var directives = angular.module('yum.directives', []);
 
   directives.directive('appVersion', ['version',
-    function(version) {
-      return function(scope, elm, attrs) {
+    function (version) {
+      return function (scope, elm, attrs) {
         elm.text(version);
       };
     }
@@ -842,26 +846,26 @@
 
   // TODO: Make select-two-show optional
   directives.directive('selectTwo', [
-    function() {
+    function () {
       function link(scope, element, attrs, a) {
         var select = angular.element(element);
 
-        scope.$watch('show', function() {
+        scope.$watch('show', function () {
           if (scope.tags.length > 0) {
             initSelectTwo();
           }
         });
-        scope.$watch('tags', function() {
+        scope.$watch('tags', function () {
           if (scope.tags.length > 0) {
             initSelectTwo();
           }
         });
-        scope.$watch('val', function(newVal) {
+        scope.$watch('val', function (newVal) {
           select.select2('val', newVal);
         });
 
-        select.bind('change', function(e) {
-          scope.$apply(function() {
+        select.bind('change', function (e) {
+          scope.$apply(function () {
             scope.val = e.val;
           });
         });
@@ -889,7 +893,7 @@
   ]);
 
   directives.directive('customCheckbox', [
-    function() {
+    function () {
       function link(scope, element, attrs) {
         var className = attrs['customCheckbox'],
           $wrapper;
@@ -897,13 +901,13 @@
         element.wrap('<div class="' + className + '" />');
         $wrapper = element.parent();
 
-        $wrapper.on('click', function(e) {
-          scope.$apply(function() {
+        $wrapper.on('click', function (e) {
+          scope.$apply(function () {
             scope[attrs['ngModel']] = !scope[attrs['ngModel']];
           });
         });
 
-        scope.$watch(attrs['ngModel'], function(value) {
+        scope.$watch(attrs['ngModel'], function (value) {
           $wrapper.toggleClass(className + '-checked', value);
         });
       }
@@ -915,11 +919,11 @@
     }
   ]);
 
-  directives.directive('whenScrolled', function() {
-    return function(scope, elm, attr) {
+  directives.directive('whenScrolled', function () {
+    return function (scope, elm, attr) {
       var raw = elm[0];
 
-      elm.bind('scroll', function() {
+      elm.bind('scroll', function () {
         if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
           scope.$apply(attr.whenScrolled);
         }
