@@ -136,13 +136,6 @@ YUM.openSelectedSuggestion = function(selection) {
   }
 };
 
-YUM.openUpdatePage = function() {
-  chrome.tabs.create({
-    url: '/updated.html',
-    active: true
-  });
-};
-
 
 // Events
 YUM.createContextMenu();
@@ -156,7 +149,6 @@ chrome.omnibox.onInputEntered.addListener(function(input) {
 chrome.omnibox.setDefaultSuggestion({
   "description": " "
 });
-// chrome.runtime.onInstalled.addListener(function () { YUM.openUpdatePage(); });
 chrome.runtime.onMessage.addListener(function(message) {
   if (message.url) {
     YUM.openNewTab(message.url);
