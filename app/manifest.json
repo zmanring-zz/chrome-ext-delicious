@@ -1,12 +1,11 @@
 {
-
   "background": {
     "scripts": [
-      "/assets/javascripts/background.js"
+      "scripts/background.js"
     ]
   },
   "browser_action": {
-    "default_icon": "/assets/images/icon.png",
+    "default_icon": "images/icon.png",
     "default_popup": "popup.html",
     "default_title": "@Delicious"
   },
@@ -21,23 +20,25 @@
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
     "js": [
-      "/vendor/javascripts/jquery-2.0.0.min.js",
-      "/assets/javascripts/tab.js"
+      "/scripts/vendor/jquery-2.0.0.min.js",
+      "/scripts/contentscript.js"
     ],
-    "css": ["/assets/stylesheets/tab.css"]
+    "css": ["/styles/contentscript.css"]
   }],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
-  "description": "Feature rich extension with the ability to add, edit, filter, and remove bookmarks from your Delicious account.",
+  "default_locale": "en",
+  "description": "__MSG_appDescription__",
   "incognito": "spanning",
   "icons": {
-    "16": "/assets/images/icon-16.png",
-    "128": "/assets/images/icon-128.png"
+    "16": "images/icon-16.png",
+    "128": "images/icon-128.png"
   },
   "manifest_version": 2,
-  "name": "@Delicious",
+  "name": "__MSG_appName__",
   "omnibox": {
     "keyword": "@del"
   },
+  "options_page": "options.html",
   "permissions": [
     "contextMenus",
     "http://*/*",
@@ -45,7 +46,6 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "2.9.8",
+  "version": "3.0.1",
   "web_accessible_resources": ["/popup.html"]
-
 }

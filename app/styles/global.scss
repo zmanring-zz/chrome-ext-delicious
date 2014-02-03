@@ -1,0 +1,43 @@
+/* Delicious colors */
+$delicious-color-active: #0065c7;
+
+$delicious-color-logo-ne: #229bf7;
+$delicious-color-logo-nw: white;
+$delicious-color-logo-se: #eeeeee;
+$delicious-color-logo-sw: #333333;
+$delicious-color-primary: #0b79e5;
+$delicious-color-primary-hover: #278ff7;
+
+$delicious-color-secondary: #999999;
+$delicious-color-secondary-hover: #aaaaaa;
+
+$text-color: #999999;
+$text-color-hover: #333333;
+
+$font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+
+/* apply a natural box layout model to all elements */
+
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+}
+
+html {
+
+  body {
+    color: $text-color;
+    font-family: $font-family;
+    font-weight: normal;
+
+    :focus {
+      -webkit-box-shadow: none;
+      outline: none;
+    }
+
+    [ng\:cloak], [ng-cloak], .ng-cloak {
+      display: none !important;
+    }
+
+  }
+
+}

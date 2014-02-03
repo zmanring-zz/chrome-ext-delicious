@@ -1,0 +1,34 @@
+@import "global";
+
+body {
+  background: white;
+
+  h1 {
+    color: $delicious-color-primary;
+    font-weight: normal;
+  }
+
+  a {
+    font-size: 16px;
+  }
+
+  p {
+    margin: 5px 0;
+  }
+
+  fieldset {
+    margin-bottom: 15px;
+    color: $delicious-color-secondary;
+    border: 1px solid $delicious-color-primary;
+
+    legend {
+      color: $delicious-color-primary;
+    }
+
+    label.saved:after {
+      color: $delicious-color-primary;
+      content: "saved";
+      margin-left: 5px;
+    }
+  }
+}

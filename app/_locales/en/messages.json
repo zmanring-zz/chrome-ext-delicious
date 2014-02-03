@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "@Delicious",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Feature rich extension with the ability to add, edit, filter, and remove bookmarks from your Delicious account.",
+    "description": "The description of the application"
+  }
+}
