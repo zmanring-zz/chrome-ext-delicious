@@ -12,12 +12,13 @@
   <ul class="links" when-scrolled="loadMore()">
     <li class="animated fly-simplified" ng-repeat="link in links | filterByWord:query | orderBy:order:reverse | limitTo:limit" ng-class="{private: isPrivate(link), edit: link.confirmUpdate, linkAdded: link.linkAdded, bounceOutDown: link.removed }">
       <article ng-show="!link.confirmUpdate">
-        <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}"><img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
+        <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}">
+          <img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
         <ul class="tags">
           <li class="private-tag" ng-show="isPrivate(link)">
             <a href="" class="link_tag" ng-click="appendQuery('private')">private</a>
           </li>
-          <li ng-repeat="tag in link.tags.sort()" >
+          <li ng-repeat="tag in link.tags.sort()">
             <a href="" class="link_tag" ng-click="appendQuery(tag)">{{tag}}</a>
           </li>
         </ul>
@@ -33,8 +34,7 @@
         <textarea type="text" name="ext-description" id="note" rows="2" tabindex="3" placeholder="extended description" maxlength="1000" ng-model="link.note"></textarea>
         <input type="text" placeholder="tag" tabindex="2" ng-model='link.tags' ng-list select-two='myTags' select-two-show='link.confirmUpdate' />
         <label for="private-{{$index + 1}}">
-          <input id="private-{{$index + 1}}" type="checkbox" name="private" value="private" ng-model="link.private" />
-          Private?
+          <input id="private-{{$index + 1}}" type="checkbox" name="private" value="private" ng-model="link.private" />Private?
         </label>
         <footer>
           <a class="remove" href="" ng-click="confirmRemove(link)" ng-hide="link.confirmRemoval">Remove</a>
@@ -46,10 +46,12 @@
 
     </li>
     <li ng-hide='links.length'>
-      <p><a href="#/new">No Bookmarks Added Yet</a></p>
+      <p><a href="#/new">No Bookmarks Added Yet</a>
+      </p>
     </li>
     <li>
-      <p>{{linksLength}} Results<p>
+      <p>{{linksLength}} Results
+        <p>
     </li>
   </ul>
   <footer class="open-urls animated" ng-class="{fadeInUp: urlListToOpen.length > 1}" ng-show="urlListToOpen.length > 1">

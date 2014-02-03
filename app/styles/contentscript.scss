@@ -1,7 +1,6 @@
-/* This stylesheet will be available on all tabs */
- #chrome-ext-delicious-frame {
+#chrome-ext-delicious-frame {
   -webkit-box-shadow: 0 0 100px #222;
-  background-color:#fff;
+  background-color: #fff;
   border-radius: 0;
   left: 50%;
   margin-left: -253px;
@@ -10,36 +9,39 @@
   position: fixed;
   top: 50%;
   width: auto;
-  z-index:2147483647;
-}
-#chrome-ext-delicious-frame #chrome-ext-delicious-iframe {
-  border:0;
-  height:546px;
-  margin:2px 2px 4px;
-  overflow:hidden;
-  width:504px;
-}
-#chrome-ext-delicious-frame button.close_frame {
-  -webkit-box-shadow: 0 0 10px #222;
-  background: -webkit-gradient(linear, left top, left bottom, from(#555), to(#222)) repeat scroll 0 0 transparent;
-  border-radius: 13px;
-  border: 2px solid #fff;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  display:block;
-  font-family:'arial';
-  font-size: 20px;
-  height: 26px;
-  left: -13px;
-  line-height: 0;
-  padding: 0;
-  position: absolute;
-  text-align: center;
-  top: -13px;
-  width: 26px;
-}
-#chrome-ext-delicious-frame button.close_frame:hover {
-  -webkit-box-shadow: 0 0 8px #222;
-  top: -12px;
+  z-index: 2147483647;
+
+  #chrome-ext-delicious-iframe {
+    border: 0;
+    height: 546px;
+    margin: 2px 2px 4px;
+    overflow: hidden;
+    width: 504px;
+  }
+
+  button.close_frame {
+    -webkit-box-shadow: 0 0 10px #222;
+    background: -webkit-gradient(linear, left top, left bottom, from(#555555), to(#222222)) repeat scroll 0 0 transparent;
+    border-radius: 13px;
+    border: 2px solid #fff;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-family: 'arial';
+    font-size: 20px;
+    height: 26px;
+    left: -13px;
+    line-height: 0;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    top: -13px;
+    width: 26px;
+
+    &:hover {
+      -webkit-box-shadow: 0 0 8px #222;
+      top: -12px;
+    }
+  }
 }
