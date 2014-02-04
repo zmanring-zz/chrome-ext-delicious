@@ -199,6 +199,9 @@ module.exports = function (grunt) {
           ],
           '<%= yeoman.dist %>/styles/options.css': [
             '.tmp/styles/options.css'
+          ],
+          '<%= yeoman.dist %>/styles/markdown.css': [
+            '.tmp/styles/markdown.css'
           ]
         }
       }
@@ -320,6 +323,20 @@ module.exports = function (grunt) {
           dest: ''
         }]
       }
+    },
+    markdown: {
+      all: {
+        files: [{
+          expand: true,
+          src: '<%= yeoman.app %>/docs/*.md',
+          dest: '<%= yeoman.dist %>/docs/',
+          ext: '.html',
+          flatten: true
+        }],
+        options: {
+          template: '<%= yeoman.app %>/docs/template.html'
+        }
+      }
     }
   });
 
@@ -341,7 +358,8 @@ module.exports = function (grunt) {
     'uglify',
     'copy:dist',
     'usemin',
-    'compress'
+    'compress',
+    'markdown'
   ]);
 
   grunt.registerTask('local', [
@@ -353,6 +371,7 @@ module.exports = function (grunt) {
     'concat',
     'copy',
     'usemin',
+    'markdown',
     'clean:local'
   ]);
 
