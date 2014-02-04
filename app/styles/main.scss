@@ -63,23 +63,24 @@
 }
 
 /* validations */
+input {
+  ::-webkit-validation-bubble-icon {
+    display: none;
+  }
 
-::-webkit-validation-bubble-icon {
-  display: none;
-}
+  ::-webkit-validation-bubble-message {
+    -webkit-border-radius: 3px;
+    background: #CE6C36;
+    border-color: #A45328;
+    color: #fff;
+    padding: 4px 10px;
+  }
 
-::-webkit-validation-bubble-message {
-  -webkit-border-radius: 3px;
-  background: #CE6C36;
-  border-color: #A45328;
-  color: #fff;
-  padding: 4px 10px;
-}
-
-::-webkit-validation-bubble-arrow {
-  -webkit-box-shadow: 0 0 0 0;
-  background: #CE6C36;
-  border-color: #A45328;
+  ::-webkit-validation-bubble-arrow {
+    -webkit-box-shadow: 0 0 0 0;
+    background: #CE6C36;
+    border-color: #A45328;
+  }
 }
 
 /* Global */
@@ -370,7 +371,6 @@ html {
     section#login header {
       background: $delicious-color-primary url(/images/icon-32.png) no-repeat 20px center;
       padding-left: 42px;
-      box-shadow: inset 0 0 7px #08254D;
       margin: 0;
     }
 
