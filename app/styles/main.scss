@@ -62,27 +62,6 @@
   display: none;
 }
 
-/* validations */
-input {
-  ::-webkit-validation-bubble-icon {
-    display: none;
-  }
-
-  ::-webkit-validation-bubble-message {
-    -webkit-border-radius: 3px;
-    background: #CE6C36;
-    border-color: #A45328;
-    color: #fff;
-    padding: 4px 10px;
-  }
-
-  ::-webkit-validation-bubble-arrow {
-    -webkit-box-shadow: 0 0 0 0;
-    background: #CE6C36;
-    border-color: #A45328;
-  }
-}
-
 /* Global */
 
 html {
@@ -160,25 +139,25 @@ html {
     hgroup {
       padding: 10px 20px;
       margin-bottom: 15px;
-    }
 
-    hgroup h1 {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 300;
-      margin: 0;
-    }
+      h1 {
+        color: $color-light;
+        font-size: 20px;
+        font-weight: 300;
+        margin: 0;
+      }
 
-    hgroup h2 {
-      color: #fff;
-      font-size: 13px;
-      font-weight: 300;
-      margin: 0;
+      h2 {
+        color: $color-light;
+        font-size: 13px;
+        font-weight: 300;
+        margin: 0;
+      }
     }
 
     section#content {
       padding: 0;
-      background: #fff;
+      background: $color-light;
     }
 
     form {
@@ -210,8 +189,8 @@ html {
       -webkit-box-shadow: none;
       -webkit-box-sizing: border-box;
       -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-      background-color: #fafafa;
-      border: 1px solid #cccccc;
+      background-color: $color-fill-light;
+      border: 1px solid $color-border-light;
       color: $text-color-hover;
       font-family: $font-family;
       font-size: 16px;
@@ -252,7 +231,7 @@ html {
     button, a.button {
       -webkit-box-sizing: border-box;
       border: none;
-      color: #fff;
+      color: $color-light;
       cursor: pointer;
       display: inline-block;
       font-size: 13px;
@@ -290,24 +269,13 @@ html {
       }
     }
 
-    a.selected > .nub {
-      height: 0;
-      width: 0;
-      border: 8px solid;
-      border-color: transparent transparent #fff transparent;
-      margin-left: 50%;
-      position: absolute;
-      bottom: 0;
-      left: -8px;
-      /*thickness of border*/
-    }
-
     button.link, a {
-      color: $delicious-color-primary;
-      font-size: 13px;
-      text-decoration: none;
       background-color: transparent;
+      color: $delicious-color-primary;
       display: inline-block;
+      font-size: 13px;
+      line-height: normal;
+      text-decoration: none;
     }
 
     button.link:hover, a:hover {
@@ -315,7 +283,7 @@ html {
     }
 
     p.error {
-      color: #CE6C36;
+      color: $color-warning;
       text-transform: capitalize;
     }
     /* Nav */
@@ -349,11 +317,11 @@ html {
     }
 
     nav ul li a.selected, nav ul li a:hover {
-      color: #fff;
+      color: $color-light;
     }
 
     nav ul li a.selected::after {
-      background: #fff;
+      background: lighten($delicious-color-primary, 10%);
       bottom: 1px;
       content: '';
       display: block;
@@ -375,8 +343,7 @@ html {
     }
 
     form input:focus:invalid {
-      border: 1px solid #CE6C36;
-      -webkit-box-shadow: 0px 0px 5px 0px #CE6C36;
+      border: 1px solid $color-warning;
     }
     /* Add link */
 
@@ -437,7 +404,7 @@ html {
       font-size: 13px;
       margin: 0;
       border: 0;
-      color: #fff;
+      color: $color-light;
       display: block;
       float: left;
     }
@@ -453,23 +420,24 @@ html {
 
     .filterinput {
       -webkit-appearance: textfield;
-      border: 1px solid #cecece;
+      background-color: $color-fill-light;
+      border: 1px solid $color-border-light;
       float: left;
-      font-size: 13px;
+      font-size: 16px;
+      font-family: $font-family;
       margin: 0;
       padding: 7px 2px;
       width: 311px;
     }
 
     .filterinput:focus {
-      -webkit-box-shadow: 0px 0px 5px 0px #BDD2EF;
-      border: 1px solid;
+      border: 1px solid $delicious-color-primary;
       outline: none;
     }
 
     .filter-toggle {
       background: $delicious-color-primary;
-      color: #fff;
+      color: $color-light;
       cursor: pointer;
       float: left;
       height: 32px;
@@ -502,11 +470,11 @@ html {
     }
 
     a.remove.confirm {
-      color: #CE6C36;
+      color: $color-warning;
     }
 
     .links {
-      border-top: 1px solid #cecece;
+      border-top: 1px solid $color-border-light;
       margin: 0;
       max-height: 398px;
       overflow-x: hidden;
@@ -554,15 +522,23 @@ html {
       margin-right: 3px;
     }
 
-    .links > li > article > a {
-      color: $delicious-color-primary;
-      font-size: 15px;
-      text-decoration: none;
-      word-break: break-all;
-    }
+    .links > li > article {
+      line-height: 0;
 
-    .links > li > article > a:hover {
-      text-decoration: underline;
+      > a {
+        color: $delicious-color-primary;
+        font-size: 15px;
+        line-height: normal;
+        overflow: hidden;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
 
     .links > li.private {
@@ -639,7 +615,7 @@ html {
       right: 24px;
       top: 0;
       width: 20px;
-      color: #fff;
+      color: $color-light;
       font-weight: bold;
       text-align: center;
       font-size: 16px;
@@ -656,7 +632,7 @@ html {
       right: 24px;
       top: 0;
       width: 20px;
-      color: #fff;
+      color: $color-light;
       font-weight: bold;
       text-align: center;
       font-size: 16px;
@@ -674,15 +650,15 @@ html {
       font-size: 12px;
       text-align: center;
       width: 100%;
-      border-top: 1px solid #fff;
+      border-top: 1px solid $color-light;
     }
 
     #viewMyLinks footer.open-urls a {
-      color: #fff;
+      color: $color-light;
     }
 
     #viewMyLinks footer.open-urls button.clear {
-      background: #fff;
+      background: $color-light;
       border-radius: 50%;
       border: none;
       color: $delicious-color-primary;
@@ -717,8 +693,8 @@ html {
     }
 
     .links > li.edit {
-      background: #EFF4FB;
-      border-top: 1px solid #7CA5DF;
+      background: lighten($delicious-color-primary, 50%);
+      border-top: 1px solid $delicious-color-primary;
       z-index: 1;
       padding: 20px;
     }

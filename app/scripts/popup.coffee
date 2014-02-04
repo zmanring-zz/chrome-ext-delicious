@@ -2,7 +2,7 @@
   "use strict"
 
   # App
-  app = angular.module("yum", ["yum.filters", "yum.services", "yum.controllers", "yum.directives"])
+  app = angular.module("yum", ["ngRoute", "yum.filters", "yum.services", "yum.controllers", "yum.directives"])
   app.config ["$routeProvider", ($routeProvider) ->
     $routeProvider.when "/login",
       templateUrl: "login.html"
@@ -22,7 +22,7 @@
     $routeProvider.otherwise redirectTo: "/login"
   ]
   app.config ($compileProvider) ->
-    $compileProvider.urlSanitizationWhitelist /^\s*(https?|ftp|mailto|file|chrome-extension):/
+    $compileProvider.aHrefSanitizationWhitelist /^\s*(https?|ftp|mailto|file|chrome-extension):/
 
   app.run ($rootScope, $location, analytics) ->
     $rootScope.loggedIn = (if localStorage.getItem("chrome-ext-delicious") then true else false)
@@ -417,7 +417,6 @@
         # esc || shift-alt-d || shift-alt-b
         window.parent.postMessage('closeModal', '*')
 
-
   controllers.controller "LoginCtrl", ($scope, $rootScope, $location, delicious) ->
     $scope.login = ->
       $scope.loading = true
@@ -521,6 +520,8 @@
     $scope.order = delicious.setting("order")
     $scope.reverse = delicious.setting("reverse")
     $scope.urlListToOpen = []
+    $scope.hideTags = (if (localStorage.getItem("chrome-ext-delicious-hide-my-link-tags")) is "true" then true else false)
+
     $scope.addUrlToList = (link) ->
       link.linkAdded = true
       $scope.urlListToOpen.push link
@@ -620,7 +621,7 @@
       $scope.linksLength = $filter("filterByWord")($scope.links, $scope.query).length
 
     $scope.loadMore = ->
-      count = 8
+      count = (if $scope.hideTags then 12 else 8)
       if $scope.limit < $scope.links.length
         $scope.limit += count
         analytics.push ["_trackEvent", "link-pages-loaded", ($scope.limit / count).toString()]

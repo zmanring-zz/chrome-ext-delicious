@@ -11,6 +11,12 @@ $delicious-color-primary-hover: #278ff7;
 $delicious-color-secondary: #999999;
 $delicious-color-secondary-hover: #aaaaaa;
 
+$color-border-light: #cecece;
+$color-dark: #222222;
+$color-fill-light: #fafafa;
+$color-light: white;
+$color-warning: #ce6c36;
+
 $text-color: #999999;
 $text-color-hover: #333333;
 
@@ -34,10 +40,15 @@ html {
       outline: none;
     }
 
-    [ng\:cloak], [ng-cloak], .ng-cloak {
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak],
+    .ng-cloak, .x-ng-cloak,
+
+    .ng-hide {
       display: none !important;
     }
 
+    ng\:form {
+      display: block;
+    }
   }
-
 }

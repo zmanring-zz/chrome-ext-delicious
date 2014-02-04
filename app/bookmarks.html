@@ -14,7 +14,7 @@
       <article ng-show="!link.confirmUpdate">
         <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}">
           <img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
-        <ul class="tags">
+        <ul class="tags" ng-hide="hideTags">
           <li class="private-tag" ng-show="isPrivate(link)">
             <a href="" class="link_tag" ng-click="appendQuery('private')">private</a>
           </li>
