@@ -1,3 +1,5 @@
+'use strict';
+
 chrome.runtime.onMessage.addListener (request) ->
 
   if request.data

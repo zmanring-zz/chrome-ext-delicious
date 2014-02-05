@@ -17,14 +17,21 @@
       }
     }
   },
-  "content_scripts": [{
-    "matches": ["http://*/*", "https://*/*"],
-    "js": [
-      "/scripts/vendor/jquery-2.0.0.min.js",
-      "/scripts/contentscript.js"
-    ],
-    "css": ["/styles/contentscript.css"]
-  }],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "/scripts/vendor/jquery-2.1.0.js",
+        "/scripts/contentscript.js"
+      ],
+      "css": [
+        "/styles/contentscript.css"
+      ]
+    }
+  ],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
   "default_locale": "en",
   "description": "__MSG_appDescription__",
@@ -46,6 +53,8 @@
     "https://api.del.icio.us/",
     "tabs"
   ],
-  "version": "3.0.1",
-  "web_accessible_resources": ["/popup.html"]
+  "version": "3.0.43",
+  "web_accessible_resources": [
+    "/popup.html"
+  ]
 }
