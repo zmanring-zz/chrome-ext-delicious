@@ -370,6 +370,10 @@ module.exports = function (grunt) {
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['local']
+      },
+      html: {
+        files: ['<%= yeoman.app %>{,*/}*.html'],
+        tasks: ['local']
       }
     },
     yeoman: yeomanConfig
