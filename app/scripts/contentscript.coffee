@@ -31,7 +31,7 @@ $ ->
   $(document).on "click", (e) ->
 
     # On windows the shortcut keys cause a "click" event, using the screen attributes tell the difference
-    closeModal()  if e.screenX isnt 0 and e.screenY isnt 0
+    closeModal() if e.screenX isnt 0 and e.screenY isnt 0
 
   # Messages from the child
   window.addEventListener "message", (e) ->

@@ -34,7 +34,7 @@
         <textarea type="text" name="ext-description" id="note" rows="2" tabindex="3" placeholder="extended description" maxlength="1000" ng-model="link.note"></textarea>
         <input type="text" placeholder="tag" tabindex="2" ng-model='link.tags' ng-list select-two='myTags' select-two-show='link.confirmUpdate' />
         <label for="private-{{$index + 1}}">
-          <input id="private-{{$index + 1}}" type="checkbox" name="private" value="private" ng-model="link.private" />Private?
+          <input id="private-{{$index + 1}}" type="checkbox" name="private" value="private" ng-model="link.private" />Private
         </label>
         <footer>
           <a class="remove" href="" ng-click="confirmRemove(link)" ng-hide="link.confirmRemoval">Remove</a>

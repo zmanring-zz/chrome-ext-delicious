@@ -85,7 +85,6 @@
         syncLocal: ->
           chrome.storage.local.get (items) ->
             LOCAL_STORAGE = items
-
       )
 
 
@@ -229,7 +228,7 @@
               # domain root
               link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, "$1")
               link['private'] = (if (link.shared is 'no') then true else false)
-              split = (if SYNC_STORAGE['chrome-ext-delicious-parse-single-space'] then RegExp(" [ ]?") else "  ")
+              split = (if SYNC_STORAGE['parse-single-space'] then RegExp(" [ ]?") else "  ")
               link.tags = link.tag.split(split)
               delete link.tag
 
@@ -443,7 +442,7 @@
           manifest.name + ' ' + manifest.version
 
         $scope.username = ->
-          localStorage.getItem 'chrome-ext-delicious-username'
+          LOCAL_STORAGE['username']
 
         # TODO: Redo in angular?
         $(document).keydown (e) ->
@@ -451,17 +450,22 @@
             # esc || shift-alt-d || shift-alt-b
             window.parent.postMessage('closeModal', '*')
 
-      controllers.controller 'LoginCtrl', ($scope, $rootScope, $location, delicious) ->
+      controllers.controller 'LoginCtrl', ($scope, $rootScope, $location, delicious, syncStorage) ->
         $scope.login = ->
           $scope.loading = true
           delicious.authenticate($scope.username, $scope.password).success((data) ->
-            localStorage.setItem 'chrome-ext-delicious-username', $scope.username
+            obj = {}
+            obj['username'] = $scope.username
+            syncStorage.setLocal(obj)
+
             $rootScope.loggedIn = true
             $location.path '/new'
+
           ).error (data, code) ->
+
             json = xml.xmlToJSON(data)
             verboseResult = (if (json.result) then ' ' + json.result['@code'] else '')
-            localStorage.removeItem 'chrome-ext-delicious-username', $scope.username
+            syncStorage.removeLocal($scope.username)
             $rootScope.errorCode = code + verboseResult
             $rootScope.loginFailed = true
             $location.path '/new'
@@ -548,7 +552,7 @@
         $scope.order = delicious.setting('order')
         $scope.reverse = delicious.setting('reverse')
         $scope.urlListToOpen = []
-        $scope.hideTags = (if (localStorage.getItem('chrome-ext-delicious-hide-my-link-tags')) is 'true' then true else false)
+        $scope.hideTags = (if SYNC_STORAGE['hide-my-link-tags'] then true else false)
 
         $scope.addUrlToList = (link) ->
           link.linkAdded = true

@@ -1,15 +1,23 @@
 $ ->
-  'use strict';
+  'use strict'
 
-  localStoragePrefix = 'chrome-ext-delicious-'
+  # Sync with Chrome
+  chrome.storage.sync.get (SYNC_STORAGE) ->
 
-  $('input').each( (i, elem) ->
-    $this = $(elem)
-    $this.prop('checked', (if (localStorage.getItem(localStoragePrefix + $this.attr('id'))) is 'true' then true else false))
-  )
+    localStoragePrefix = 'chrome-ext-delicious-'
 
-  $('input').on('change', ->
-    $this = $(this)
-    localStorage.setItem(localStoragePrefix + $this.attr('id'), $this.prop('checked'))
-    $this.next('label').addClass('saved')
-  )
+    $('input').each( (i, elem) ->
+      $this = $(elem)
+      $this.prop('checked', (if SYNC_STORAGE[$this.attr('id')] then true else false))
+    )
+
+    $('input').on('change', ->
+      $this = $(this)
+
+      obj = {}
+      obj[$this.attr('id')] = $this.prop('checked')
+      chrome.storage.sync.set(obj, ->
+        $this.next('label').addClass('saved')
+      )
+
+    )
