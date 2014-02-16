@@ -97,13 +97,6 @@
       ]
       filters.filter 'filterByWord', ($rootScope) ->
 
-        # syncStorage.get(['filter-description', 'filter-extended', 'filter-url', 'filter-tags', 'filter-time']).then (resp) ->
-        #   filterDescription = resp['filter-description']
-        #   filterExtended = resp['filter-extended']
-        #   filterUrl = resp['filter-url']
-        #   filterTags = resp['filter-tags']
-        #   filterTime = resp['filter-time']
-
         (links, query) ->
 
           # Only filter if there's a query string
@@ -117,11 +110,11 @@
 
               # Combine link properties to search into string
               search = [
-                link['description']
-                link['extended']
-                link['url']
-                link['tags']
-                link['time']
+                link['description'] if SYNC_STORAGE['filter-description']
+                link['extended'] if SYNC_STORAGE['filter-extended']
+                link['url'] if SYNC_STORAGE['filter-url']
+                link['tags'] if SYNC_STORAGE['filter-tags']
+                link['time'] if SYNC_STORAGE['filter-time']
                 ((if (link['shared'] is 'no') then 'private' else ''))
               ].join(' ').toLowerCase()
 
@@ -141,43 +134,43 @@
         Delicious = {}
 
         Delicious.authenticate = (username, password) ->
-          hash = btoa(username + ":" + password)
+          hash = btoa(username + ':' + password)
           options =
-            method: "GET"
-            url: "https://api.del.icio.us/v1/posts/update"
+            method: 'GET'
+            url: 'https://api.del.icio.us/v1/posts/update'
             headers:
-              Authorization: "Basic " + hash
+              Authorization: 'Basic ' + hash
 
           $http(options).success ->
             syncStorage.setLocal 'auth-token': hash
 
         Delicious.addLink = (linkData) ->
           options =
-            method: "POST"
-            url: "https://api.del.icio.us/v1/posts/add"
+            method: 'POST'
+            url: 'https://api.del.icio.us/v1/posts/add'
             headers:
-              Authorization: "Basic " + LOCAL_STORAGE['auth-token']
-              "Content-Type": "application/x-www-form-urlencoded"
+              Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
+              'Content-Type': 'application/x-www-form-urlencoded'
 
             transformRequest: (obj) ->
               str = []
               for p of obj
-                str.push encodeURIComponent(p) + "=" + encodeURIComponent(obj[p])
-              str.join "&"
+                str.push encodeURIComponent(p) + '=' + encodeURIComponent(obj[p])
+              str.join '&'
 
             data: linkData
 
           $http(options).success ->
 
             # Clear out links cache
-            syncStorage.remove "links"
+            syncStorage.remove 'links'
 
         Delicious.removeLink = (link) ->
           options =
-            method: "GET"
-            url: "https://api.del.icio.us/v1/posts/delete"
+            method: 'GET'
+            url: 'https://api.del.icio.us/v1/posts/delete'
             headers:
-              Authorization: "Basic " + LOCAL_STORAGE['auth-token']
+              Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
 
             params:
               md5: link.hash
@@ -185,7 +178,7 @@
           $http(options).success ->
 
             # Clear out links cache
-            syncStorage.removeLocal "links"
+            syncStorage.removeLocal 'links'
 
         Delicious.getQueryStringByName = (name) ->
           name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
@@ -206,9 +199,9 @@
 
           else
             defer.resolve
-              url: Delicious.getQueryStringByName("url")
-              selectionText: Delicious.getQueryStringByName("selected")
-              title: Delicious.getQueryStringByName("title")
+              url: Delicious.getQueryStringByName('url')
+              selectionText: Delicious.getQueryStringByName('selected')
+              title: Delicious.getQueryStringByName('title')
 
           defer.promise
 
@@ -230,13 +223,13 @@
 
               # Remove '@' symbols from keys
               for key of rawLink
-                k = key.split("@")[1]
+                k = key.split('@')[1]
                 link[k] = rawLink[key]
 
               # domain root
-              link["domain"] = link["href"].replace(/^(.*\/\/[^\/?#]*).*$/, "$1")
-              link["private"] = (if (link.shared is "no") then true else false)
-              split = (if (localStorage.getItem("chrome-ext-delicious-parse-single-space")) is "true" then RegExp(" [ ]?") else "  ")
+              link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, "$1")
+              link['private'] = (if (link.shared is 'no') then true else false)
+              split = (if SYNC_STORAGE['chrome-ext-delicious-parse-single-space'] then RegExp(" [ ]?") else "  ")
               link.tags = link.tag.split(split)
               delete link.tag
 
@@ -272,10 +265,10 @@
             defer = $q.defer()
 
             options =
-              method: "GET"
-              url: "https://api.del.icio.us/v1/posts/get?url=" + url
+              method: 'GET'
+              url: 'https://api.del.icio.us/v1/posts/get?url=' + url
               headers:
-                Authorization: "Basic " + LOCAL_STORAGE['auth-token']
+                Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
 
               transformResponse: Delicious.parseLinks
 
@@ -291,7 +284,7 @@
 
             # Remove '@' symbols from keys
             for key of rawUpdate
-              k = key.split("@")[1]
+              k = key.split('@')[1]
               update[k] = rawUpdate[key]
 
             # Convert time string to time integer
@@ -301,10 +294,10 @@
             defer = $q.defer()
 
             options =
-              method: "GET"
-              url: "https://api.del.icio.us/v1/posts/update"
+              method: 'GET'
+              url: 'https://api.del.icio.us/v1/posts/update'
               headers:
-                Authorization: "Basic " + LOCAL_STORAGE['auth-token']
+                Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
 
               transformResponse: _parseUpdateResponse
 
@@ -323,7 +316,7 @@
 
                 # Remove '@' symbols from keys
                 for key of rawSuggestionTag
-                  k = key.split("@")[1]
+                  k = key.split('@')[1]
                   suggestedTag[k] = rawSuggestionTag[key]
                 suggestedTag.tag
 
@@ -331,10 +324,10 @@
             defer = $q.defer()
 
             options =
-              method: "GET"
-              url: "https://api.del.icio.us/v1/posts/suggest?url=" + url
+              method: 'GET'
+              url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url
               headers:
-                Authorization: "Basic " + LOCAL_STORAGE['auth-token']
+                Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
 
               transformResponse: _parseSuggestionsResponse
 
@@ -350,7 +343,7 @@
 
               # Remove '@' symbols from keys
               for key of rawTag
-                k = key.split("@")[1]
+                k = key.split('@')[1]
                 tag[k] = rawTag[key]
               tag.tag
             json = xml.xmlToJSON(data)
@@ -365,10 +358,10 @@
             defer = $q.defer()
 
             options =
-              method: "GET"
-              url: "https://api.del.icio.us/v1/tags/get"
+              method: 'GET'
+              url: 'https://api.del.icio.us/v1/tags/get'
               headers:
-                Authorization: "Basic " + LOCAL_STORAGE['auth-token']
+                Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
 
               transformResponse: _parseTags
 
@@ -381,16 +374,21 @@
           syncStorage.clear()
 
         Delicious.setting = do ->
+
           getSetting = (key) ->
-            setting = localStorage.getItem(prefix + key)
+            setting = SYNC_STORAGE[prefix + key]
             defaultSetting = defaults[key]
-            (if setting then JSON.parse(setting) else defaultSetting)
+            (if setting then setting else defaultSetting)
+
           setSetting = (key, value) ->
-            localStorage.setItem prefix + key, JSON.stringify(value)
-          prefix = "chrome-ext-delicious-setting-"
+            obj = {}
+            obj[prefix + key] = value
+            syncStorage.set(obj)
+
+          prefix = 'setting-'
           defaults =
             share: false
-            order: "time"
+            order: 'time'
             reverse: true
 
           setting = (key, value) ->
@@ -401,7 +399,7 @@
         Delicious.getUpdate().then (update) ->
 
           lastUpdate = undefined
-          if LOCAL_STORAGE['last-update'] isnt "NaN"
+          if LOCAL_STORAGE['last-update'] isnt 'NaN'
             lastUpdate = LOCAL_STORAGE['last-update']
           else
             lastUpdate = 0
@@ -416,20 +414,20 @@
 
         Delicious
 
-      services.factory "analytics", ($window) ->
-        $window._gaq.push ["_setAccount", "UA-38039307-2"]
+      services.factory 'analytics', ($window) ->
+        $window._gaq.push ['_setAccount', 'UA-38039307-2']
         $window._gaq
 
 
       # Controllers
-      controllers = angular.module("yum.controllers", [])
-      controllers.controller "AppCtrl", ($scope, $rootScope, $location, delicious) ->
+      controllers = angular.module('yum.controllers', [])
+      controllers.controller 'AppCtrl', ($scope, $rootScope, $location, delicious) ->
         $scope.menu = [
-          path: "/new"
-          text: "Add link"
+          path: '/new'
+          text: 'Add link'
         ,
-          path: "/bookmarks"
-          text: "My links"
+          path: '/bookmarks'
+          text: 'My links'
         ]
         $scope.isSelected = (item) ->
           path = $location.path()
@@ -438,14 +436,14 @@
         $scope.logout = (link) ->
           delicious.logout()
           $rootScope.loggedIn = false
-          $location.path "/login"
+          $location.path '/login'
 
         $scope.extVersion = ->
           manifest = chrome.runtime.getManifest()
-          manifest.name + " " + manifest.version
+          manifest.name + ' ' + manifest.version
 
         $scope.username = ->
-          localStorage.getItem "chrome-ext-delicious-username"
+          localStorage.getItem 'chrome-ext-delicious-username'
 
         # TODO: Redo in angular?
         $(document).keydown (e) ->
@@ -453,29 +451,29 @@
             # esc || shift-alt-d || shift-alt-b
             window.parent.postMessage('closeModal', '*')
 
-      controllers.controller "LoginCtrl", ($scope, $rootScope, $location, delicious) ->
+      controllers.controller 'LoginCtrl', ($scope, $rootScope, $location, delicious) ->
         $scope.login = ->
           $scope.loading = true
           delicious.authenticate($scope.username, $scope.password).success((data) ->
-            localStorage.setItem "chrome-ext-delicious-username", $scope.username
+            localStorage.setItem 'chrome-ext-delicious-username', $scope.username
             $rootScope.loggedIn = true
-            $location.path "/new"
+            $location.path '/new'
           ).error (data, code) ->
             json = xml.xmlToJSON(data)
-            verboseResult = (if (json.result) then " " + json.result["@code"] else "")
-            localStorage.removeItem "chrome-ext-delicious-username", $scope.username
+            verboseResult = (if (json.result) then ' ' + json.result['@code'] else '')
+            localStorage.removeItem 'chrome-ext-delicious-username', $scope.username
             $rootScope.errorCode = code + verboseResult
             $rootScope.loginFailed = true
-            $location.path "/new"
+            $location.path '/new'
 
-      controllers.controller "NewLinkCtrl", ($scope, $location, tab, delicious, analytics) ->
+      controllers.controller 'NewLinkCtrl', ($scope, $location, tab, delicious, analytics) ->
         $scope.description = tab.title
-        $scope.header = "Add link to Delicious"
+        $scope.header = 'Add link to Delicious'
         $scope.myTags = []
         $scope.myTagsLoaded = false
         $scope.note = tab.selectionText
-        $scope.share = delicious.setting("share")
-        $scope.submitLabel = "Add"
+        $scope.share = delicious.setting('share')
+        $scope.submitLabel = 'Add'
         $scope.suggestedTags = []
         $scope.tags = []
         $scope.url = tab.url
@@ -485,13 +483,13 @@
           delicious.addLink(
             url: $scope.url
             description: $scope.description
-            extended: (if ($scope.note) then $scope.note else "")
-            shared: ((if not $scope.share then "yes" else "no"))
-            tags: $scope.tags.join(", ")
-            replace: "yes"
+            extended: (if ($scope.note) then $scope.note else '')
+            shared: ((if not $scope.share then 'yes' else 'no'))
+            tags: $scope.tags.join(', ')
+            replace: 'yes'
           ).then ->
-            $location.path "/bookmarks"
-            analytics.push ["_trackEvent", "link-added", "action"]
+            $location.path '/bookmarks'
+            analytics.push ['_trackEvent', 'link-added', 'action']
 
         $scope.addSuggestedTag = (tag) ->
           tags = angular.copy($scope.tags)
@@ -505,13 +503,13 @@
         delicious.getDeliciousLinkDataByUrl($scope.url).then (data) ->
           link = data[0]
           if link
-            $scope.description = link["description"]
-            $scope.note = link["extended"]
-            $scope.header = "Modify your Delicious link"
-            $scope.menu[0]["text"] = "Modify link"
-            $scope.share = link["private"]
-            $scope.submitLabel = "Modify"
-            $scope.tags = link["tags"]
+            $scope.description = link['description']
+            $scope.note = link['extended']
+            $scope.header = 'Modify your Delicious link'
+            $scope.menu[0]['text'] = 'Modify link'
+            $scope.share = link['private']
+            $scope.submitLabel = 'Modify'
+            $scope.tags = link['tags']
           else
             delicious.getPopularSuggestedTags($scope.url).then (tags) ->
               $scope.suggestedTags = tags
@@ -521,47 +519,47 @@
           $scope.myTagsLoaded = true
 
           #init (way faster than directive) | Todo: move this out to a function
-          select = angular.element("#tag") # only target the 'New' page
+          select = angular.element('#tag') # only target the 'New' page
           select.select2
             tags: myTags
-            tokenSeparators: [","]
-            placeholder: "tag"
+            tokenSeparators: [',']
+            placeholder: 'tag'
 
           # Needed for saving link
-          select.bind "change", (e) ->
+          select.bind 'change', (e) ->
             $scope.$apply ->
               $scope.tags = e.val
 
           # Used during suggest click event
-          $scope.$watch "tags", (newVal) ->
-            select.select2 "val", newVal
+          $scope.$watch 'tags', (newVal) ->
+            select.select2 'val', newVal
 
-        $scope.$watch "share", (value) ->
+        $scope.$watch 'share', (value) ->
 
           # Set presistant private checkmark
-          delicious.setting "share", value
+          delicious.setting 'share', value
 
-      controllers.controller "BookmarksCtrl", ($scope, $timeout, $filter, delicious, analytics) ->
+      controllers.controller 'BookmarksCtrl', ($scope, $timeout, $filter, delicious, analytics) ->
         $scope.limit = 0
         $scope.links = []
         $scope.linksLength = 0
         $scope.myTags = []
-        $scope.query = ""
-        $scope.order = delicious.setting("order")
-        $scope.reverse = delicious.setting("reverse")
+        $scope.query = ''
+        $scope.order = delicious.setting('order')
+        $scope.reverse = delicious.setting('reverse')
         $scope.urlListToOpen = []
-        $scope.hideTags = (if (localStorage.getItem("chrome-ext-delicious-hide-my-link-tags")) is "true" then true else false)
+        $scope.hideTags = (if (localStorage.getItem('chrome-ext-delicious-hide-my-link-tags')) is 'true' then true else false)
 
         $scope.addUrlToList = (link) ->
           link.linkAdded = true
           $scope.urlListToOpen.push link
-          analytics.push ["_trackEvent", "link-btn-add-link-to-list", "clicked"]
+          analytics.push ['_trackEvent', 'link-btn-add-link-to-list', 'clicked']
 
         $scope.removeUrlToList = (link) ->
           link.linkAdded = false
           index = $scope.urlListToOpen.indexOf(link)
           $scope.urlListToOpen.splice index, 1
-          analytics.push ["_trackEvent", "link-btn-remove-link-from-list", "clicked"]
+          analytics.push ['_trackEvent', 'link-btn-remove-link-from-list', 'clicked']
 
         $scope.clearUrlList = ->
 
@@ -589,7 +587,7 @@
               # Send message to background to open!
               chrome.runtime.sendMessage url: $scope.urlListToOpen[i].href
             i++
-          analytics.push ["_trackEvent", "link-btn-open-links", "open-" + $scope.urlListToOpen.length]
+          analytics.push ['_trackEvent', 'link-btn-open-links', 'open-' + $scope.urlListToOpen.length]
 
           # last thing is to clear the list
           $scope.clearUrlList()
@@ -603,7 +601,7 @@
         $scope.confirmUpdate = (link) ->
           link.confirmUpdate = true
           link.clean = angular.copy(link)
-          analytics.push ["_trackEvent", "link-btn-edit", "clicked"]
+          analytics.push ['_trackEvent', 'link-btn-edit', 'clicked']
 
         $scope.cancelUpdate = (link) ->
           angular.copy link.clean, link
@@ -616,12 +614,12 @@
             url: link.href
             description: link.description
             extended: link.note
-            shared: ((if (link["private"]) then "no" else "yes"))
-            tags: link.tags.join(", ")
-            replace: "yes"
+            shared: ((if (link['private']) then 'no' else 'yes'))
+            tags: link.tags.join(', ')
+            replace: 'yes'
           ).then ->
             $scope.getAllMyTags()
-            analytics.push ["_trackEvent", "link-updated", "action"]
+            analytics.push ['_trackEvent', 'link-updated', 'action']
 
         $scope.remove = (link) ->
           link.removed = true
@@ -632,15 +630,15 @@
             delicious.removeLink(link).then null, ->
               $scope.links.splice index, 0, link
               $scope.setLinksLength()
-              analytics.push ["_trackEvent", "link-removed", "action"]
+              analytics.push ['_trackEvent', 'link-removed', 'action']
 
           ), 500
 
         $scope.isPrivate = (link) ->
-          link["private"]
+          link['private']
 
         $scope.appendQuery = (word) ->
-          query = (if $scope.query then ($scope.query + " " + word) else word)
+          query = (if $scope.query then ($scope.query + ' ' + word) else word)
           $scope.query = query.trim()
 
         $scope.getAllMyTags = ->
@@ -648,13 +646,13 @@
             $scope.myTags = myTags
 
         $scope.setLinksLength = ->
-          $scope.linksLength = $filter("filterByWord")($scope.links, $scope.query).length
+          $scope.linksLength = $filter('filterByWord')($scope.links, $scope.query).length
 
         $scope.loadMore = ->
           count = (if $scope.hideTags then 12 else 8)
           if $scope.limit < $scope.links.length
             $scope.limit += count
-            analytics.push ["_trackEvent", "link-pages-loaded", ($scope.limit / count).toString()]
+            analytics.push ['_trackEvent', 'link-pages-loaded', ($scope.limit / count).toString()]
 
         delicious.getLinks().then (links) ->
           $scope.links = links.map((link) ->
@@ -667,75 +665,75 @@
           $scope.loadMore()
 
         $scope.getAllMyTags()
-        $scope.$watch "query", $scope.setLinksLength()
-        $scope.$watch "links", $scope.setLinksLength()
-        $scope.$watch "order", (value) ->
-          delicious.setting "order", value
+        $scope.$watch 'query', $scope.setLinksLength()
+        $scope.$watch 'links', $scope.setLinksLength()
+        $scope.$watch 'order', (value) ->
+          delicious.setting 'order', value
 
-        $scope.$watch "reverse", (value) ->
-          delicious.setting "reverse", value
+        $scope.$watch 'reverse', (value) ->
+          delicious.setting 'reverse', value
 
 
       # Directives
-      directives = angular.module("yum.directives", [])
-      directives.directive "appVersion", ["version", (version) ->
+      directives = angular.module('yum.directives', [])
+      directives.directive 'appVersion', ['version', (version) ->
         (scope, elm, attrs) ->
           elm.text version
       ]
 
       # TODO: Make select-two-show optional
-      directives.directive "selectTwo", [->
+      directives.directive 'selectTwo', [->
         link = (scope, element, attrs, a) ->
           initSelectTwo = ->
             return  unless scope.show
             select.select2
               tags: scope.tags
-              tokenSeparators: [","]
+              tokenSeparators: [',']
 
-            select.select2 "val", scope.val
+            select.select2 'val', scope.val
           select = angular.element(element)
-          scope.$watch "show", ->
+          scope.$watch 'show', ->
             initSelectTwo()  if scope.tags.length > 0
 
-          scope.$watch "tags", ->
+          scope.$watch 'tags', ->
             initSelectTwo()  if scope.tags.length > 0
 
-          scope.$watch "val", (newVal) ->
-            select.select2 "val", newVal
+          scope.$watch 'val', (newVal) ->
+            select.select2 'val', newVal
 
-          select.bind "change", (e) ->
+          select.bind 'change', (e) ->
             scope.$apply ->
               scope.val = e.val
 
-        restrict: "A"
+        restrict: 'A'
         scope:
-          val: "=ngModel"
-          tags: "=selectTwo"
-          show: "=selectTwoShow"
+          val: '=ngModel'
+          tags: '=selectTwo'
+          show: '=selectTwoShow'
 
         link: link
       ]
-      directives.directive "customCheckbox", [->
+      directives.directive 'customCheckbox', [->
         link = (scope, element, attrs) ->
-          className = attrs["customCheckbox"]
+          className = attrs['customCheckbox']
           $wrapper = undefined
-          element.wrap "<div class=\"" + className + "\" />"
+          element.wrap '<div class="' + className + '" />'
           $wrapper = element.parent()
-          $wrapper.on "click", (e) ->
+          $wrapper.on 'click', (e) ->
             scope.$apply ->
-              scope[attrs["ngModel"]] = not scope[attrs["ngModel"]]
+              scope[attrs['ngModel']] = not scope[attrs['ngModel']]
 
 
-          scope.$watch attrs["ngModel"], (value) ->
-            $wrapper.toggleClass className + "-checked", value
+          scope.$watch attrs['ngModel'], (value) ->
+            $wrapper.toggleClass className + '-checked', value
 
-        restrict: "A"
+        restrict: 'A'
         link: link
       ]
-      directives.directive "whenScrolled", ->
+      directives.directive 'whenScrolled', ->
         (scope, elm, attr) ->
           raw = elm[0]
-          elm.bind "scroll", ->
+          elm.bind 'scroll', ->
             scope.$apply attr.whenScrolled  if raw.scrollTop + raw.offsetHeight >= raw.scrollHeight
 
       angular.bootstrap(document, ['yum'])
