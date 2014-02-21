@@ -162,7 +162,7 @@
           $http(options).success ->
 
             # Clear out links cache
-            syncStorage.remove 'links'
+            syncStorage.removeLocal 'links'
 
         Delicious.removeLink = (link) ->
           options =
@@ -210,8 +210,8 @@
           if LOCAL_STORAGE['links']
             defer.resolve LOCAL_STORAGE['links']
           else
-            Delicious.fetchLinks().then ->
-              defer.resolve
+            Delicious.fetchLinks().then (links) ->
+              defer.resolve links
 
           defer.promise
 
@@ -247,7 +247,7 @@
 
             options =
               method: 'GET'
-              url: 'https://api.del.icio.us/v1/posts/all?results=10000'
+              url: 'https://api.del.icio.us/v1/posts/all?results=10000&meta=yes'
               headers:
                 Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
 
@@ -275,6 +275,25 @@
               defer.resolve resp.data
 
             defer.promise
+
+        Delicious.getHashes = do ->
+          getHashes = ->
+            defer = $q.defer()
+
+            options =
+              method: 'GET'
+              url: 'https://api.del.icio.us/v1/posts/all?hashes'
+              headers:
+                Authorization: 'Basic ' + LOCAL_STORAGE['auth-token']
+
+              # transformResponse: Delicious.parseLinks
+
+            $http(options).then (resp) ->
+              defer.resolve resp.data
+
+            defer.promise
+
+        # Delicious.getHashes()
 
         Delicious.getUpdate = do ->
           _parseUpdateResponse = (data) ->
@@ -409,7 +428,7 @@
             syncStorage.removeLocal(['last-update', 'links'])
 
             Delicious.fetchLinks().then ->
-              syncStorage.setLocal({'last-update': update.time})
+              syncStorage.setLocal 'last-update': update.time
 
         Delicious
 

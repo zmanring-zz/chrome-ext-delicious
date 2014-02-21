@@ -5,7 +5,7 @@
     ]
   },
   "browser_action": {
-    "default_icon": "images/icon.png",
+    "default_icon": "images/icon@2x.png",
     "default_popup": "popup.html",
     "default_title": "@Delicious"
   },
@@ -37,8 +37,9 @@
   "description": "__MSG_appDescription__",
   "incognito": "spanning",
   "icons": {
-    "16": "images/icon-16.png",
-    "128": "images/icon-128.png"
+    "16": "images/icon-16@2x.png",
+    "48": "images/icon-48@2x.png",
+    "128": "images/icon-128@2x.png"
   },
   "manifest_version": 2,
   "name": "__MSG_appName__",

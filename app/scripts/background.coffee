@@ -67,17 +67,21 @@ chrome.storage.sync.get (SYNC_STORAGE) ->
       _gaq.push ["_trackEvent", "modalOpened", "contextMenu"]
 
     YUM.isCurrentTabSaved = ->
-      searchString = localStorage.getItem("chrome-ext-delicious-links")
+      searchString = JSON.stringify(LOCAL_STORAGE['links'])
+
       if searchString
         chrome.tabs.getSelected null, (tab) ->
           if searchString.indexOf("\"" + tab.url + "\"") >= 0
-            chrome.browserAction.setBadgeText text: "√"
-            chrome.browserAction.setBadgeBackgroundColor color: "#468ED9"
+            chrome.browserAction.setIcon
+              path:
+                "38": "/images/icon-38@2x.png"
             chrome.contextMenus.update "chrome-ext-delicious-private-context",
               title: "Modify link"
 
           else
-            chrome.browserAction.setBadgeText text: ""
+            chrome.browserAction.setIcon
+              path:
+                "38": "/images/icon@2x.png"
             chrome.contextMenus.update "chrome-ext-delicious-private-context",
               title: "Add link"
 
