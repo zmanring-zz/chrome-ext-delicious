@@ -1,4 +1,4 @@
-![icon](app/images/icon.png) @Delicious Chrome Extension
+![icon](app/images/icon-38@2x.png) @Delicious Chrome Extension
 ===
 
 @Delicious Chrome Extension re-worked in Yeoman  
