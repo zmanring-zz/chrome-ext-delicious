@@ -84,8 +84,9 @@ module.exports = function (grunt) {
         files: [{
           dot: true,
           src: [
-            '<%= yeoman.app %>/scripts/*.map',
-            '<%= yeoman.app %>/scripts/*.js'
+            '<%= yeoman.app %>/scripts/**/*.map',
+            '<%= yeoman.app %>/scripts/*.js',
+            '<%= yeoman.app %>/scripts/popup/*.js'
           ]
         }]
       }
