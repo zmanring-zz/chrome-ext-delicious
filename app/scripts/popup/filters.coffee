@@ -2,10 +2,12 @@
 
 # Filters
 filters = angular.module('yum.filters', [])
+
 filters.filter 'list', [->
   (arr) ->
     arr.join ', '
 ]
+
 filters.filter 'filterByWord', ($rootScope) ->
 
   (links, query) ->
@@ -21,11 +23,11 @@ filters.filter 'filterByWord', ($rootScope) ->
 
         # Combine link properties to search into string
         search = [
-          # link['description'] if SYNC_STORAGE['filter-description']
-          # link['extended'] if SYNC_STORAGE['filter-extended']
-          # link['url'] if SYNC_STORAGE['filter-url']
-          # link['tags'] if SYNC_STORAGE['filter-tags']
-          # link['time'] if SYNC_STORAGE['filter-time']
+          link['description'],
+          link['extended'],
+          link['url'],
+          link['tags'],
+          link['time'],
           ((if (link['shared'] is 'no') then 'private' else ''))
         ].join(' ').toLowerCase()
 

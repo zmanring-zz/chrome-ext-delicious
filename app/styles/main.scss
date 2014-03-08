@@ -65,7 +65,6 @@
 /* Global */
 
 html {
-  margin: 2px;
   padding: 0 0 4px 0;
 
   body {
@@ -92,6 +91,22 @@ html {
         a {
           color: $text-color;
           font-size: 13px;
+
+          &:hover {
+            color: $delicious-color-primary;
+            text-decoration: none;
+          }
+
+          &:after {
+            color: $text-color;
+            content: "|";
+            margin-left: 3px;
+          }
+
+          &:last-child:after {
+            content: "";
+            margin: 0;
+          }
         }
       }
 

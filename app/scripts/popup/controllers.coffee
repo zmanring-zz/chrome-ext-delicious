@@ -24,10 +24,6 @@ controllers.controller 'AppCtrl', ($scope, $rootScope, $location, delicious, syn
     manifest = chrome.runtime.getManifest()
     manifest.name + ' ' + manifest.version
 
-  $scope.getUsername = ->
-    syncStorage.getLocal('username').then (username) ->
-      username
-
   # TODO: Redo in angular?
   $(document).keydown (e) ->
     if e.keyCode is 27 || e.altKey and e.shiftKey and e.keyCode is 68 || e.altKey and e.shiftKey and e.keyCode is 66
@@ -37,9 +33,9 @@ controllers.controller 'AppCtrl', ($scope, $rootScope, $location, delicious, syn
 controllers.controller 'LoginCtrl', ($scope, $rootScope, $location, delicious, syncStorage) ->
   $scope.login = ->
     $scope.loading = true
-    delicious.authenticate($scope.getUsername, $scope.password).success((data) ->
+    delicious.authenticate($scope.username, $scope.password).success((data) ->
       obj = {}
-      obj['username'] = $scope.getUsername
+      obj['username'] = $scope.username
       syncStorage.setLocal(obj)
 
       $rootScope.loggedIn = true
@@ -49,18 +45,19 @@ controllers.controller 'LoginCtrl', ($scope, $rootScope, $location, delicious, s
 
       json = xml.xmlToJSON(data)
       verboseResult = (if (json.result) then ' ' + json.result['@code'] else '')
-      syncStorage.removeLocal($scope.getUsername)
+      syncStorage.getLocal('username').then (username) ->
+        syncStorage.removeLocal(username) if username
       $rootScope.errorCode = code + verboseResult
       $rootScope.loginFailed = true
       $location.path '/new'
 
-controllers.controller 'NewLinkCtrl', ($scope, $location, tab, delicious, analytics) ->
+controllers.controller 'NewLinkCtrl', ($scope, $location, tab, delicious, analytics, syncStorage) ->
   $scope.description = tab.title
   $scope.header = 'Add link to Delicious'
   $scope.myTags = []
   $scope.myTagsLoaded = false
   $scope.note = tab.selectionText
-  $scope.share = delicious.setting('share')
+  $scope.share = syncStorage.getSync('setting-share').then (settingShare) -> settingShare
   $scope.submitLabel = 'Add'
   $scope.suggestedTags = []
   $scope.tags = []
@@ -123,9 +120,7 @@ controllers.controller 'NewLinkCtrl', ($scope, $location, tab, delicious, analyt
       select.select2 'val', newVal
 
   $scope.$watch 'share', (value) ->
-
-    # Set presistant private checkmark
-    delicious.setting 'share', value
+    syncStorage.setSync({'setting-share': value})
 
 controllers.controller 'BookmarksCtrl', ($scope, $timeout, $filter, delicious, analytics, syncStorage) ->
   $scope.limit = 0
@@ -133,13 +128,11 @@ controllers.controller 'BookmarksCtrl', ($scope, $timeout, $filter, delicious, a
   $scope.linksLength = 0
   $scope.myTags = []
   $scope.query = ''
-  $scope.order = delicious.setting('order')
-  $scope.reverse = delicious.setting('reverse')
   $scope.urlListToOpen = []
 
-
-  $scope.hideTags = syncStorage.getSync('hide-my-link-tags').then (hideMyLinkTags) ->
-    hideMyLinkTags
+  syncStorage.getSync('setting-order').then (settingOrder) -> $scope.order = settingOrder
+  syncStorage.getSync('setting-reverse').then (settingReverse) -> $scope.reverse = settingReverse
+  syncStorage.getSync('hide-my-link-tags').then (hideMyLinkTags) -> $scope.hideTags = hideMyLinkTags
 
   $scope.addUrlToList = (link) ->
     link.linkAdded = true
@@ -241,25 +234,28 @@ controllers.controller 'BookmarksCtrl', ($scope, $timeout, $filter, delicious, a
 
   $scope.loadMore = ->
     count = (if $scope.hideTags then 12 else 8)
+
     if $scope.limit < $scope.links.length
       $scope.limit += count
       analytics.push ['_trackEvent', 'link-pages-loaded', ($scope.limit / count).toString()]
 
   delicious.getLinks().then (links) ->
-    $scope.links = links.map((link) ->
+    $scope.links = links.map (link) ->
       angular.extend link,
         confirmUpdate: false
         confirmRemoval: false
         tempDescription: link.description
         note: link.extended
-    )
+
     $scope.loadMore()
+    return
 
   $scope.getAllMyTags()
   $scope.$watch 'query', $scope.setLinksLength()
   $scope.$watch 'links', $scope.setLinksLength()
   $scope.$watch 'order', (value) ->
-    delicious.setting 'order', value
+    syncStorage.setSync({'setting-order': value})
 
   $scope.$watch 'reverse', (value) ->
-    delicious.setting 'reverse', value
+    syncStorage.setSync({'setting-reverse': value})
+

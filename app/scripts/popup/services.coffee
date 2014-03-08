@@ -116,7 +116,6 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
         link
 
       json = xml.xmlToJSON(data)
-      console.log(json)
       unless json.posts
         []
       else if angular.isArray(json.posts.post)
@@ -282,29 +281,6 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
   Delicious.logout = ->
     syncStorage.clear()
 
-  Delicious.setting = do ->
-
-    getSetting = (key) ->
-      syncStorage.getSync().then (resp) ->
-
-        setting = resp[prefix + key]
-        defaultSetting = defaults[key]
-        (if setting then setting else defaultSetting)
-
-    setSetting = (key, value) ->
-      obj = {}
-      obj[prefix + key] = value
-      syncStorage.setSync(obj)
-
-    prefix = 'setting-'
-    defaults =
-      share: false
-      order: 'time'
-      reverse: true
-
-    setting = (key, value) ->
-      (if angular.isUndefined(value) then getSetting(key) else setSetting(key, value))
-
 
   # Check for updates
   Delicious.getUpdate().then (update) ->
@@ -379,27 +355,29 @@ services.factory 'syncStorage', ($q, $rootScope) ->
 
   syncStorage.clearLocal = ->
     chrome.storage.local.clear()
-    @updateLocal()
+    syncStorage.updateLocal()
 
   syncStorage.clearSync = ->
     chrome.storage.sync.clear()
-    @updateSync()
+    syncStorage.updateSync()
 
-  syncStorage.removeSync = (keys) ->
-    chrome.storage.sync.remove(keys)
-    @updateSync()
+  syncStorage.removeSync = (key) ->
+    chrome.storage.sync.remove(key)
+    syncStorage.updateSync()
 
-  syncStorage.removeLocal = (keys) ->
-    chrome.storage.local.remove(keys)
-    @updateLocal()
+  syncStorage.removeLocal = (key) ->
+    console.log key
+    chrome.storage.local.remove(key)
+    syncStorage.updateLocal()
 
   syncStorage.setSync = (obj) ->
     chrome.storage.sync.set(obj)
-    @updateSync()
+    syncStorage.updateSync()
 
   syncStorage.setLocal = (obj) ->
+    console.log obj
     chrome.storage.local.set(obj)
-    @updateLocal()
+    syncStorage.updateLocal()
 
   syncStorage.updateSync = ->
     chrome.storage.sync.get (items) ->

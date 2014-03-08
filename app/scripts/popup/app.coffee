@@ -29,19 +29,22 @@ app.config ($compileProvider) ->
 app.run ($rootScope, $location, analytics, $q, syncStorage) ->
 
   syncStorage.getLocal('auth-token').then (authToken) ->
-    syncStorage.getSync().then (syncStorage) ->
+    syncStorage.getSync().then (sync) ->
 
       $rootScope.loggedIn = (if authToken then true else false)
-      defaultTab = (if syncStorage['default-tab'] then true else false)
-      firstTimeFilter = (if syncStorage['filter-description'] then true else false)
+      defaultTab = (if sync['default-tab'] then true else false)
+      firstTimeFilter = (if sync['filter-description'] then true else false)
 
       if !firstTimeFilter
-        syncStorage.set
+        syncStorage.setSync
           'filter-description': true,
           'filter-extended': true,
-          'filter-url': true,
           'filter-tags': true,
-          'filter-time': true
+          'filter-time': true,
+          'filter-url': true,
+          'setting-order': 'time',
+          'setting-reverse': true,
+          'setting-share': false
 
       if $location.$$path isnt '/bookmarks' and $location.$$path isnt '/new'
         if defaultTab

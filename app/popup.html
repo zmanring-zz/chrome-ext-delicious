@@ -24,10 +24,11 @@
     <footer ng-cloak>
       <p>
         <a target="_blank" title="View changelog" href="docs/changelog.html">{{extVersion()}}</a>
-        | <a target="_blank" title="Edit your options" href="options.html">Options</a>
-        | <a target="_blank" title="Follow @DeliciousExt on Twitter" href="https://twitter.com/DeliciousExt">Follow</a>
-        | <a target="_blank" title="Delicious.com" ng-href="https://delicious.com/{{username()}}">Delicious.com</a>
-        <span ng-show="loggedIn">| <a href="" ng-click="logout()">Logout</a>
+        <a target="_blank" title="Edit your options" href="options.html">Options</a>
+        <a target="_blank" title="Follow @DeliciousExt on Twitter" href="https://www.twitter.com/DeliciousExt">Follow</a>
+        <a target="_blank" title="Delicious.com" ng-href="https://www.delicious.com">Delicious.com</a>
+        <span ng-show="loggedIn">
+          <a href="" ng-click="logout()">Logout</a>
         </span>
       </p>
     </footer>
