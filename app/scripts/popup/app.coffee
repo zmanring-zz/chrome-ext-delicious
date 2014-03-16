@@ -20,7 +20,7 @@ app.config ['$routeProvider', ($routeProvider) ->
     templateUrl: 'bookmarks.html'
     controller: 'BookmarksCtrl'
 
-  $routeProvider.otherwise redirectTo: '/login'
+  # $routeProvider.otherwise redirectTo: '/login'
 ]
 
 app.config ($compileProvider) ->
@@ -36,6 +36,7 @@ app.run ($rootScope, $location, analytics, $q, syncStorage) ->
       firstTimeFilter = (if sync['filter-description'] then true else false)
 
       if !firstTimeFilter
+        localStorage.clear()
         syncStorage.setSync
           'filter-description': true,
           'filter-extended': true,
@@ -51,6 +52,8 @@ app.run ($rootScope, $location, analytics, $q, syncStorage) ->
           $location.path '/bookmarks'
         else
           $location.path '/new' if $rootScope.loggedIn
+      else
+        $location.path '/login' if not $rootScope.loggedIn
 
       $rootScope.$on '$routeChangeStart', (e, next, current) ->
         $location.path '/login' if not $rootScope.loggedIn and next.controller isnt 'LoginCtrl'

@@ -1,4 +1,4 @@
-<section id="viewMyLinks">
+<section id="viewMyLinks" ng-cloak>
   <header>
     <input tabindex="1" class="filterinput" type="search" placeholder="Filter" ng-model="query" autofocus="autofocus" />
     <div class="sort-options">
@@ -45,14 +45,14 @@
       </form>
 
     </li>
-    <li ng-hide='links.length'>
+    <!-- <li ng-hide='links.length'>
       <p><a href="#/new">No Bookmarks Added Yet</a>
       </p>
     </li>
     <li>
       <p>{{linksLength}} Results
         <p>
-    </li>
+    </li> -->
   </ul>
   <footer class="open-urls animated" ng-class="{fadeInUp: urlListToOpen.length > 1}" ng-show="urlListToOpen.length > 1">
     <a href="" ng-click="openUrlList()">Open your {{urlListToOpen.length}} links in new tabs</a>

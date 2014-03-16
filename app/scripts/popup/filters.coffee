@@ -21,6 +21,7 @@ filters.filter 'filterByWord', ($rootScope) ->
       # Filter the links and return them
       links.filter (link) ->
 
+        # TODO: hook back up to options
         # Combine link properties to search into string
         search = [
           link['description'],

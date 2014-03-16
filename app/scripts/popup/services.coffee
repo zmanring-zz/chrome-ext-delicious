@@ -107,10 +107,12 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
         # domain root
         link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, "$1")
         link['private'] = (if (link.shared is 'no') then true else false)
-        split = syncStorage.getSync('parse-single-space').then (parseSingleSpace) ->
-          (if parseSingleSpace then RegExp(" [ ]?") else "  ")
 
-        link.tags = link.tag.split(split)
+        # TODO: split is not working async
+        # split = syncStorage.getSync('parse-single-space').then (parseSingleSpace) ->
+          # (if parseSingleSpace then RegExp(" [ ]?") else "  ")
+
+        link.tags = link.tag.split("  ")
         delete link.tag
 
         link
@@ -279,7 +281,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
       defer.promise
 
   Delicious.logout = ->
-    syncStorage.clear()
+    syncStorage.clearLocal()
 
 
   # Check for updates
@@ -366,7 +368,6 @@ services.factory 'syncStorage', ($q, $rootScope) ->
     syncStorage.updateSync()
 
   syncStorage.removeLocal = (key) ->
-    console.log key
     chrome.storage.local.remove(key)
     syncStorage.updateLocal()
 
@@ -375,7 +376,6 @@ services.factory 'syncStorage', ($q, $rootScope) ->
     syncStorage.updateSync()
 
   syncStorage.setLocal = (obj) ->
-    console.log obj
     chrome.storage.local.set(obj)
     syncStorage.updateLocal()
 
