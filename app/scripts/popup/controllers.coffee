@@ -11,6 +11,7 @@ controllers.controller 'AppCtrl', ($scope, $rootScope, $location, delicious, syn
     path: '/bookmarks'
     text: 'My links'
   ]
+
   $scope.isSelected = (item) ->
     path = $location.path()
     path is item.path
@@ -103,7 +104,7 @@ controllers.controller 'NewLinkCtrl', ($scope, $location, tab, delicious, analyt
     $scope.myTags = myTags
     $scope.myTagsLoaded = true
 
-    #init (way faster than directive) | Todo: move this out to a function
+    #init (way faster than directive) | TODO: move this out to a function
     select = angular.element('#tag') # only target the 'New' page
     select.select2
       tags: myTags
@@ -258,4 +259,3 @@ controllers.controller 'BookmarksCtrl', ($scope, $timeout, $filter, delicious, a
 
   $scope.$watch 'reverse', (value) ->
     syncStorage.setSync({'setting-reverse': value})
-

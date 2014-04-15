@@ -11,7 +11,7 @@
 
 <body>
   <section id="content" ng-controller="AppCtrl">
-    <nav ng-show="loggedIn">
+    <nav ng-show="authenticated">
       <ul>
         <li ng-repeat="item in menu">
           <a class="button" ng-href="#{{item.path}}" ng-class="{selected: isSelected(item)}" ng-cloak>
@@ -20,7 +20,8 @@
         </li>
       </ul>
     </nav>
-    <div class="view-container" ng-view ng-animate="{enter: 'view-enter'}"></div>
+    <!-- <div class="view-container" ng-view ng-animate="{enter: 'view-enter'}"></div> -->
+    <div ui-view></div>
     <footer ng-cloak>
       <p>
         <a target="_blank" title="View changelog" href="docs/changelog.html">{{extVersion()}}</a>
@@ -39,7 +40,7 @@
   <script src="scripts/vendor/jquery-2.1.0.js"></script>
   <script src="scripts/vendor/select2.js"></script>
   <script src="scripts/vendor/angular.js"></script>
-  <script src="scripts/vendor/angular-route.js"></script>
+  <script src="scripts/vendor/angular-ui-router.js"></script>
   <script src="scripts/vendor/async.min.js"></script>
   <!-- endbuild -->
   <!-- build:js scripts/global.js -->

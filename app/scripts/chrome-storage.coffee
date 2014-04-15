@@ -10,27 +10,27 @@
 # ], (err, results) ->
 #   console.log results
 
-window.syncStorage = {
+# window.syncStorage = {
 
-  getLocal: (item) ->
+#   getLocal: (item) ->
 
-    async.series {
+#     async.series {
 
-      data: (callback) ->
-        chrome.storage.local.get (items) ->
-          if item
-            callback(null, items[item])
-          else
-            callback(null, items)
+#       data: (callback) ->
+#         chrome.storage.local.get (items) ->
+#           if item
+#             callback(null, items[item])
+#           else
+#             callback(null, items)
 
-    }, (err, results) ->
+#     }, (err, results) ->
 
-      console.log results
-      results.data
+#       console.log results
+#       results.data
 
-}
+# }
 
-syncStorage.getLocal('username')
+# syncStorage.getLocal('username')
 
 
 

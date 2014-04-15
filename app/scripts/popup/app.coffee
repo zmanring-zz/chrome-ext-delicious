@@ -1,62 +1,78 @@
 'use strict'
 
 # App
-app = angular.module('yum', ['ngRoute', 'yum.filters', 'yum.services', 'yum.controllers', 'yum.directives'])
+app = angular.module('yum', ['ui.router','yum.filters', 'yum.services', 'yum.controllers', 'yum.directives'])
 
-app.config ['$routeProvider', ($routeProvider) ->
+app.config ($stateProvider, $urlRouterProvider) ->
 
-  $routeProvider.when '/login',
-    templateUrl: 'login.html'
-    controller: 'LoginCtrl'
+    $stateProvider.state('new',
+      url: '/new'
+      templateUrl: 'new.html'
+      controller: 'NewLinkCtrl'
+      resolve:
+        tab: ($q, delicious) ->
+          delicious.getTab()
+      # authenticate: true
 
-  $routeProvider.when '/new',
-    templateUrl: 'new.html'
-    controller: 'NewLinkCtrl'
-    resolve:
-      tab: ($q, delicious) ->
-        delicious.getTab()
+    ).state('bookmarks',
+      url: '/bookmarks'
+      templateUrl: 'bookmarks.html'
+      controller: 'BookmarksCtrl'
+      # authenticate: true
 
-  $routeProvider.when '/bookmarks',
-    templateUrl: 'bookmarks.html'
-    controller: 'BookmarksCtrl'
+    ).state 'login',
+      url: '/login'
+      templateUrl: 'login.html'
+      controller: 'LoginCtrl'
+      # authenticate: false
 
-  # $routeProvider.otherwise redirectTo: '/login'
-]
+    # Send to login if the URL was not found
+    $urlRouterProvider.otherwise '/login'
+
 
 app.config ($compileProvider) ->
   $compileProvider.aHrefSanitizationWhitelist /^\s*(https?|ftp|mailto|file|chrome-extension):/
 
-app.run ($rootScope, $location, analytics, $q, syncStorage) ->
+# Run
+app.run ($rootScope, $state, syncStorage) ->
 
-  syncStorage.getLocal('auth-token').then (authToken) ->
-    syncStorage.getSync().then (sync) ->
+  # async get storage
+  async.parallel [
+    (callback) ->
+      syncStorage.getLocal().then (local) ->
+        callback(null, local);
 
-      $rootScope.loggedIn = (if authToken then true else false)
-      defaultTab = (if sync['default-tab'] then true else false)
-      firstTimeFilter = (if sync['filter-description'] then true else false)
+    (callback) ->
+      syncStorage.getSync().then (sync) ->
+        callback(null, sync);
+  ],
+  (err, results) ->
+    obj = {
+      local: results[0],
+      sync: results[1]
+    }
 
-      if !firstTimeFilter
-        localStorage.clear()
-        syncStorage.setSync
-          'filter-description': true,
-          'filter-extended': true,
-          'filter-tags': true,
-          'filter-time': true,
-          'filter-url': true,
-          'setting-order': 'time',
-          'setting-reverse': true,
-          'setting-share': false
+    $rootScope.$broadcast 'synced', obj
 
-      if $location.$$path isnt '/bookmarks' and $location.$$path isnt '/new'
-        if defaultTab
-          $location.path '/bookmarks'
-        else
-          $location.path '/new' if $rootScope.loggedIn
+
+  $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
+    console.log toState
+
+
+  $rootScope.$on 'synced', (event, data) ->
+
+    $rootScope.dataStorage = data
+    $rootScope.authenticated = $rootScope.dataStorage.local['auth-token']
+
+    # if authenticated
+    if $rootScope.authenticated
+
+      if $rootScope.dataStorage.sync['default-tab']
+        $state.transitionTo 'bookmarks'
       else
-        $location.path '/login' if not $rootScope.loggedIn
+        $state.transitionTo 'new'
 
-      $rootScope.$on '$routeChangeStart', (e, next, current) ->
-        $location.path '/login' if not $rootScope.loggedIn and next.controller isnt 'LoginCtrl'
+    else
+      $state.transitionTo 'login'
 
-      $rootScope.$on '$viewContentLoaded', (e) ->
-        analytics.push ['_trackPageview', $location.path()]
+    console.log($rootScope.dataStorage)
