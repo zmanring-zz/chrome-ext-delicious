@@ -64,7 +64,7 @@ app.run ($rootScope, $state, syncStorage) ->
 
     $rootScope.authenticated = $rootScope.dataStorage.local['auth-token']
 
-    # first time?
+    # defaults
     filter = $rootScope.dataStorage.sync
     syncStorage.setSync({'filter-description':true}) if filter['filter-description'] == undefined
     syncStorage.setSync({'filter-extended':true}) if filter['filter-extended'] == undefined

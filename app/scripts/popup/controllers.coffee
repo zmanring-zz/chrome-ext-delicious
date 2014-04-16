@@ -127,9 +127,10 @@ controllers.controller 'BookmarksCtrl', ($rootScope, $scope, $timeout, $filter, 
   $scope.query = ''
   $scope.urlListToOpen = []
 
-  syncStorage.getSync('setting-order').then (settingOrder) -> $scope.order = settingOrder
-  syncStorage.getSync('setting-reverse').then (settingReverse) -> $scope.reverse = settingReverse
-  syncStorage.getSync('hide-my-link-tags').then (hideMyLinkTags) -> $scope.hideTags = hideMyLinkTags
+  $scope.order = $rootScope.dataStorage.sync['setting-order'] || 'time'
+  console.log $rootScope.dataStorage.sync['setting-reverse']
+  $scope.reverse = (if ($rootScope.dataStorage.sync['setting-reverse'] isnt undefined) then $rootScope.dataStorage.sync['setting-reverse'] else true)
+  $scope.hideTags = $rootScope.dataStorage.sync['hide-my-link-tags']
 
   $scope.addUrlToList = (link) ->
     link.linkAdded = true
