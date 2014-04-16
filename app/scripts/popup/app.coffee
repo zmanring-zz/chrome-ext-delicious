@@ -52,17 +52,26 @@ app.run ($rootScope, $state, syncStorage) ->
       sync: results[1]
     }
 
+    $rootScope.dataStorage = obj
     $rootScope.$broadcast 'synced', obj
 
 
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
-    console.log toState
+    # console.log toState
 
 
   $rootScope.$on 'synced', (event, data) ->
 
-    $rootScope.dataStorage = data
     $rootScope.authenticated = $rootScope.dataStorage.local['auth-token']
+
+    # first time?
+    filter = $rootScope.dataStorage.sync
+    syncStorage.setSync({'filter-description':true}) if filter['filter-description'] == undefined
+    syncStorage.setSync({'filter-extended':true}) if filter['filter-extended'] == undefined
+    syncStorage.setSync({'filter-tags':true}) if filter['filter-tags'] == undefined
+    syncStorage.setSync({'filter-time':true}) if filter['filter-time'] == undefined
+    syncStorage.setSync({'filter-url':true}) if filter['filter-url'] == undefined
+    syncStorage.setSync({'setting-private':false}) if filter['setting-private'] == undefined
 
     # if authenticated
     if $rootScope.authenticated
@@ -74,5 +83,3 @@ app.run ($rootScope, $state, syncStorage) ->
 
     else
       $state.transitionTo 'login'
-
-    console.log($rootScope.dataStorage)

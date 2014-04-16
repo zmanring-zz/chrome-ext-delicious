@@ -18,7 +18,7 @@ controllers.controller 'AppCtrl', ($scope, $rootScope, $location, delicious, syn
 
   $scope.logout = (link) ->
     delicious.logout()
-    $rootScope.loggedIn = false
+    $rootScope.authenticated = false
     $location.path '/login'
 
   $scope.extVersion = ->
@@ -35,30 +35,26 @@ controllers.controller 'LoginCtrl', ($scope, $rootScope, $location, delicious, s
   $scope.login = ->
     $scope.loading = true
     delicious.authenticate($scope.username, $scope.password).success((data) ->
-      obj = {}
-      obj['username'] = $scope.username
-      syncStorage.setLocal(obj)
 
-      $rootScope.loggedIn = true
+      syncStorage.setLocal({'username':$scope.username})
+      $rootScope.authenticated = true
       $location.path '/new'
 
     ).error (data, code) ->
 
       json = xml.xmlToJSON(data)
       verboseResult = (if (json.result) then ' ' + json.result['@code'] else '')
-      syncStorage.getLocal('username').then (username) ->
-        syncStorage.removeLocal(username) if username
       $rootScope.errorCode = code + verboseResult
       $rootScope.loginFailed = true
-      $location.path '/new'
+      $location.path '/login'
 
-controllers.controller 'NewLinkCtrl', ($scope, $location, tab, delicious, analytics, syncStorage) ->
+controllers.controller 'NewLinkCtrl', ($location, $rootScope, $scope, analytics, delicious, syncStorage, tab) ->
   $scope.description = tab.title
   $scope.header = 'Add link to Delicious'
   $scope.myTags = []
   $scope.myTagsLoaded = false
   $scope.note = tab.selectionText
-  $scope.share = syncStorage.getSync('setting-share').then (settingShare) -> settingShare
+  $scope.share = $rootScope.dataStorage.sync['setting-private']
   $scope.submitLabel = 'Add'
   $scope.suggestedTags = []
   $scope.tags = []
@@ -121,9 +117,9 @@ controllers.controller 'NewLinkCtrl', ($scope, $location, tab, delicious, analyt
       select.select2 'val', newVal
 
   $scope.$watch 'share', (value) ->
-    syncStorage.setSync({'setting-share': value})
+    syncStorage.setSync({'setting-private': value})
 
-controllers.controller 'BookmarksCtrl', ($scope, $timeout, $filter, delicious, analytics, syncStorage) ->
+controllers.controller 'BookmarksCtrl', ($rootScope, $scope, $timeout, $filter, delicious, analytics, syncStorage) ->
   $scope.limit = 0
   $scope.links = []
   $scope.linksLength = 0

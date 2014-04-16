@@ -21,15 +21,17 @@ filters.filter 'filterByWord', ($rootScope) ->
       # Filter the links and return them
       links.filter (link) ->
 
-        # TODO: hook back up to options
+        filter = $rootScope.dataStorage.sync
+
         # Combine link properties to search into string
         search = [
-          link['description'],
-          link['extended'],
-          link['url'],
-          link['tags'],
-          link['time'],
-          ((if (link['shared'] is 'no') then 'private' else ''))
+
+          (if (filter['filter-description']) then link['description'] else ''),
+          (if (filter['filter-extended']) then link['extended'] else ''),
+          (if (filter['filter-tags']) then link['tags'] else ''),
+          (if (filter['filter-time']) then link['time'] else ''),
+          (if (filter['filter-url']) then link['url'] else ''),
+          (if (link['shared'] is 'no') then 'private' else '')
         ].join(' ').toLowerCase()
 
         # all of the words

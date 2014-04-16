@@ -4,296 +4,288 @@
 services = angular.module('yum.services', [])
 services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
 
-  Delicious = {}
+  Delicious =
 
-  Delicious.authenticate = (username, password) ->
-    hash = btoa(username + ':' + password)
-    options =
-      method: 'GET'
-      url: 'https://api.del.icio.us/v1/posts/update'
-      headers:
-        Authorization: 'Basic ' + hash
-
-    $http(options).success ->
-      syncStorage.setLocal 'auth-token' : hash
-
-  Delicious.addLink = (linkData) ->
-    syncStorage.getLocal('auth-token').then (authToken) ->
-      options =
-        method: 'POST'
-        url: 'https://api.del.icio.us/v1/posts/add'
-        headers:
-          Authorization: 'Basic ' + authToken
-          'Content-Type': 'application/x-www-form-urlencoded'
-
-        transformRequest: (obj) ->
-          str = []
-          for p of obj
-            str.push encodeURIComponent(p) + '=' + encodeURIComponent(obj[p])
-          str.join '&'
-
-        data: linkData
-
-      $http(options).success ->
-
-        # Clear out links cache
-        syncStorage.removeLocal 'links'
-
-  Delicious.removeLink = (link) ->
-    syncStorage.getLocal('auth-token').then (authToken) ->
+    authenticate : (username, password) ->
+      hash = btoa(username + ':' + password)
       options =
         method: 'GET'
-        url: 'https://api.del.icio.us/v1/posts/delete'
+        url: 'https://api.del.icio.us/v1/posts/update'
         headers:
-          Authorization: 'Basic ' + authToken
-
-        params:
-          md5: link.hash
+          Authorization: 'Basic ' + hash
 
       $http(options).success ->
+        syncStorage.setLocal 'auth-token' : hash
 
-        # Clear out links cache
-        syncStorage.removeLocal 'links'
+    addLink : (linkData) ->
+      syncStorage.getLocal('auth-token').then (authToken) ->
+        options =
+          method: 'POST'
+          url: 'https://api.del.icio.us/v1/posts/add'
+          headers:
+            Authorization: 'Basic ' + authToken
+            'Content-Type': 'application/x-www-form-urlencoded'
 
-  Delicious.getQueryStringByName = (name) ->
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
-    regexS = "[\\?&]" + name + "=([^&#]*)"
-    regex = new RegExp(regexS)
-    results = regex.exec($location.$$absUrl)
-    (if results then decodeURIComponent(results[1].replace(/\+/g, " ")) else "")
+          transformRequest: (obj) ->
+            str = []
+            for p of obj
+              str.push encodeURIComponent(p) + '=' + encodeURIComponent(obj[p])
+            str.join '&'
 
-  Delicious.getTab = ->
-    defer = $q.defer()
-    if chrome.tabs
-      chrome.tabs.query
-        windowId: chrome.windows.WINDOW_ID_CURRENT
-        active: true
-      , (tab) ->
-        $rootScope.$apply ->
-          defer.resolve tab[0]
+          data: linkData
 
-    else
-      defer.resolve
-        url: Delicious.getQueryStringByName('url')
-        selectionText: Delicious.getQueryStringByName('selected')
-        title: Delicious.getQueryStringByName('title')
+        $http(options).success ->
 
-    defer.promise
+          # Clear out links cache
+          syncStorage.removeLocal 'links'
 
-  Delicious.getLinks = ->
-    defer = $q.defer()
+    removeLink : (link) ->
+      syncStorage.getLocal('auth-token').then (authToken) ->
+        options =
+          method: 'GET'
+          url: 'https://api.del.icio.us/v1/posts/delete'
+          headers:
+            Authorization: 'Basic ' + authToken
 
-    syncStorage.getLocal('links').then (links) ->
+          params:
+            md5: link.hash
 
-      if links
-        defer.resolve links
+        $http(options).success ->
+
+          # Clear out links cache
+          syncStorage.removeLocal 'links'
+
+    getQueryStringByName : (name) ->
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
+      regexS = "[\\?&]" + name + "=([^&#]*)"
+      regex = new RegExp(regexS)
+      results = regex.exec($location.$$absUrl)
+      (if results then decodeURIComponent(results[1].replace(/\+/g, " ")) else "")
+
+    getTab : ->
+      defer = $q.defer()
+      if chrome.tabs
+        chrome.tabs.query
+          windowId: chrome.windows.WINDOW_ID_CURRENT
+          active: true
+        , (tab) ->
+          $rootScope.$apply ->
+            defer.resolve tab[0]
+
       else
-        Delicious.fetchLinks().then (links) ->
+        defer.resolve
+          url: Delicious.getQueryStringByName('url')
+          selectionText: Delicious.getQueryStringByName('selected')
+          title: Delicious.getQueryStringByName('title')
+
+      defer.promise
+
+    getLinks : ->
+      defer = $q.defer()
+
+      syncStorage.getLocal('links').then (links) ->
+
+        if links
           defer.resolve links
-
-    defer.promise
-
-  Delicious.parseLinks = do ->
-    parseLinksResponse = (data) ->
-      _parseLink = (rawLink) ->
-
-        link = {}
-
-        # Remove '@' symbols from keys
-        for key of rawLink
-          k = key.split('@')[1]
-          link[k] = rawLink[key]
-
-        # domain root
-        link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, "$1")
-        link['private'] = (if (link.shared is 'no') then true else false)
-
-        # TODO: split is not working async
-        # split = syncStorage.getSync('parse-single-space').then (parseSingleSpace) ->
-          # (if parseSingleSpace then RegExp(" [ ]?") else "  ")
-
-        link.tags = link.tag.split("  ")
-        delete link.tag
-
-        link
-
-      json = xml.xmlToJSON(data)
-      unless json.posts
-        []
-      else if angular.isArray(json.posts.post)
-        json.posts.post.map _parseLink
-      else
-        [_parseLink(json.posts.post)]
-
-  Delicious.fetchLinks = do ->
-    fetchLinks = ->
-      defer = $q.defer()
-
-      syncStorage.getLocal('auth-token').then (authToken) ->
-
-        options =
-          method: 'GET'
-          url: 'https://api.del.icio.us/v1/posts/all?results=10000&meta=yes'
-          headers:
-            Authorization: 'Basic ' + authToken
-
-          transformResponse: Delicious.parseLinks
-
-        $http(options).then (resp) ->
-
-          syncStorage.setLocal 'links' : resp.data
-          defer.resolve resp.data
+        else
+          Delicious.fetchLinks().then (links) ->
+            defer.resolve links
 
       defer.promise
 
-  Delicious.getDeliciousLinkDataByUrl = do ->
-    getDeliciousLinkDataByUrl = (url) ->
-      defer = $q.defer()
+    parseLinks : do ->
+      parseLinksResponse = (data) ->
+        _parseLink = (rawLink) ->
 
-      syncStorage.getLocal('auth-token').then (authToken) ->
-        options =
-          method: 'GET'
-          url: 'https://api.del.icio.us/v1/posts/get?url=' + url
-          headers:
-            Authorization: 'Basic ' + authToken
-
-          transformResponse: Delicious.parseLinks
-
-        $http(options).then (resp) ->
-          defer.resolve resp.data
-
-      defer.promise
-
-  Delicious.getHashes = do ->
-    getHashes = ->
-      defer = $q.defer()
-
-      syncStorage.getLocal('auth-token').then (authToken) ->
-
-        options =
-          method: 'GET'
-          url: 'https://api.del.icio.us/v1/posts/all?hashes'
-          headers:
-            Authorization: 'Basic ' + authToken
-
-        $http(options).then (resp) ->
-          defer.resolve resp.data
-
-      defer.promise
-
-  Delicious.getUpdate = do ->
-    _parseUpdateResponse = (data) ->
-      rawUpdate = xml.xmlToJSON(data).update
-      update = {}
-
-      # Remove '@' symbols from keys
-      for key of rawUpdate
-        k = key.split('@')[1]
-        update[k] = rawUpdate[key]
-
-      # Convert time string to time integer
-      update.time = new Date(update.time).getTime()
-      update
-    getUpdate = ->
-      defer = $q.defer()
-
-      syncStorage.getLocal('auth-token').then (authToken) ->
-
-        options =
-          method: 'GET'
-          url: 'https://api.del.icio.us/v1/posts/update'
-          headers:
-            Authorization: 'Basic ' + authToken
-
-          transformResponse: _parseUpdateResponse
-
-        if $rootScope.loggedIn
-          $http(options).then (resp) ->
-            defer.resolve resp.data
-
-      defer.promise
-
-  Delicious.getPopularSuggestedTags = do ->
-    _parseSuggestionsResponse = (data) ->
-      json = xml.xmlToJSON(data)
-      if json.suggest
-        json.suggest.popular.map (rawSuggestionTag) ->
-          suggestedTag = {}
+          link = {}
 
           # Remove '@' symbols from keys
-          for key of rawSuggestionTag
+          for key of rawLink
             k = key.split('@')[1]
-            suggestedTag[k] = rawSuggestionTag[key]
-          suggestedTag.tag
+            link[k] = rawLink[key]
 
-    getPopularSuggestedTags = (url) ->
-      defer = $q.defer()
+          # domain root
+          link['domain'] = link['href'].replace(/^(.*\/\/[^\/?#]*).*$/, "$1")
+          link['private'] = (if (link.shared is 'no') then true else false)
 
-      syncStorage.getLocal('auth-token').then (authToken) ->
-        options =
+          split = (if ($rootScope.dataStorage.sync['parse-single-space']) then RegExp(' [ ]?') else '  ')
+
+          link.tags = link.tag.split(split)
+          delete link.tag
+
+          link
+
+        json = xml.xmlToJSON(data)
+        unless json.posts
+          []
+        else if angular.isArray(json.posts.post)
+          json.posts.post.map _parseLink
+        else
+          [_parseLink(json.posts.post)]
+
+    fetchLinks : do ->
+      fetchLinks = ->
+        defer = $q.defer()
+
+        syncStorage.getLocal('auth-token').then (authToken) ->
+
+          options =
             method: 'GET'
-            url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url
+            url: 'https://api.del.icio.us/v1/posts/all?results=10000&meta=yes'
             headers:
               Authorization: 'Basic ' + authToken
 
-            transformResponse: _parseSuggestionsResponse
+            transformResponse: Delicious.parseLinks
 
-        $http(options).then (resp) ->
-          defer.resolve resp.data
+          $http(options).then (resp) ->
 
-      defer.promise
+            syncStorage.setLocal 'links' : resp.data
+            defer.resolve resp.data
 
-  Delicious.getAllMyTags = do ->
-    _parseTags = (data) ->
-      _parseTag = (rawTag) ->
-        tag = {}
+        defer.promise
+
+    getDeliciousLinkDataByUrl : do ->
+      getDeliciousLinkDataByUrl = (url) ->
+        defer = $q.defer()
+
+        syncStorage.getLocal('auth-token').then (authToken) ->
+          options =
+            method: 'GET'
+            url: 'https://api.del.icio.us/v1/posts/get?url=' + url
+            headers:
+              Authorization: 'Basic ' + authToken
+
+            transformResponse: Delicious.parseLinks
+
+          $http(options).then (resp) ->
+            defer.resolve resp.data
+
+        defer.promise
+
+    getHashes : do ->
+      getHashes = ->
+        defer = $q.defer()
+
+        syncStorage.getLocal('auth-token').then (authToken) ->
+
+          options =
+            method: 'GET'
+            url: 'https://api.del.icio.us/v1/posts/all?hashes'
+            headers:
+              Authorization: 'Basic ' + authToken
+
+          $http(options).then (resp) ->
+            defer.resolve resp.data
+
+        defer.promise
+
+    getUpdate : do ->
+      _parseUpdateResponse = (data) ->
+        rawUpdate = xml.xmlToJSON(data).update
+        update = {}
 
         # Remove '@' symbols from keys
-        for key of rawTag
+        for key of rawUpdate
           k = key.split('@')[1]
-          tag[k] = rawTag[key]
-        tag.tag
-      json = xml.xmlToJSON(data)
+          update[k] = rawUpdate[key]
 
-      unless json.tags
-        []
-      else if angular.isArray(json.tags.tag)
-        json.tags.tag.map _parseTag
-      else
-        [_parseTag(json.tags.tag)]
+        # Convert time string to time integer
+        update.time = new Date(update.time).getTime()
+        update
+      getUpdate = ->
+        defer = $q.defer()
 
-    getAllMyTags = ->
-      defer = $q.defer()
+        syncStorage.getLocal('auth-token').then (authToken) ->
 
-      syncStorage.getLocal('auth-token').then (authToken) ->
+          options =
+            method: 'GET'
+            url: 'https://api.del.icio.us/v1/posts/update'
+            headers:
+              Authorization: 'Basic ' + authToken
 
-        options =
-          method: 'GET'
-          url: 'https://api.del.icio.us/v1/tags/get'
-          headers:
-            Authorization: 'Basic ' + authToken
+            transformResponse: _parseUpdateResponse
 
-          transformResponse: _parseTags
+          if $rootScope.authenticated
+            $http(options).then (resp) ->
+              defer.resolve resp.data
 
-        $http(options).then (resp) ->
-          defer.resolve resp.data
+        defer.promise
 
-      defer.promise
+    getPopularSuggestedTags : do ->
+      _parseSuggestionsResponse = (data) ->
+        json = xml.xmlToJSON(data)
+        if json.suggest
+          json.suggest.popular.map (rawSuggestionTag) ->
+            suggestedTag = {}
 
-  Delicious.logout = ->
-    syncStorage.clearLocal()
+            # Remove '@' symbols from keys
+            for key of rawSuggestionTag
+              k = key.split('@')[1]
+              suggestedTag[k] = rawSuggestionTag[key]
+            suggestedTag.tag
+
+      getPopularSuggestedTags = (url) ->
+        defer = $q.defer()
+
+        syncStorage.getLocal('auth-token').then (authToken) ->
+          options =
+              method: 'GET'
+              url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url
+              headers:
+                Authorization: 'Basic ' + authToken
+
+              transformResponse: _parseSuggestionsResponse
+
+          $http(options).then (resp) ->
+            defer.resolve resp.data
+
+        defer.promise
+
+    getAllMyTags : do ->
+      _parseTags = (data) ->
+        _parseTag = (rawTag) ->
+          tag = {}
+
+          # Remove '@' symbols from keys
+          for key of rawTag
+            k = key.split('@')[1]
+            tag[k] = rawTag[key]
+          tag.tag
+        json = xml.xmlToJSON(data)
+
+        unless json.tags
+          []
+        else if angular.isArray(json.tags.tag)
+          json.tags.tag.map _parseTag
+        else
+          [_parseTag(json.tags.tag)]
+
+      getAllMyTags = ->
+        defer = $q.defer()
+
+        syncStorage.getLocal('auth-token').then (authToken) ->
+
+          options =
+            method: 'GET'
+            url: 'https://api.del.icio.us/v1/tags/get'
+            headers:
+              Authorization: 'Basic ' + authToken
+
+            transformResponse: _parseTags
+
+          $http(options).then (resp) ->
+            defer.resolve resp.data
+
+        defer.promise
+
+    logout : ->
+      syncStorage.clearLocal()
 
 
   # Check for updates
   Delicious.getUpdate().then (update) ->
 
     syncStorage.getLocal('last-update').then (lastUpdate) ->
-
-      lastUpdate = undefined
-      if lastUpdate isnt 'NaN'
-        lastUpdate = lastUpdate
-      else
-        lastUpdate = 0
 
       if update.time isnt lastUpdate
 
@@ -304,6 +296,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
           syncStorage.setLocal 'last-update' : update.time
 
   Delicious
+
 
 services.factory 'analytics', ($window) ->
   $window._gaq.push ['_setAccount', 'UA-38039307-2']
