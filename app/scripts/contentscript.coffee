@@ -2,7 +2,7 @@
 
 $ ->
   closeModal = ->
-    $("#chrome-ext-delicious-frame").remove()
+    $('#chrome-ext-delicious-frame').remove()
 
   loadModal = (view) ->
     html = [
@@ -11,8 +11,8 @@ $ ->
         '<iframe seamless id="chrome-ext-delicious-iframe" src="chrome-extension://' + chrome.i18n.getMessage("@@extension_id") + '/popup.html?origin=shortcut&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + view + '" />',
         '<button class="close_frame" title="close">&times;</button>',
       '</div>'
-    ].join("\n")
-    $("body").append html
+    ].join('\n')
+    $('body').append html
 
 
   #Events
@@ -20,21 +20,20 @@ $ ->
     if e.altKey and e.shiftKey and e.keyCode is 68
 
       # shift-alt-d
-      loadModal "#/new"
+      loadModal '#/new'
 
     # shift-alt-b
-    else loadModal "#/bookmarks"  if e.altKey and e.shiftKey and e.keyCode is 66
+    else loadModal '#/bookmarks'  if e.altKey and e.shiftKey and e.keyCode is 66
 
-  $(document).on "click", "#chrome-ext-delicious-frame button.close_frame", ->
+  $(document).on 'click', '#chrome-ext-delicious-frame button.close_frame', ->
     closeModal()
 
-  $(document).on "click", (e) ->
+  $(document).on 'click', (e) ->
 
-    # On windows the shortcut keys cause a "click" event, using the screen attributes tell the difference
+    # On windows the shortcut keys cause a 'click' event, using the screen attributes tell the difference
     closeModal() if e.screenX isnt 0 and e.screenY isnt 0
 
   # Messages from the child
-  window.addEventListener "message", (e) ->
+  window.addEventListener 'message', (e) ->
     if e.data is 'closeModal'
       closeModal()
-
