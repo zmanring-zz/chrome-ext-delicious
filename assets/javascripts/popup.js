@@ -534,7 +534,7 @@
   });
 
   controllers.controller('NewLinkCtrl', function ($scope, $location, tab, delicious, analytics) {
-    $scope.description = tab.title;
+    $scope.description = tab.title.replace(/[^\x00-\x7F]/g, "");
     $scope.header = 'Add link to Delicious';
     $scope.myTags = [];
     $scope.myTagsLoaded = false;
