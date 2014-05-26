@@ -147,6 +147,7 @@
         for(var i=0;i<str.length;i++){
           if(str.charCodeAt(i)>127){
             encodedStr += encodeStr(strArray[i]);
+            // console.log('char \''+strArray[i]+'\' => '+encodeStr(strArray[i]) + ' , code = '+str.charCodeAt(i));
           }
           else {
             encodedStr += strArray[i];
