@@ -144,7 +144,7 @@
           transformRequest: function (obj) {
             var str = [];
             for (var p in obj) {
-              str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+              str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p].trim()).replace(/\%20/g,'+'));
             }
             return str.join('&');
           },
@@ -422,6 +422,27 @@
       localStorage.clear();
     };
 
+    Delicious.replaceNonAscii = function (str) {
+
+      if (str) {
+
+        str = str.replace(/\xE4/g, 'ae'); /* ä */
+        str = str.replace(/\xF6/g, 'oe'); /* ö */
+        str = str.replace(/\xFC/g, 'ue'); /* ü */
+        str = str.replace(/\xC4/g, 'Ae'); /* Ä */
+        str = str.replace(/\xD6/g, 'Oe'); /* Ö */
+        str = str.replace(/\xDC/g, 'Ue'); /* Ü */
+        str = str.replace(/\xDF/g, 'ss'); /* ß */
+
+        // Everything else
+        str = str.replace(/[^\x00-\x7F]/g, '');
+
+      }
+
+      return str;
+
+    };
+
     Delicious.setting = (function () {
       var prefix = 'chrome-ext-delicious-setting-',
         defaults = {
@@ -534,11 +555,11 @@
   });
 
   controllers.controller('NewLinkCtrl', function ($scope, $location, tab, delicious, analytics) {
-    $scope.description = tab.title.replace(/[^\x00-\x7F]/g, "");
+    $scope.description = delicious.replaceNonAscii(tab.title);
     $scope.header = 'Add link to Delicious';
     $scope.myTags = [];
     $scope.myTagsLoaded = false;
-    $scope.note = tab.selectionText;
+    $scope.note = delicious.replaceNonAscii(tab.selectionText);
     $scope.submitLabel = 'Add';
     $scope.suggestedTags = [];
     $scope.tags = [];
