@@ -132,6 +132,31 @@
       });
     };
 
+    // walk through any string and encode only the
+    // non-ascii chars.  This will ensure they are
+    // double-encoded after the entire string is encoded.
+    function getStrWithEncodedNonAsciiChars(str){
+
+      function encodeStr(str) {
+        return encodeURIComponent(str).replace(/'/g,'%27').replace(/"/g,'%22');
+      }
+
+      var encodedStr = '',
+          strArray = str.split('');
+      if(typeof(str)==='string') {
+        for(var i=0;i<str.length;i++){
+          if(str.charCodeAt(i)>127){
+            encodedStr += encodeStr(strArray[i]);
+            // console.log('char \''+strArray[i]+'\' => '+encodeStr(strArray[i]) + ' , code = '+str.charCodeAt(i));
+          }
+          else {
+            encodedStr += strArray[i];
+          }
+        }
+      }
+      return encodedStr;
+    }
+
     Delicious.addLink = function (linkData) {
       var hash = localStorage.getItem('chrome-ext-delicious'),
         options = {
@@ -142,9 +167,12 @@
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           transformRequest: function (obj) {
-            var str = [];
+            var str = [],
+                tempVal;
             for (var p in obj) {
-              str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p].trim()).replace(/\%20/g,'+'));
+              // First encode only non-ascii chars. Then they'll be double-encoded.
+              tempVal = getStrWithEncodedNonAsciiChars(obj[p].trim());
+              str.push(encodeURIComponent(p) + '=' + encodeURIComponent(tempVal).replace(/\%20/g,'+'));
             }
             return str.join('&');
           },
@@ -443,6 +471,21 @@
 
     };
 
+    // Use this function to decode the link properties
+    // for description and notes. 
+    Delicious.decodeStr = function (str) {
+      var tmp = str || '';
+      // handle any strings that decodeURIComponent
+      // considers Malformed
+      try {
+        tmp = decodeURIComponent(tmp.replace(/\+/g, ' ')); 
+      }
+      catch(e) {
+        // console.log(e);
+      }
+      return tmp;
+    }
+
     Delicious.setting = (function () {
       var prefix = 'chrome-ext-delicious-setting-',
         defaults = {
@@ -555,11 +598,11 @@
   });
 
   controllers.controller('NewLinkCtrl', function ($scope, $location, tab, delicious, analytics) {
-    $scope.description = delicious.replaceNonAscii(tab.title);
+    $scope.description = tab.title; // delicious.replaceNonAscii(tab.title);
     $scope.header = 'Add link to Delicious';
     $scope.myTags = [];
     $scope.myTagsLoaded = false;
-    $scope.note = delicious.replaceNonAscii(tab.selectionText);
+    $scope.note = tab.selectionText; // delicious.replaceNonAscii(tab.selectionText);
     $scope.submitLabel = 'Add';
     $scope.suggestedTags = [];
     $scope.tags = [];
@@ -598,8 +641,8 @@
 
       var link = data[0];
       if (link) {
-        $scope.description = link['description'];
-        $scope.note = link['extended'];
+        $scope.description = delicious.decodeStr(link['description']);
+        $scope.note = delicious.decodeStr(link['extended']);
         $scope.header = 'Modify your Delicious link';
         $scope.menu[0]['text'] = 'Modify link';
         $scope.share = link['private'];
@@ -783,6 +826,13 @@
 
     delicious.getLinks().then(function (links) {
       $scope.links = links.map(function (link) {
+
+        // Delicious appears to double-encode any
+        // non-ascii chars, so we must manually
+        // decode for extension display
+        link.description = delicious.decodeStr(link.description);
+        link.extended = delicious.decodeStr(link.extended)
+
         return angular.extend(link, {
           confirmUpdate: false,
           confirmRemoval: false,
