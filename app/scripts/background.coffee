@@ -28,6 +28,7 @@ chrome.storage.sync.get (SYNC_STORAGE) ->
             onclick: YUM.injectModal
 
     YUM.getSuggestion = (query) ->
+      console.log LOCAL_STORAGE
       links = JSON.parse(localStorage.getItem("chrome-ext-delicious-links"))
       words = query.toLowerCase().split(" ")
       if links

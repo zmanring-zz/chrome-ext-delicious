@@ -70,6 +70,7 @@ controllers.controller 'NewLinkCtrl', ($location, $rootScope, $scope, analytics,
       tags: $scope.tags.join(', ')
       replace: 'yes'
     ).then ->
+
       $location.path '/bookmarks'
       analytics.push ['_trackEvent', 'link-added', 'action']
 
