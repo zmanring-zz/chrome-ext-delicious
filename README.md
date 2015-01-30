@@ -17,3 +17,6 @@ Running tests
 To run the Jasmine tests, simply navigate to:
     
     chrome-extension://<extension_id>/spec-runner.html
+
+Love,
+Greg
