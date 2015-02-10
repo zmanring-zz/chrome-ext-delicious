@@ -23,27 +23,6 @@ module.exports = function (grunt) {
   };
 
   grunt.initConfig({
-    // chromeManifest
-    // clean
-    // coffee
-    // compass
-    // compress
-    // concurrent
-    // connect
-    // copy
-    // cssmin
-    // htmlmin
-    // imagemin
-    // jshint
-    // markdown
-    // mocha
-    // svgmin
-    // uglify
-    // usemin
-    // useminPrepare
-    // watch
-    // yeoman
-
     chromeManifest: {
       dist: {
         options: {
@@ -103,7 +82,7 @@ module.exports = function (grunt) {
       },
       local: {
         options: {
-          sourceMap: true
+          sourceMap: false
         },
         files: [{
           expand: true,
@@ -223,7 +202,7 @@ module.exports = function (grunt) {
           '*.{ico,png,txt}',
           'images/{,*/}*.{webp,gif}',
           '_locales/{,*/}*.json',
-          'scripts/{,*/}*.coffee',
+          // 'scripts/{,*/}*.coffee',
           'scripts/{,*/}*.map',
           'scripts/contentscript.js',
           'scripts/context.js',

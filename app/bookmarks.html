@@ -12,8 +12,7 @@
   <ul class="links" when-scrolled="loadMore()">
     <li class="animated fly-simplified" ng-repeat="link in links | filterByWord:query | orderBy:order:reverse | limitTo:limit" ng-class="{private: isPrivate(link), edit: link.confirmUpdate, linkAdded: link.linkAdded, bounceOutDown: link.removed }">
       <article ng-show="!link.confirmUpdate">
-        <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}">
-          <img class="favicon" style="height:16px; width: 16px" src="http://g.etfv.co/{{link.domain}}" />{{link.description}}</a>
+        <a class="link" ng-href="{{link.href}}" target="_blank" title="{{link.href}}">{{link.description}}</a>
         <ul class="tags" ng-hide="hideTags">
           <li class="private-tag" ng-show="isPrivate(link)">
             <a href="" class="link_tag" ng-click="appendQuery('private')">private</a>

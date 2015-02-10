@@ -33,6 +33,17 @@ app.config ($stateProvider, $urlRouterProvider) ->
 app.config ($compileProvider) ->
   $compileProvider.aHrefSanitizationWhitelist /^\s*(https?|ftp|mailto|file|chrome-extension):/
 
+app.config [
+  "$httpProvider"
+  ($httpProvider) ->
+    #Reset headers to avoid OPTIONS request (aka preflight)
+    $httpProvider.defaults.headers.common = {}
+    $httpProvider.defaults.headers.post = {}
+    $httpProvider.defaults.headers.put = {}
+    $httpProvider.defaults.headers.patch = {}
+]
+
+
 # Run
 app.run ($rootScope, $state, syncStorage) ->
 
@@ -66,12 +77,12 @@ app.run ($rootScope, $state, syncStorage) ->
 
     # defaults
     filter = $rootScope.dataStorage.sync
-    syncStorage.setSync({'filter-description':true}) if filter['filter-description'] == undefined
-    syncStorage.setSync({'filter-extended':true}) if filter['filter-extended'] == undefined
-    syncStorage.setSync({'filter-tags':true}) if filter['filter-tags'] == undefined
-    syncStorage.setSync({'filter-time':true}) if filter['filter-time'] == undefined
-    syncStorage.setSync({'filter-url':true}) if filter['filter-url'] == undefined
-    syncStorage.setSync({'setting-private':false}) if filter['setting-private'] == undefined
+    syncStorage.setSync({'filter-description':true}) if filter['filter-description'] is undefined
+    syncStorage.setSync({'filter-extended':true}) if filter['filter-extended'] is undefined
+    syncStorage.setSync({'filter-tags':true}) if filter['filter-tags'] is undefined
+    syncStorage.setSync({'filter-time':true}) if filter['filter-time'] is undefined
+    syncStorage.setSync({'filter-url':true}) if filter['filter-url'] is undefined
+    syncStorage.setSync({'setting-private':false}) if filter['setting-private'] is undefined
 
     # if authenticated
     if $rootScope.authenticated
