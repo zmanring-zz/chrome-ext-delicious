@@ -10,7 +10,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
       hash = btoa(username + ':' + password)
       options =
         method: 'GET'
-        url: 'https://api.del.icio.us/v1/posts/update'
+        url: 'http://api.del.icio.us/v1/posts/update'
         headers:
           Authorization: 'Basic ' + hash
 
@@ -21,7 +21,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
       syncStorage.getLocal('auth-token').then (authToken) ->
         options =
           method: 'POST'
-          url: 'https://api.del.icio.us/v1/posts/add'
+          url: 'http://api.del.icio.us/v1/posts/add'
           headers:
             Authorization: 'Basic ' + authToken
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -43,7 +43,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
       syncStorage.getLocal('auth-token').then (authToken) ->
         options =
           method: 'GET'
-          url: 'https://api.del.icio.us/v1/posts/delete'
+          url: 'http://api.del.icio.us/v1/posts/delete'
           headers:
             Authorization: 'Basic ' + authToken
 
@@ -131,7 +131,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
 
           options =
             method: 'GET'
-            url: 'https://api.del.icio.us/v1/posts/all?results=10000&meta=yes'
+            url: 'http://api.del.icio.us/v1/posts/all?results=10000&meta=yes'
             headers:
               Authorization: 'Basic ' + authToken
 
@@ -151,7 +151,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
         syncStorage.getLocal('auth-token').then (authToken) ->
           options =
             method: 'GET'
-            url: 'https://api.del.icio.us/v1/posts/get?url=' + url
+            url: 'http://api.del.icio.us/v1/posts/get?url=' + url
             headers:
               Authorization: 'Basic ' + authToken
 
@@ -170,7 +170,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
 
           options =
             method: 'GET'
-            url: 'https://api.del.icio.us/v1/posts/all?hashes'
+            url: 'http://api.del.icio.us/v1/posts/all?hashes'
             headers:
               Authorization: 'Basic ' + authToken
 
@@ -199,7 +199,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
 
           options =
             method: 'GET'
-            url: 'https://api.del.icio.us/v1/posts/update'
+            url: 'http://api.del.icio.us/v1/posts/update'
             headers:
               Authorization: 'Basic ' + authToken
 
@@ -230,7 +230,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
         syncStorage.getLocal('auth-token').then (authToken) ->
           options =
               method: 'GET'
-              url: 'https://api.del.icio.us/v1/posts/suggest?url=' + url
+              url: 'http://api.del.icio.us/v1/posts/suggest?url=' + url
               headers:
                 Authorization: 'Basic ' + authToken
 
@@ -267,7 +267,7 @@ services.factory 'delicious', ($http, $q, $rootScope, $location, syncStorage) ->
 
           options =
             method: 'GET'
-            url: 'https://api.del.icio.us/v1/tags/get'
+            url: 'http://api.del.icio.us/v1/tags/get'
             headers:
               Authorization: 'Basic ' + authToken
 

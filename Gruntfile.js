@@ -110,7 +110,6 @@ module.exports = function (grunt) {
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',
         fontsDir: '<%= yeoman.app %>/styles/fonts',
-        importPath: '<%= yeoman.app %>/bower_components',
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
         relativeAssets: false
@@ -359,12 +358,7 @@ module.exports = function (grunt) {
     yeoman: yeomanConfig
   });
 
-  grunt.registerTask('test', [
-    'local',
-    'connect:test',
-    'mocha'
-  ]);
-
+  // Tasks
   grunt.registerTask('build', [
     'coffee:dist',
     'clean:dist',
@@ -395,7 +389,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'jshint',
-    'test',
     'build'
   ]);
 

@@ -4,8 +4,8 @@
 
 ### Follow [@DeliciousExt](https://twitter.com/@deliciousext) on Twitter
 
---- 
-    
+---
+
 ## Features
 
 * Bookmark your current tab, change descriptions, add tags, mark private or add notes.
@@ -15,11 +15,11 @@
 * Option to single-space delimited tags when user's tags contain no spaces, via [Options](/options.html). Thanks *@Rocketraman*
 * Visual cue &Sqrt; on the icon if page is already saved in your bookmarks. - Thanks *@Jelle*
 * Added new shortcut for modal view. Thanks *@Ian*
-  * [`shift`]-[`alt`]-[`d`] will open add link view 
+  * [`shift`]-[`alt`]-[`d`] will open add link view
   * [`shift`]-[`alt`]-[`b`] will open your bookmarks view.
 * Ability to change what you want to filter on, via [Options](/options.html). Thanks *@Jelle*
 * Ability to open more than one link at a time! Thanks *@Robert*
-  * Click the `+` button after hovering over the link you want to open. 
+  * Click the `+` button after hovering over the link you want to open.
 * Omnibox | Search from within Chrome's address bar, just type `@del`+ space + keyword.
 * Context menu access, just 'right click' on the page and select 'Add to Delicious'
   * Selected text will auto-fill extended description field when using context menu. Thanks for the idea *@Tomasz*
@@ -89,5 +89,3 @@ Found an issue or want to see a feature implemented? [Send Feedback](https://chr
 * Faster loading times
 * Ability to logout
 * Added Sorting and better filtering of links
-
-
